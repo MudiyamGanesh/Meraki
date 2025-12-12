@@ -2,32 +2,12 @@
 
 .carousel-section {
   width: 100%;
-  padding: 60px 0 80px 0;
+  padding: 10px 0 80px 0;
   background-color: var(--bg-primary, #FAF0E6);
   display: flex;
   flex-direction: column;
   align-items: center;
   overflow: hidden;
-}
-
-.carousel-header {
-  text-align: center;
-  margin-bottom: 40px;
-}
-
-.header-subtitle {
-  font-size: 14px;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  color: var(--text-secondary, #666);
-  font-weight: 700;
-}
-
-.header-title {
-  font-size: 36px;
-  margin: 5px 0 0 0;
-  color: var(--text-main, #556B2F);
-  font-family: var(--font-main);
 }
 
 /* --- TRACK & WRAPPER --- */
@@ -73,7 +53,6 @@
 
 /* Inactive State */
 .card.inactive {
-  /* Make inactive cards slightly darker and desaturated to focus on active one */
   filter: brightness(0.7) grayscale(0.2); 
 }
 
@@ -103,14 +82,11 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  /* Transition handled by Framer Motion now, but keep this for fallback */
+  transition: transform 0.5s ease;
 }
 
-.card.active .card-image-box img {
-  transform: scale(1.1); /* Slow gentle zoom */
-}
-
-/* --- TEXT CONTENT OVERLAY (The Premium Look) --- */
+/* --- TEXT CONTENT OVERLAY --- */
 .card-content {
   position: absolute;
   bottom: 0;
@@ -123,22 +99,17 @@
   justify-content: flex-end;
   color: white;
   
-  /* PREMIUM GRADIENT: Very subtle fade from transparent to soft dark */
   background: linear-gradient(
     to top,
-    rgba(0, 0, 0, 0.7) 0%,      /* Darkest at bottom for readability */
-    rgba(0, 0, 0, 0.3) 50%,     /* Mid-fade */
+    rgba(0, 0, 0, 0.7) 0%,      
+    rgba(0, 0, 0, 0.3) 50%,     
     transparent 100%
   );
 
-  /* OPTIONAL: Frosted Glass effect at the bottom */
-  /* This blurs the image BEHIND the text just a little bit */
   backdrop-filter: blur(2px);
   -webkit-backdrop-filter: blur(2px);
-  
-  /* Ensure it covers enough area */
   min-height: 45%; 
-  mask-image: linear-gradient(to bottom, transparent, black 20%); /* Softens top edge of blur */
+  mask-image: linear-gradient(to bottom, transparent, black 20%);
 }
 
 .card-title {
@@ -147,13 +118,13 @@
   font-weight: 700;
   margin: 0;
   line-height: 1.1;
-  /* Soft shadow instead of hard outline */
   text-shadow: 0 2px 10px rgba(0,0,0,0.5);
   letter-spacing: 0.5px;
 }
 
 .details-container {
   overflow: hidden;
+  /* Initial state handled by Framer Motion */
 }
 
 .card-price {
@@ -161,6 +132,7 @@
   font-weight: 600;
   color: #fff;
   opacity: 0.9;
+  margin-top: 8px; /* Added spacing here since motion controls margin */
   margin-bottom: 8px;
   text-shadow: 0 1px 4px rgba(0,0,0,0.5);
 }
@@ -200,53 +172,74 @@
   box-shadow: 0 15px 40px rgba(193, 110, 77, 0.3);
 }
 
-.left-arrow { left: 10%; }
-.right-arrow { right: 10%; }
+.left-arrow { left: 5%; }
+.right-arrow { right: 5%; }
 
 /* --- MOBILE RESPONSIVENESS --- */
 @media (max-width: 900px) {
+  
+  /* 1. Scrolling Container */
   .carousel-track-container {
-    display: block;
+    display: block; /* Remove flex centering */
+    width: 100%;
     padding: 20px 0;
+    
+    /* Native Scroll Physics */
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     scroll-behavior: smooth;
+    
+    /* Snap Logic */
+    scroll-snap-type: x mandatory;
+    scroll-padding-left: 50%; /* Center the snap point */
   }
   .carousel-track-container::-webkit-scrollbar { display: none; }
 
+  /* 2. Wrapper */
   .cards-wrapper {
     display: inline-flex;
     width: auto;
     height: auto;
-    padding: 0 25px;
+    padding: 0 50vw; /* Padding to allow first/last items to center */
+    margin-left: -150px; /* Offset to align first item to center (half card width) */
     gap: 20px;
     justify-content: flex-start;
   }
 
+  /* 3. Card Mobile Styles */
   .card {
     width: 300px !important;
     height: 480px !important;
     margin: 0;
     display: inline-flex !important; 
+    
+    /* Snap Alignment */
+    scroll-snap-align: center;
+    scroll-snap-stop: always;
+    
+    /* Reset Desktop transforms */
     transform: none !important;
-    opacity: 1 !important;
-    filter: none !important;
     box-shadow: 0 10px 30px rgba(0,0,0,0.2) !important;
+    
+    /* Default Opacity for inactive cards */
+    opacity: 1 !important; 
+    transition: opacity 0.3s ease;
+  }
+  
+  /* Dim inactive cards on mobile */
+  .card.inactive {
+    opacity: 0.5 !important; /* Dim the side cards */
+    transform: scale(0.95) !important; /* Scale down slightly */
+  }
+  
+  /* Highlight active card */
+  .card.active {
+    opacity: 1 !important;
+    transform: scale(1) !important;
+    z-index: 10;
   }
   
   .active-border, .play-icon-overlay { display: none; }
-
-  /* On mobile, darken gradient slightly more for readability in bright sun */
-  .card-content {
-    background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
-    backdrop-filter: none; /* Disable blur on mobile for performance */
-  }
-
-  .details-container {
-    height: auto !important;
-    opacity: 1 !important;
-    margin-top: 10px !important;
-  }
 
   .nav-arrow { display: none; }
 }

@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { motion } from "framer-motion";
+import React, { useState, useRef, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight, PlayCircle } from "lucide-react";
 import "../css/HeroCarousel.css";
 
@@ -16,7 +16,7 @@ const categories = [
     title: "Casual Denim",
     price: "From ₹1,499",
     features: ["Durable Stitch", "Vintage Wash", "All Sizes"],
-    image: "https://images.unsplash.com/photo-1542272617-08f08630329f?auto=format&fit=crop&w=800&q=80",
+    image: "https://www.urbanofashion.com/cdn/shop/files/shirtden2pc-iceblue-1.jpg?v=1736093532",
   },
   {
     id: 3,
@@ -37,46 +37,85 @@ const categories = [
     title: "Active Wear",
     price: "From ₹799",
     features: ["Sweat Wicking", "4-Way Stretch", "High Impact"],
-    image: "https://images.unsplash.com/photo-1518310383802-640c2de311b2?auto=format&fit=crop&w=800&q=80",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSPE7ngAJZqfTdFlyJaBa8CbStXjWQAAFgOtA&s",
   }
 ];
 
 const HeroCarousel = () => {
-  const [currentIndex, setCurrentIndex] = useState(2);
+  const [currentIndex, setCurrentIndex] = useState(2); // Desktop Active
+  const [mobileActiveIndex, setMobileActiveIndex] = useState(0); // Mobile Active
   const [hoveredIndex, setHoveredIndex] = useState(null);
+  
+  // Refs for mobile scroll detection
+  const scrollRef = useRef(null);
+  const cardRefs = useRef([]);
+
   const length = categories.length;
 
+  // --- DESKTOP NAVIGATION ---
   const nextSlide = () => {
     setCurrentIndex((prev) => (prev === length - 1 ? 0 : prev + 1));
   };
-
   const prevSlide = () => {
     setCurrentIndex((prev) => (prev === 0 ? length - 1 : prev - 1));
   };
 
+  // --- MOBILE SCROLL DETECTION ---
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            // If card is >50% visible, set it as active
+            const index = Number(entry.target.getAttribute("data-index"));
+            setMobileActiveIndex(index);
+          }
+        });
+      },
+      {
+        root: scrollRef.current,
+        threshold: 0.6, // Trigger when 60% of card is visible
+      }
+    );
+
+    // Observe all cards
+    cardRefs.current.forEach((card) => {
+      if (card) observer.observe(card);
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
+
+  // --- HELPER LOGIC ---
   const getCardPosition = (index) => {
     const prevIndex = (currentIndex - 1 + length) % length;
     const nextIndex = (currentIndex + 1) % length;
-
     if (index === currentIndex) return "center";
     if (index === prevIndex) return "left";
     if (index === nextIndex) return "right";
     return "hidden";
   };
 
+  // Check if active (Desktop: Index match or Hover / Mobile: Scroll Observer match)
   const isCardActive = (index) => {
+    // We use a CSS media query check or just rely on the fact that 
+    // mobile layout ignores 'currentIndex' visually.
+    // However, for React rendering logic, we need to know which state to use.
+    
+    // Simplification: We will use `isActive` for styling classes.
+    // The CSS handles showing/hiding based on viewport.
+    if (window.innerWidth <= 900) {
+      return index === mobileActiveIndex;
+    }
     if (hoveredIndex !== null) return hoveredIndex === index;
     return index === currentIndex;
   };
 
   return (
     <div className="carousel-section">
-      <div className="carousel-header">
-        <span className="header-subtitle">Discover Collections</span>
-        <h2 className="header-title">Shop By Category</h2>
-      </div>
-
-      <div className="carousel-track-container">
+      
+      <div className="carousel-track-container" ref={scrollRef}>
         <button onClick={prevSlide} className="nav-arrow left-arrow">
           <ChevronLeft size={40} strokeWidth={2.5} />
         </button>
@@ -84,45 +123,65 @@ const HeroCarousel = () => {
         <div className="cards-wrapper">
           {categories.map((item, index) => {
             const position = getCardPosition(index);
-            const isActive = isCardActive(index);
+            // Dynamic Active Check (Responds to Mobile Scroll or Desktop Hover)
+            const isActive = isCardActive(index); 
 
             return (
               <motion.div
                 key={item.id}
+                ref={(el) => (cardRefs.current[index] = el)}
+                data-index={index}
                 className={`card ${isActive ? "active" : "inactive"} ${position}`}
                 onMouseEnter={() => setHoveredIndex(index)}
                 onMouseLeave={() => setHoveredIndex(null)}
+                
                 layout
                 animate={{ 
-                  scale: isActive ? 1.05 : 0.9, 
+                  scale: isActive ? 1.05 : 0.95, 
                   zIndex: isActive ? 20 : 5 
                 }}
                 transition={{ type: "spring", stiffness: 300, damping: 25 }}
               >
+                {/* --- IMAGE LAYER --- */}
                 <div className="card-image-box">
-                  <img src={item.image} alt={item.title} />
+                  <motion.img 
+                    src={item.image} 
+                    alt={item.title} 
+                    // Image Transition: Zoom in when active
+                    animate={{ scale: isActive ? 1.15 : 1 }}
+                    transition={{ duration: 0.8, ease: "easeOut" }}
+                  />
                 </div>
 
                  {isActive}
 
-                {/* Removed background color style here for a cleaner look */}
+                {/* --- TEXT LAYER --- */}
                 <div className="card-content">
                   <motion.h3 className="card-title" layout>
                     {item.title}
                   </motion.h3>
                   
-                  <motion.div
-                     className="details-container"
-                     initial={false}
-                     animate={isActive ? { opacity: 1, height: "auto", marginTop: 8 } : { opacity: 0, height: 0, marginTop: 0 }}
-                  >
-                    <p className="card-price">{item.price}</p>
-                    <ul className="card-features">
-                      {item.features.map((feature, i) => (
-                        <li key={i}>• {feature}</li>
-                      ))}
-                    </ul>
-                  </motion.div>
+                  {/* --- ANIMATED DETAILS --- */}
+                  {/* AnimatePresence ensures exit animations play when switching cards */}
+                  <AnimatePresence mode="wait">
+                    {isActive && (
+                      <motion.div
+                         className="details-container"
+                         // Animation: Fade In + Slide Up
+                         initial={{ opacity: 0, y: 15, height: 0 }}
+                         animate={{ opacity: 1, y: 0, height: "auto" }}
+                         exit={{ opacity: 0, y: 10, height: 0 }}
+                         transition={{ duration: 0.4, ease: "easeOut" }}
+                      >
+                        <p className="card-price">{item.price}</p>
+                        <ul className="card-features">
+                          {item.features.map((feature, i) => (
+                            <li key={i}>• {feature}</li>
+                          ))}
+                        </ul>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
 
                 {isActive && (
