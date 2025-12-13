@@ -1,12 +1,9 @@
 {
-  "homepage":"https://ajayreddy19080507.github.io/sample",
   "name": "riti",
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "scripts": { 
-    "predeploy":"npm run buid",
-    "deploy":"gh-pages -d build"
+  "scripts": {
     "dev": "vite --host",
     "build": "vite build",
     "lint": "eslint .",
