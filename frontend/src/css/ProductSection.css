@@ -1,0 +1,204 @@
+/* --- THEME VARIABLES --- */
+/* (Inherited from your global CSS, ensuring consistency) */
+
+.product-section {
+  padding: 40px 20px;
+  background-color: var(--bg-primary);
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
+/* Header Styles */
+.section-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.section-title {
+  font-size: 24px;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--text-main);
+  letter-spacing: 1px;
+  margin-bottom: 5px;
+}
+
+.section-subtitle {
+  font-size: 14px;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+/* Carousel Container */
+.carousel-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Centers the grid */
+}
+
+/* THE GRID SYSTEM */
+.product-grid {
+  display: grid;
+  /* Desktop: 4 Equal Columns */
+  grid-template-columns: repeat(4, 1fr); 
+  gap: 20px;
+  width: 100%;
+  padding: 10px 40px; /* Side padding to make room for arrows */
+}
+
+/* Product Card */
+.product-card {
+  background-color: var(--bg-input);
+  border-radius: 8px;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+  border: 1px solid transparent;
+  display: flex;
+  flex-direction: column;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+  border-color: var(--border-color);
+}
+
+/* Image Area */
+.image-wrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3 / 4; 
+  overflow: hidden;
+  background-color: #f0f0f0;
+}
+
+.product-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.product-card:hover .product-image {
+  transform: scale(1.05);
+}
+
+/* Badge */
+.product-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background-color: rgba(0,0,0,0.7);
+  color: var(--white);
+  font-size: 10px;
+  font-weight: 700;
+  padding: 4px 8px;
+  text-transform: uppercase;
+  z-index: 2;
+  border-radius: 4px;
+  transform: rotate(-5deg);
+}
+
+/* Details Area */
+.product-details {
+  padding: 15px;
+  text-align: left;
+}
+
+.product-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.product-category {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+
+.product-price {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+/* Navigation Buttons */
+.nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: var(--bg-input);
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  transition: all 0.2s ease;
+}
+
+.nav-btn:hover:not(:disabled) {
+  background-color: var(--accent-hover);
+  color: var(--white);
+  border-color: var(--accent-hover);
+}
+
+/* Disable button style */
+.nav-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.prev-btn { left: -5px; } /* Adjusted closer to edge */
+.next-btn { right: -5px; }
+
+/* RESPONSIVE: MOBILE VIEW */
+@media (max-width: 768px) {
+  .product-grid {
+    /* Mobile: 2 Columns = 2x2 Layout for 4 items */
+    grid-template-columns: repeat(2, 1fr);
+    padding: 0; /* Remove side padding on mobile */
+    gap: 15px;
+  }
+  
+  /* We generally hide arrows on mobile if it's touch, 
+     but since this is pagination (not scroll), we usually KEEP arrows.
+     However, if you want them hidden and use swipe, that requires more complex JS.
+     Based on your request "add those 4 cards into 2 rows", I will keep arrows 
+     positioned differently or hide them if you only have 4 items total.
+     
+     Let's position arrows at the bottom for mobile or make them smaller.
+  */
+  
+  .nav-btn {
+    width: 35px;
+    height: 35px;
+    /* Adjust position if needed, or hide if you prefer standard mobile stack */
+  }
+  
+  .product-details {
+    padding: 10px;
+  }
+  
+  .product-name {
+    font-size: 13px;
+  }
+  
+  .section-title {
+    font-size: 20px;
+  }
+}

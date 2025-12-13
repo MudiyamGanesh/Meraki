@@ -42,7 +42,7 @@ const categories = [
 ];
 
 const HeroCarousel = () => {
-  const [currentIndex, setCurrentIndex] = useState(2); // Desktop Active
+  const [currentIndex, setCurrentIndex] = useState(1); // Desktop Active
   const [mobileActiveIndex, setMobileActiveIndex] = useState(0); // Mobile Active
   const [hoveredIndex, setHoveredIndex] = useState(null);
   
@@ -66,7 +66,6 @@ const HeroCarousel = () => {
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            // If card is >50% visible, set it as active
             const index = Number(entry.target.getAttribute("data-index"));
             setMobileActiveIndex(index);
           }
@@ -74,11 +73,10 @@ const HeroCarousel = () => {
       },
       {
         root: scrollRef.current,
-        threshold: 0.6, // Trigger when 60% of card is visible
+        threshold: 0.6,
       }
     );
 
-    // Observe all cards
     cardRefs.current.forEach((card) => {
       if (card) observer.observe(card);
     });
@@ -97,14 +95,7 @@ const HeroCarousel = () => {
     return "hidden";
   };
 
-  // Check if active (Desktop: Index match or Hover / Mobile: Scroll Observer match)
   const isCardActive = (index) => {
-    // We use a CSS media query check or just rely on the fact that 
-    // mobile layout ignores 'currentIndex' visually.
-    // However, for React rendering logic, we need to know which state to use.
-    
-    // Simplification: We will use `isActive` for styling classes.
-    // The CSS handles showing/hiding based on viewport.
     if (window.innerWidth <= 900) {
       return index === mobileActiveIndex;
     }
@@ -123,7 +114,6 @@ const HeroCarousel = () => {
         <div className="cards-wrapper">
           {categories.map((item, index) => {
             const position = getCardPosition(index);
-            // Dynamic Active Check (Responds to Mobile Scroll or Desktop Hover)
             const isActive = isCardActive(index); 
 
             return (
@@ -147,7 +137,6 @@ const HeroCarousel = () => {
                   <motion.img 
                     src={item.image} 
                     alt={item.title} 
-                    // Image Transition: Zoom in when active
                     animate={{ scale: isActive ? 1.15 : 1 }}
                     transition={{ duration: 0.8, ease: "easeOut" }}
                   />

@@ -44,12 +44,20 @@ const Navbar = () => {
               <Menu size={28} />
             </button>
 
+            {/* NEW: Mobile Theme Toggle (Placed right after Hamburger) */}
+            <button 
+              className="icon-btn theme-toggle mobile-only" 
+              onClick={toggleTheme} 
+              aria-label="Toggle Theme"
+            >
+              {theme === 'light' ? <Moon size={26} /> : <Sun size={26} />}
+            </button>
+
             {/* Desktop: Navigation Links */}
             <ul className="desktop-links desktop-only">
               <li><a href="#men">MEN</a></li>
               <li><a href="#women">WOMEN</a></li>
               <li><a href="#kids">KIDS</a></li>
-              {/* Added distinct red link typical of sales */}
               <li className="highlight-link"><a href="#sale">SALE</a></li> 
             </ul>
           </div>
@@ -76,11 +84,15 @@ const Navbar = () => {
               <Search size={26} />
             </button>
 
-            {/* Icons (Wishlist, Cart, Profile, THEME TOGGLE) */}
+            {/* Icons */}
             <div className="nav-icons">
               
-              {/* Theme Toggle Button */}
-              <button className="icon-btn theme-toggle" onClick={toggleTheme} aria-label="Toggle Theme">
+              {/* CHANGED: Desktop Theme Toggle (Hidden on Mobile now) */}
+              <button 
+                className="icon-btn theme-toggle desktop-only" 
+                onClick={toggleTheme} 
+                aria-label="Toggle Theme"
+              >
                 {theme === 'light' ? <Moon size={26} /> : <Sun size={26} />}
               </button>
 
@@ -98,7 +110,7 @@ const Navbar = () => {
           </div>
         </div>
 
-        {/* --- MOBILE SEARCH BAR (Conditional Render) --- */}
+        {/* --- MOBILE SEARCH BAR --- */}
         <div className={`mobile-search-container ${showMobileSearch ? 'active' : ''}`}>
           <input type="text" placeholder="What are you looking for?" autoFocus />
           <Search size={20} className="mobile-search-submit"/>
