@@ -1,0 +1,211 @@
+/* Footer.css */
+
+/* --- FOOTER CONTAINER --- */
+.footer {
+  /* Use secondary background to distinguish from main body content */
+  background-color: var(--bg-secondary); 
+  color: var(--text-main);
+  padding: 3rem 1.5rem;
+  font-family: var(--font-main);
+  border-top: 1px solid var(--border-color);
+  
+  /* Smooth transition for theme switching */
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+.footer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.footer-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.highlight-text {
+  /* Highlighting text with the 'active' accent color (Forest Green) */
+  color: var(--accent-active); 
+}
+
+/* --- THE TRIGGER BUTTON (Mobile Only) --- */
+.know-more-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+  cursor: pointer;
+  user-select: none;
+  background-color: transparent; /* Transparent so it takes the footer bg */
+  color: var(--text-main);
+}
+
+/* Arrow Animation */
+.chevron-icon {
+  width: 20px;
+  height: 20px;
+  transition: transform 0.4s ease;
+  color: var(--text-secondary);
+}
+
+.rotate-180 {
+  transform: rotate(180deg);
+}
+
+/* --- COLLAPSIBLE CONTAINER --- */
+/* MOBILE DEFAULT: Hidden (Height 0) */
+.footer-collapsible {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s ease-in-out, opacity 0.5s ease-in-out;
+  opacity: 0;
+}
+
+/* MOBILE OPEN: Expanded */
+.footer-collapsible.open {
+  max-height: 2000px; 
+  opacity: 1;
+}
+
+/* --- DESKTOP OVERRIDES --- */
+@media (min-width: 1024px) {
+  /* Hide the "Know More" button on Desktop */
+  .know-more-section {
+    display: none;
+  }
+
+  /* Always show footer content on Desktop */
+  .footer-collapsible {
+    max-height: none !important;
+    overflow: visible !important;
+    opacity: 1 !important;
+  }
+}
+
+/* --- GRID SYSTEM --- */
+.footer-links-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Mobile: 2 columns */
+  gap: 2.5rem 1.5rem; 
+  text-align: left; 
+  margin-top: 1rem;
+}
+
+@media (min-width: 1024px) {
+  .footer-links-grid {
+    grid-template-columns: repeat(4, 1fr); /* Desktop: 4 columns */
+  }
+}
+
+/* Link Columns */
+.footer-column h4 {
+  color: var(--text-main);
+  font-weight: 700;
+  margin-bottom: 1.25rem;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.footer-column ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-column ul li {
+  margin-bottom: 0.75rem;
+}
+
+.footer-column a {
+  text-decoration: none;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  transition: color 0.2s ease;
+}
+
+.footer-column a:hover {
+  /* Hover effect uses the Steel Blue accent */
+  color: var(--accent-hover); 
+}
+
+/* Specific "View More" link style */
+.view-more {
+  color: var(--accent-hover) !important;
+  font-weight: 600;
+}
+
+/* Feature Rows (Icons with text) */
+.feature-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-bottom: 0.75rem;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.feature-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 0.75rem;
+  color: var(--text-main); 
+  flex-shrink: 0;
+}
+
+/* --- SOCIAL & PAYMENT --- */
+.social-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 3rem;
+  flex-wrap: wrap;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.social-icon-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  color: white; /* Icons stay white inside the colored circles */
+  text-decoration: none;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.social-icon-wrapper:hover {
+  transform: translateY(-3px);
+  opacity: 0.9;
+}
+
+.social-svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+}
+
+/* Social Colors (kept specific for branding) */
+.bg-fb { background-color: #2563eb; }
+.bg-insta { background-color: #db2777; }
+.bg-snap { background-color: #eab308; }
+.bg-twitter { background-color: #000000; }
+/* Dark mode check: if background is dark, Twitter icon might need a white border or change */
+[data-theme="dark"] .bg-twitter { border: 1px solid #333; }
+
+/* Payment Methods */
+.copyright {
+  text-align: center;
+  margin-top: 2rem;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  opacity: 0.8;
+}

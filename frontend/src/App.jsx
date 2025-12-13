@@ -1,6 +1,7 @@
 import Navbar from './components/Navbar'
 import HeroCarousel  from './components/HeroCarousel';
 import HomePage from './HomePage.jsx'
+import Footer from './components/Footer.jsx';
 
 function App() {
   
@@ -10,6 +11,9 @@ function App() {
       <Navbar/>
       <HeroCarousel/>
       <HomePage/>
+
+      {/* Footer Component */}
+      <Footer/>
     </div>
   )
 }
