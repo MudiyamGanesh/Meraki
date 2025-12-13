@@ -137,6 +137,7 @@ const Navbar = () => {
           <a href="#men" className="drawer-link">Men <ChevronRight size={16} /></a>
           <a href="#women" className="drawer-link">Women <ChevronRight size={16} /></a>
           <a href="#kids" className="drawer-link">Kids <ChevronRight size={16} /></a>
+          <a href="own_design.jsx" className="drawer-link">Make your design<ChevronRight size={16} /></a>
           <a href="#sale" className="drawer-link highlight">Exclusive Sale <ChevronRight size={16} /></a>
         </div>
         
