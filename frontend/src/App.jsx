@@ -1,23 +1,38 @@
+import React, { useState } from 'react'; // Import useState
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { WishlistProvider } from './Context/WishlistContext.jsx';
-
+import { WishlistProvider } from './Context/WishlistContext';
+import SneakerDrop from './components/SneakerDrop';
 import Navbar from './components/Navbar';
+import SubNavbar from './components/SubNavbar'; // Import new component
 import HeroCarousel from './components/HeroCarousel';
 import HomePage from './HomePage.jsx';
 import Footer from './components/Footer.jsx';
 import ShowPage from './ShopPage.jsx';
-import WishlistPage from './WishlistPage.jsx'; 
+import WishlistPage from './WishlistPage.jsx';
 
-// Create a component for the main Home Page content to keep App clean
-const MainHome = () => (
+// Main Home Component wrapper to handle props passing
+const MainHome = ({ activeTab, setActiveTab }) => (
   <>
-    <HeroCarousel />
-    <HomePage />
-    <ShowPage />
+    <SubNavbar activeTab={activeTab} setActiveTab={setActiveTab} />
+    
+    {activeTab === 'Sneakers' ? (
+      <SneakerDrop />
+    ) : (
+      <>
+        {/* Pass activeTab to HeroCarousel so images change */}
+        <HeroCarousel activeTab={activeTab} />
+        
+        <HomePage activeTab={activeTab}/>
+        <ShowPage activeTab={activeTab} />
+      </>
+    )}
   </>
 );
 
 function App() {
+  // State for Men/Women tabs (Default to 'Men')
+  const [activeTab, setActiveTab] = useState('Men');
+
   return (
     <WishlistProvider>
       <Router>
@@ -25,7 +40,8 @@ function App() {
           <Navbar />
           
           <Routes>
-            <Route path="/Meraki" element={<MainHome />} />
+            {/* Pass state to MainHome */}
+            <Route path="/Meraki" element={<MainHome activeTab={activeTab} setActiveTab={setActiveTab} />} />
             <Route path="/Meraki/wishlist" element={<WishlistPage />} />
           </Routes>
 

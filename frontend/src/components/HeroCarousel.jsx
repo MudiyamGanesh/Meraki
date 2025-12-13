@@ -1,9 +1,10 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useLayoutEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronLeft, ChevronRight, PlayCircle } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import "../css/HeroCarousel.css";
 
-const categories = [
+// --- DATA SETS ---
+const menSlides = [
   {
     id: 1,
     title: "Summer Linen",
@@ -20,37 +21,92 @@ const categories = [
   },
   {
     id: 3,
-    title: "Festive Silk",
-    price: "From ₹2,999",
-    features: ["Hand Embroidered", "Pure Silk", "Limited Edition"],
-    image: "https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=800&q=80",
-  },
-  {
-    id: 4,
-    title: "Winter Wool",
+    title: "Urban Street",
     price: "From ₹2,499",
-    features: ["Merino Wool", "Thermal lining", "Classic Cuts"],
-    image: "https://images.unsplash.com/photo-1434389677669-e08b4cac3105?auto=format&fit=crop&w=800&q=80",
-  },
-  {
-    id: 5,
-    title: "Active Wear",
-    price: "From ₹799",
-    features: ["Sweat Wicking", "4-Way Stretch", "High Impact"],
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSPE7ngAJZqfTdFlyJaBa8CbStXjWQAAFgOtA&s",
+    features: ["Heavy Cotton", "Oversized", "Graphic Prints"],
+    image: "https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?auto=format&fit=crop&w=800&q=80",
   }
 ];
 
-const HeroCarousel = () => {
-  const [currentIndex, setCurrentIndex] = useState(1); // Desktop Active
-  const [mobileActiveIndex, setMobileActiveIndex] = useState(0); // Mobile Active
+const womenSlides = [
+  {
+    id: 101,
+    title: "Boho Chic",
+    price: "From ₹1,299",
+    features: ["Flowy Silhouette", "Floral Patterns", "Lightweight"],
+    image: "https://images.unsplash.com/photo-1496747611176-843222e1e57c?auto=format&fit=crop&w=800&q=80",
+  },
+  {
+    id: 102,
+    title: "Power Suits",
+    price: "From ₹3,999",
+    features: ["Tailored Fit", "Premium Blend", "Office Ready"],
+    image: "https://si.wsj.net/public/resources/images/BN-VB698_SUITS0_M_20170912112340.jpg",
+  },
+  {
+    id: 103,
+    title: "Evening Elegance",
+    price: "From ₹2,499",
+    features: ["Silk Satin", "Maxi Length", "Bold Colors"],
+    image: "https://images.unsplash.com/photo-1566174053879-31528523f8ae?auto=format&fit=crop&w=800&q=80",
+  }
+];
+
+// Receive activeTab prop
+const HeroCarousel = ({ activeTab = 'Men' }) => {
+  const categories = activeTab === 'Women' ? womenSlides : menSlides;
+  
+  const [currentIndex, setCurrentIndex] = useState(0); 
+  const [mobileActiveIndex, setMobileActiveIndex] = useState(0);
   const [hoveredIndex, setHoveredIndex] = useState(null);
   
-  // Refs for mobile scroll detection
   const scrollRef = useRef(null);
   const cardRefs = useRef([]);
-
   const length = categories.length;
+
+  // --- 1. FORCE SCROLL RESET ON MOUNT & TAB CHANGE ---
+  // useLayoutEffect runs BEFORE the paint, preventing visual glitching
+  useLayoutEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollLeft = 0; // Hard reset DOM property
+    }
+    setCurrentIndex(0);
+    setMobileActiveIndex(0);
+  }, [activeTab, categories]);
+
+
+  // --- 2. MOBILE SCROLL OBSERVER ---
+  useEffect(() => {
+    const observerCallback = (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const index = Number(entry.target.getAttribute("data-index"));
+          // Safety: ensure index is a valid number
+          if (!isNaN(index)) {
+            setMobileActiveIndex(index);
+          }
+        }
+      });
+    };
+
+    const observer = new IntersectionObserver(observerCallback, {
+      root: scrollRef.current,
+      threshold: 0.5, // 50% visibility required
+    });
+
+    // Small timeout ensures DOM is fully painted before observing
+    const timeoutId = setTimeout(() => {
+      cardRefs.current.forEach((card) => {
+        if (card) observer.observe(card);
+      });
+    }, 150);
+
+    return () => {
+      observer.disconnect();
+      clearTimeout(timeoutId);
+    };
+  }, [categories]); // Re-run when data changes
+
 
   // --- DESKTOP NAVIGATION ---
   const nextSlide = () => {
@@ -60,52 +116,8 @@ const HeroCarousel = () => {
     setCurrentIndex((prev) => (prev === 0 ? length - 1 : prev - 1));
   };
 
-  // --- MOBILE SCROLL DETECTION ---
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const index = Number(entry.target.getAttribute("data-index"));
-            setMobileActiveIndex(index);
-          }
-        });
-      },
-      {
-        root: scrollRef.current,
-        threshold: 0.6,
-      }
-    );
-
-    cardRefs.current.forEach((card) => {
-      if (card) observer.observe(card);
-    });
-
-    return () => observer.disconnect();
-  }, []);
-
-
-  // --- HELPER LOGIC ---
-  const getCardPosition = (index) => {
-    const prevIndex = (currentIndex - 1 + length) % length;
-    const nextIndex = (currentIndex + 1) % length;
-    if (index === currentIndex) return "center";
-    if (index === prevIndex) return "left";
-    if (index === nextIndex) return "right";
-    return "hidden";
-  };
-
-  const isCardActive = (index) => {
-    if (window.innerWidth <= 900) {
-      return index === mobileActiveIndex;
-    }
-    if (hoveredIndex !== null) return hoveredIndex === index;
-    return index === currentIndex;
-  };
-
   return (
     <div className="carousel-section">
-      
       <div className="carousel-track-container" ref={scrollRef}>
         <button onClick={prevSlide} className="nav-arrow left-arrow">
           <ChevronLeft size={40} strokeWidth={2.5} />
@@ -113,8 +125,18 @@ const HeroCarousel = () => {
 
         <div className="cards-wrapper">
           {categories.map((item, index) => {
-            const position = getCardPosition(index);
-            const isActive = isCardActive(index); 
+            // Calculate Desktop Position
+            const position = (index === currentIndex) ? "center" : 
+                             (index === (currentIndex - 1 + length) % length) ? "left" : 
+                             (index === (currentIndex + 1) % length) ? "right" : "hidden";
+            
+            // LOGIC:
+            // Mobile: use mobileActiveIndex
+            // Desktop: use Hover or CurrentIndex
+            const isMobile = window.innerWidth <= 900;
+            const isActive = isMobile 
+                ? index === mobileActiveIndex 
+                : (hoveredIndex !== null ? hoveredIndex === index : index === currentIndex);
 
             return (
               <motion.div
@@ -124,7 +146,6 @@ const HeroCarousel = () => {
                 className={`card ${isActive ? "active" : "inactive"} ${position}`}
                 onMouseEnter={() => setHoveredIndex(index)}
                 onMouseLeave={() => setHoveredIndex(null)}
-                
                 layout
                 animate={{ 
                   scale: isActive ? 1.05 : 0.95, 
@@ -132,35 +153,27 @@ const HeroCarousel = () => {
                 }}
                 transition={{ type: "spring", stiffness: 300, damping: 25 }}
               >
-                {/* --- IMAGE LAYER --- */}
+                {/* Image */}
                 <div className="card-image-box">
                   <motion.img 
                     src={item.image} 
                     alt={item.title} 
                     animate={{ scale: isActive ? 1.15 : 1 }}
-                    transition={{ duration: 0.8, ease: "easeOut" }}
+                    transition={{ duration: 0.8 }}
                   />
                 </div>
 
-                 {isActive}
-
-                {/* --- TEXT LAYER --- */}
+                {/* Content */}
                 <div className="card-content">
-                  <motion.h3 className="card-title" layout>
-                    {item.title}
-                  </motion.h3>
+                  <motion.h3 className="card-title">{item.title}</motion.h3>
                   
-                  {/* --- ANIMATED DETAILS --- */}
-                  {/* AnimatePresence ensures exit animations play when switching cards */}
                   <AnimatePresence mode="wait">
                     {isActive && (
                       <motion.div
-                         className="details-container"
-                         // Animation: Fade In + Slide Up
-                         initial={{ opacity: 0, y: 15, height: 0 }}
-                         animate={{ opacity: 1, y: 0, height: "auto" }}
-                         exit={{ opacity: 0, y: 10, height: 0 }}
-                         transition={{ duration: 0.4, ease: "easeOut" }}
+                          className="details-container"
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: "auto" }}
+                          exit={{ opacity: 0, height: 0 }}
                       >
                         <p className="card-price">{item.price}</p>
                         <ul className="card-features">
@@ -172,14 +185,6 @@ const HeroCarousel = () => {
                     )}
                   </AnimatePresence>
                 </div>
-
-                {isActive && (
-                  <motion.div 
-                    className="active-border" 
-                    layoutId="activeBorder"
-                    style={{ zIndex: 30 }}
-                  />
-                )}
               </motion.div>
             );
           })}

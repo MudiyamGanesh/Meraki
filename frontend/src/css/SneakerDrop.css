@@ -1,0 +1,172 @@
+.sneaker-drop-container {
+  min-height: 80vh;
+  background-color: #000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  position: relative;
+  overflow: hidden;
+  color: white;
+}
+
+/* Glitch Title */
+.glitch-text {
+  font-size: 5rem;
+  font-weight: 900;
+  letter-spacing: 5px;
+  position: relative;
+  color: white;
+  margin-bottom: 40px;
+  text-transform: uppercase;
+}
+
+.glitch-text::before, .glitch-text::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.glitch-text::before {
+  left: 2px;
+  text-shadow: -1px 0 #ff00c1;
+  clip: rect(44px, 450px, 56px, 0);
+  animation: glitch-anim 5s infinite linear alternate-reverse;
+}
+
+.glitch-text::after {
+  left: -2px;
+  text-shadow: -1px 0 #00fff9;
+  clip: rect(44px, 450px, 56px, 0);
+  animation: glitch-anim2 5s infinite linear alternate-reverse;
+}
+
+/* Drop Card */
+.drop-card {
+  background: rgba(25, 25, 25, 0.9);
+  border: 1px solid #333;
+  border-radius: 20px;
+  padding: 40px;
+  text-align: center;
+  max-width: 500px;
+  width: 100%;
+  box-shadow: 0 0 50px rgba(0, 255, 249, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+.drop-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #222;
+  padding: 5px 15px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  color: #ff00c1;
+  font-weight: bold;
+  margin-bottom: 20px;
+  border: 1px solid #ff00c1;
+}
+
+.mystery-shoe {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+  border-radius: 10px;
+  filter: grayscale(100%) contrast(1.2);
+  margin-bottom: 30px;
+  transition: filter 0.3s;
+}
+
+.drop-card:hover .mystery-shoe {
+  filter: grayscale(0%) contrast(1);
+}
+
+/* Timer */
+.timer-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  font-family: monospace;
+  margin-bottom: 30px;
+}
+
+.time-unit {
+  display: flex;
+  flex-direction: column;
+}
+
+.time-unit span {
+  font-size: 2.5rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.time-unit label {
+  font-size: 0.7rem;
+  color: #888;
+}
+
+.colon {
+  font-size: 2rem;
+  color: #555;
+  margin-top: -15px;
+}
+
+/* Notify Form */
+.notify-form {
+  display: flex;
+  gap: 10px;
+}
+
+.notify-form input {
+  flex: 1;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #444;
+  background: #111;
+  color: white;
+  outline: none;
+}
+
+.notify-form button {
+  background: linear-gradient(45deg, #ff00c1, #333399);
+  border: none;
+  padding: 0 20px;
+  border-radius: 8px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.success-msg {
+  color: #00fff9;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+@keyframes glitch-anim {
+  0% { clip: rect(4px, 9999px, 81px, 0); }
+  20% { clip: rect(66px, 9999px, 14px, 0); }
+  /* ... simplified for brevity ... */
+  100% { clip: rect(33px, 9999px, 6px, 0); }
+}
+
+@keyframes glitch-anim2 {
+  0% { clip: rect(22px, 9999px, 4px, 0); }
+  100% { clip: rect(76px, 9999px, 44px, 0); }
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  .glitch-text { font-size: 2.5rem; }
+  .notify-form { flex-direction: column; }
+}
