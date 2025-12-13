@@ -104,12 +104,16 @@
 
 /* Link Columns */
 .footer-column h4 {
-  color: var(--text-main);
+  color: #dc2626;
   font-weight: 700;
   margin-bottom: 1.25rem;
   font-size: 0.9rem;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+}
+
+[data-theme="dark"] .footer-column h4 {
+  color: var(--text-main);
 }
 
 .footer-column ul {

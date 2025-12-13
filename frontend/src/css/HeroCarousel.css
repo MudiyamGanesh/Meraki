@@ -151,7 +151,7 @@
 .nav-arrow {
   background: white;
   border: none;
-  color: #5D7A9E;
+  color: var(--bg-primary);
   width: 60px;
   height: 60px;
   border-radius: 50%;
@@ -166,7 +166,7 @@
 }
 
 .nav-arrow:hover {
-  background: #C16E4D; 
+  background: #5D7A9E; 
   color: white;
   transform: scale(1.1);
   box-shadow: 0 15px 40px rgba(193, 110, 77, 0.3);

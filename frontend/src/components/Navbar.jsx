@@ -1,11 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Menu, Search, ShoppingCart, Heart, User, X, ChevronRight, Sun, Moon } from 'lucide-react';
+import { Link } from 'react-router-dom'; // 1. Import Link
+import { useWishlist } from '../Context/WishlistContext'; // 2. Import Context
 import '../css/Navbar.css';
 
 const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [showMobileSearch, setShowMobileSearch] = useState(false);
   
+  // 3. Get wishlist data to show the count badge
+  const { wishlist } = useWishlist();
+
   // Initialize theme from localStorage or default to 'light'
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
 
@@ -55,6 +60,7 @@ const Navbar = () => {
 
             {/* Desktop: Navigation Links */}
             <ul className="desktop-links desktop-only">
+              {/* Changed href to Link if these pages exist, otherwise keep anchors for sections */}
               <li><a href="#men">MEN</a></li>
               <li><a href="#women">WOMEN</a></li>
               <li><a href="#kids">KIDS</a></li>
@@ -64,7 +70,8 @@ const Navbar = () => {
 
           {/* --- CENTER SECTION (LOGO) --- */}
           <div className="nav-center">
-            <a href="/" className="brand-logo">रीति</a>
+            {/* Use Link here too so it doesn't refresh the page */}
+            <Link to="/Meraki" className="brand-logo">रीति</Link>
           </div>
 
           {/* --- RIGHT SECTION --- */}
@@ -99,9 +106,22 @@ const Navbar = () => {
               <button className="icon-btn desktop-only">
                 <User size={26} />
               </button>
-              <button className="icon-btn">
-                <Heart size={26} />
-              </button>
+              
+              {/* --- UPDATED WISHLIST LINK --- */}
+              <Link to="/Meraki/wishlist" className="icon-btn">
+                <Heart 
+                  size={26} 
+                  // Fill red if items exist
+                  fill={wishlist.length > 0 ? "#d32f2f" : "none"} 
+                  color={wishlist.length > 0 ? "#d32f2f" : "currentColor"}
+                />
+                {/* Badge Logic: Only show if items > 0 */}
+                {wishlist.length > 0 && (
+                   <span className="badge">{wishlist.length}</span>
+                )}
+              </Link>
+              {/* ----------------------------- */}
+
               <button className="icon-btn cart-btn">
                 <ShoppingCart size={26} />
                 <span className="badge">3</span>
@@ -133,10 +153,17 @@ const Navbar = () => {
             <User size={20} /> Login / Register
           </a>
           <hr />
-          <a href="#home" className="drawer-link">Home <ChevronRight size={16} /></a>
+          {/* Update Drawer Links to use Routes if needed, or keep anchors for scrolling */}
+          <Link to="/" className="drawer-link" onClick={() => setMobileMenuOpen(false)}>Home <ChevronRight size={16} /></Link>
           <a href="#men" className="drawer-link">Men <ChevronRight size={16} /></a>
           <a href="#women" className="drawer-link">Women <ChevronRight size={16} /></a>
           <a href="#kids" className="drawer-link">Kids <ChevronRight size={16} /></a>
+          
+          {/* Add Wishlist to Mobile Menu as well for good UX */}
+          <Link to="/wishlist" className="drawer-link" onClick={() => setMobileMenuOpen(false)}>
+            My Wishlist ({wishlist.length}) <ChevronRight size={16} />
+          </Link>
+
           <a href="#sale" className="drawer-link highlight">Exclusive Sale <ChevronRight size={16} /></a>
         </div>
         
