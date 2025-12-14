@@ -123,3 +123,9 @@
     margin-top: 3px;
   }
 }
+
+@media (min-width: 901px) {
+  .sub-navbar {
+    display: none !important;
+  }
+}

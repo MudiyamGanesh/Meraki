@@ -92,7 +92,7 @@ body {
 
 .desktop-links a {
   text-decoration: none;
-  color: var(--text-main);
+  color: var(--white);
   font-weight: 700;
   font-size: 14px;
   letter-spacing: 0.5px;
@@ -102,31 +102,71 @@ body {
   padding-bottom: 4px;
 }
 
-.desktop-links a:hover {
-  color: var(--accent-hover);
-  border-bottom: 2px solid var(--accent-hover);
-}
-
-.desktop-links a:active {
-  color: var(--accent-active);
-  border-bottom-color: var(--accent-active);
-  transition: 0.1s;
-}
-
-.desktop-links a:focus {
-  outline: none;
-  border-bottom: 2px solid var(--accent-hover);
-}
-
 .highlight-link a {
-  color: var(--accent-active); 
+  color: var(--sale-red); 
 }
 
 .highlight-link a:hover {
-  filter: brightness(1.2); /* Makes it pop in both themes */
+  filter: brightness(1.2); 
   border-bottom-color: currentColor;
 }
 
+.highlight-link a:active {
+  filter: brightness(0.9); 
+  border-bottom-color: currentColor;
+}
+
+.desktop-links button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-main);
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--white);
+  padding-bottom: 4px;
+  border-bottom: 2px solid transparent;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.desktop-links button:hover {
+  color: rgb(217, 89, 89);
+}
+
+/* --- ACTIVE STATE --- */
+.active-nav-item button {
+  color:rgb(217, 89, 89);
+  border-bottom: 2px solid var(--white);
+}
+
+/* --- SNEAKER BADGE (The Mini 'Drop' Badge) --- */
+.sneaker-nav-item button {
+  position: relative;
+}
+
+.nav-badge {
+  font-size: 8px;
+  background: linear-gradient(45deg, #ff00cc, #333399);
+  color: white;
+  padding: 1px 4px;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  animation: pulse 2s infinite;
+  margin-left: 2px;
+}
+
+/* Ensure links and buttons align nicely */
+.desktop-links li {
+  display: flex;
+  align-items: center;
+}
 /* --- CENTER SECTION (LOGO) --- */
 .nav-center {
   display: flex;
@@ -136,7 +176,7 @@ body {
 .brand-logo {
   font-size: 40px;
   font-weight: 500;
-  color: var(--text-main);
+  color: var(--white);
   text-decoration: none;
   letter-spacing: 1px;
   text-transform: uppercase;
@@ -188,7 +228,7 @@ body {
   transform: translateY(-50%);
   background: none;
   border: none;
-  color: var(--text-main);
+  color: var(--accent-hover);
   cursor: pointer;
   transition: color 0.2s ease;
 }
@@ -208,7 +248,7 @@ body {
   background: none;
   border: none;
   cursor: pointer;
-  color: var(--text-main);
+  color: var(--white);
   display: flex;
   align-items: center;
   position: relative;

@@ -13,16 +13,19 @@ import WishlistPage from './WishlistPage.jsx';
 // Main Home Component wrapper to handle props passing
 const MainHome = ({ activeTab, setActiveTab }) => (
   <>
+    {/* 1. Pass props to Navbar */}
+    <Navbar activeTab={activeTab} setActiveTab={setActiveTab} />
+    
+    {/* 2. SubNavbar (Will auto-hide on desktop via CSS) */}
     <SubNavbar activeTab={activeTab} setActiveTab={setActiveTab} />
     
+    {/* Logic for Sneaker Drop vs Normal Content */}
     {activeTab === 'Sneakers' ? (
       <SneakerDrop />
     ) : (
       <>
-        {/* Pass activeTab to HeroCarousel so images change */}
         <HeroCarousel activeTab={activeTab} />
-        
-        <HomePage activeTab={activeTab}/>
+        <HomePage activeTab={activeTab} />
         <ShowPage activeTab={activeTab} />
       </>
     )}
