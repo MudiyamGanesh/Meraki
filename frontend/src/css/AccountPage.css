@@ -1,0 +1,437 @@
+/* src/css/AccountPage.css */
+
+/* --- ACCOUNT PAGE LAYOUT --- */
+.account-page {
+  /* Offset for fixed navbar */
+  min-height: calc(100vh - 80px);
+  padding: 40px 20px;
+  background-color: var(--bg-primary);
+  color: var(--text-main);
+  font-family: var(--font-main);
+  /* PREVENT OVERFLOW */
+  width: 100%;
+  overflow-x: hidden; 
+}
+
+.account-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 280px 1fr; /* Sidebar | Content */
+  gap: 30px;
+  align-items: start;
+}
+
+/* --- SIDEBAR (Desktop) --- */
+.account-sidebar {
+  background-color: var(--bg-input);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 25px;
+  position: sticky;
+  top: 100px; 
+  box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+  z-index: 10;
+}
+
+/* User Profile Mini-Card */
+.user-mini-profile {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding-bottom: 20px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.avatar-circle {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent-active), var(--accent-hover));
+  color: var(--white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+.user-info h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 0;
+  color: var(--text-main);
+}
+
+.user-info p {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 140px;
+}
+
+/* Navigation Links */
+.account-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  text-align: left;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: var(--font-main);
+}
+
+.nav-item:hover {
+  background-color: var(--bg-primary);
+  color: var(--text-main);
+}
+
+.nav-item.active {
+  background-color: var(--bg-primary);
+  color: var(--accent-active);
+  border-left: 4px solid var(--accent-active);
+}
+
+.nav-divider {
+  height: 1px;
+  background-color: var(--border-color);
+  margin: 10px 0;
+}
+
+.nav-item.logout {
+  color: var(--sale-red);
+}
+.nav-item.logout:hover {
+  background-color: rgba(211, 47, 47, 0.05);
+}
+
+/* --- MAIN CONTENT AREA --- */
+.account-content {
+  background-color: var(--bg-input);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 40px;
+  min-height: 500px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+  /* Prevent content from overflowing container */
+  max-width: 100%;
+}
+
+.section-header h2 {
+  font-size: 1.8rem;
+  font-weight: 800;
+  margin-bottom: 10px;
+  color: var(--text-main);
+}
+
+.section-header p {
+  color: var(--text-secondary);
+  margin-bottom: 30px;
+  line-height: 1.6;
+}
+
+/* Stats Cards */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-bottom: 40px;
+}
+
+.stat-card {
+  background-color: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  cursor: pointer;
+  transition: transform 0.2s, border-color 0.2s;
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--accent-hover);
+}
+
+.icon-box {
+  width: 45px;
+  height: 45px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.icon-box.blue { background: rgba(93, 122, 158, 0.15); color: var(--accent-hover); }
+.icon-box.green { background: rgba(74, 109, 94, 0.15); color: var(--accent-active); }
+.icon-box.purple { background: rgba(147, 51, 234, 0.15); color: #9333ea; }
+
+.stat-info span { font-size: 0.8rem; color: var(--text-secondary); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; }
+.stat-info h3 { margin: 5px 0 0; font-size: 1.5rem; font-weight: 800; color: var(--text-main); }
+
+/* --- RECENT ORDERS --- */
+.preview-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.preview-header h3 { font-size: 1.1rem; color: var(--text-main); font-weight: 700; }
+.preview-header button {
+  background: none; border: none; color: var(--accent-hover);
+  font-weight: 700; cursor: pointer; font-size: 0.9rem;
+}
+
+.order-preview-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  margin-bottom: 10px;
+  transition: background-color 0.2s;
+  cursor: pointer;
+  background-color: var(--bg-primary); /* Ensure contrast */
+}
+
+.order-preview-item:hover { background-color: var(--bg-secondary); }
+
+.order-info { display: flex; flex-direction: column; gap: 4px; }
+.order-id { font-weight: 700; color: var(--text-main); }
+.order-date { font-size: 0.85rem; color: var(--text-secondary); }
+
+.badge-success {
+  background-color: var(--accent-active);
+  color: var(--white);
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+/* --- ADDRESS GRID --- */
+.address-grid {
+  display: grid;
+  /* Auto-fit but min 250px causes issues on mobile if padding exists. See mobile query for fix */
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); 
+  gap: 20px;
+}
+
+.address-card, .add-new-card {
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 20px;
+  background-color: var(--bg-primary);
+  position: relative;
+}
+
+.add-new-card {
+  border-style: dashed;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  cursor: pointer;
+  min-height: 150px;
+}
+
+.add-new-card:hover { border-color: var(--accent-active); color: var(--accent-active); }
+
+/* --- FORMS --- */
+.settings-form { max-width: 500px; width: 100%; }
+.form-group { margin-bottom: 20px; }
+.form-group label {
+  display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem; color: var(--text-main);
+}
+.form-group input {
+  width: 100%;
+  padding: 12px 15px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-primary);
+  color: var(--text-main);
+  font-size: 1rem;
+  outline: none;
+  /* Crucial for mobile width */
+  box-sizing: border-box; 
+  transition: border-color 0.2s;
+}
+.form-group input:focus { border-color: var(--accent-hover); }
+.form-group input:disabled { opacity: 0.6; cursor: not-allowed; background-color: var(--bg-secondary); }
+
+.btn-save {
+  padding: 12px 30px;
+  background-color: var(--text-main);
+  color: var(--bg-primary);
+  border: none;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+  width: 100%; /* Full width on small screens by default */
+  max-width: 200px; /* Limit on desktop */
+  transition: opacity 0.2s;
+}
+.btn-save:hover { opacity: 0.9; }
+
+/* Empty State */
+.empty-state-box {
+  text-align: center;
+  padding: 50px 20px;
+  border: 2px dashed var(--border-color);
+  border-radius: 12px;
+  color: var(--text-secondary);
+}
+
+/* Animations */
+.fade-in { animation: fadeIn 0.3s ease-out; }
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ========================================= */
+/* MOBILE RESPONSIVE VIEW (FIXED WIDTH)      */
+/* ========================================= */
+
+@media (max-width: 900px) {
+  .account-page {
+    /* Reduce padding to maximize space */
+    padding: 15px;
+    padding-top: 15px;
+    width: 100vw; /* Force viewport width */
+    max-width: 100%; /* Prevent overflow */
+    overflow-x: hidden;
+  }
+
+  .account-container {
+    display: flex;
+    flex-direction: column; /* Strictly Stack */
+    width: 100%;
+    gap: 20px;
+  }
+
+  /* --- 1. Top Scrollable Nav --- */
+  .account-sidebar {
+    position: relative;
+    top: 0;
+    padding: 0;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    border-radius: 0;
+    width: 100%;
+    overflow: hidden; /* Contains the scrollbar inside */
+  }
+
+  .user-mini-profile { display: none; }
+
+  .account-nav {
+    flex-direction: row; /* Horizontal tabs */
+    overflow-x: auto; /* Scrollable */
+    padding-bottom: 5px;
+    gap: 10px;
+    width: 100%;
+    
+    /* Smooth scrolling */
+    -webkit-overflow-scrolling: touch;
+    
+    /* Hide Scrollbar */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  
+  .account-nav::-webkit-scrollbar { display: none; }
+
+  .nav-item {
+    background-color: var(--bg-input);
+    border: 1px solid var(--border-color);
+    border-radius: 20px; /* Pill shape */
+    padding: 8px 16px;
+    white-space: nowrap; /* Keep text on one line */
+    font-size: 0.85rem;
+    flex-shrink: 0; /* Prevent shrinking */
+    justify-content: center;
+  }
+
+  .nav-item.active {
+    background-color: var(--text-main);
+    color: var(--bg-primary);
+    border-color: var(--text-main);
+    border-left: 1px solid var(--text-main); /* Reset desktop style */
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  }
+
+  .nav-divider, .nav-item.logout { display: none; }
+
+  /* --- 2. Content Area Fixes --- */
+  .account-content {
+    padding: 0; /* Remove internal padding to save space */
+    background: transparent; 
+    border: none;
+    box-shadow: none;
+    width: 100%;
+  }
+
+  /* --- 3. Grid Fixes (Force Single Column) --- */
+  .stats-grid {
+    grid-template-columns: 1fr; /* Stack 1 on top of another */
+    gap: 15px;
+  }
+
+  .address-grid {
+    /* Override desktop minmax to ensure it fits mobile */
+    grid-template-columns: 1fr; 
+  }
+
+  .stat-card, .address-card, .add-new-card {
+    background-color: var(--bg-input); /* Add bg back since content area is transparent */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+  }
+
+  /* --- 4. Order List Fixes --- */
+  .order-preview-item {
+    background-color: var(--bg-input);
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    width: 100%;
+  }
+
+  .order-status {
+    align-self: flex-start;
+    margin-top: 5px;
+  }
+
+  /* Hide arrows on mobile to save horizontal space */
+  .arrow { display: none; }
+  
+  /* Buttons full width */
+  .btn-save { max-width: 100%; }
+}

@@ -1,0 +1,408 @@
+/* src/css/DesignStudio.css */
+
+/* --- 1. MAIN LAYOUT & WRAPPER --- */
+.design-wrapper {
+  display: flex;
+  height: calc(100vh - 70px); /* Subtract Navbar height */
+  margin-top: -10px; /* Push down below fixed navbar */
+  background-color: var(--bg-primary); /* Theme Background */
+  font-family: var(--font-main);
+  color: var(--text-main);
+  overflow: hidden;
+  position: relative;
+}
+
+/* --- 2. LEFT SIDEBAR (Views) --- */
+.view-sidebar {
+  width: 100px;
+  background-color: var(--bg-input); /* Theme Surface */
+  border-right: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 20px;
+  gap: 20px;
+  z-index: 10;
+  box-shadow: 2px 0 10px rgba(0,0,0,0.02);
+}
+
+.view-option {
+  cursor: pointer;
+  opacity: 0.5;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.view-option.active {
+  opacity: 1;
+  transform: scale(1.05);
+}
+
+.view-thumb {
+  width: 60px;
+  height: 60px;
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 5px;
+  object-fit: contain;
+  background: var(--bg-primary);
+  margin-bottom: 8px;
+  transition: border-color 0.3s;
+}
+
+.view-option.active .view-thumb {
+  border: 2px solid var(--text-main); /* Active Border */
+}
+
+.view-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-secondary);
+}
+
+/* --- 3. CENTER CANVAS --- */
+.canvas-area {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--bg-primary);
+  position: relative;
+  /* Subtle grid pattern for professional feel */
+  background-image: radial-gradient(var(--border-color) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+.canvas-box {
+  background: white; /* Canvas always white for design accuracy */
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.15);
+  border: 1px solid var(--border-color);
+  border-radius: 4px; /* Slight roundness */
+}
+
+/* --- 4. RIGHT TOOLS PANEL --- */
+.tools-panel {
+  width: 320px;
+  background-color: var(--bg-input);
+  border-left: 1px solid var(--border-color);
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  overflow-y: auto;
+  box-shadow: -2px 0 10px rgba(0,0,0,0.02);
+}
+
+.tools-panel h2 {
+  font-size: 1.5rem;
+  color: var(--text-main);
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 15px;
+  margin-bottom: 5px;
+}
+
+.tool-group h3 {
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: var(--text-secondary);
+  margin-bottom: 15px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.color-options {
+  display: flex;
+  gap: 15px;
+}
+
+.color-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--border-color);
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.color-btn:hover { transform: scale(1.1); }
+.color-btn.selected {
+  box-shadow: 0 0 0 2px var(--bg-input), 0 0 0 4px var(--text-main);
+}
+
+.upload-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 15px;
+  border: 2px dashed var(--border-color);
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--text-secondary);
+  transition: all 0.2s;
+  background-color: var(--bg-primary);
+}
+.upload-btn:hover {
+  background: var(--bg-secondary);
+  border-color: var(--accent-hover);
+  color: var(--accent-hover);
+}
+
+.changeProduct {
+  margin-top: auto;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--accent-active);
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border: none;
+  background: none;
+  padding: 10px 0;
+  transition: color 0.2s;
+}
+/* --- 5. MODAL (Product Selection) --- */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.7); /* Darker backdrop */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  backdrop-filter: blur(8px); /* Modern Glass Effect */
+}
+
+.modal-content {
+  background: var(--bg-input);
+  width: 90%;
+  max-width: 600px;
+  padding: 50px;
+  border-radius: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--border-color);
+}
+
+.modal-title {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--text-main);
+  margin-bottom: 40px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.modal-options {
+  display: flex;
+  gap: 30px;
+  justify-content: center;
+  width: 100%;
+}
+
+.option-card {
+  width: 180px;
+  height: 200px;
+  border: 2px solid var(--border-color);
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: var(--bg-primary);
+}
+
+.option-card:hover {
+  border-color: var(--text-main);
+  transform: translateY(-8px);
+  box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+}
+
+.option-label {
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin-top: 15px;
+  color: var(--text-main);
+}
+
+.modal-product-img {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+  transition: transform 0.3s;
+}
+
+.option-card:hover .modal-product-img {
+  transform: scale(1.1);
+}
+
+/* --- 6. PREVIEW & BUTTONS --- */
+.btn-place-order {
+  width: 100%;
+  padding: 16px;
+  background-color: var(--accent-active); /* Green from theme */
+  color: white;
+  font-size: 1.1rem;
+  font-weight: 700;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  transition: all 0.2s;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.btn-place-order:hover { 
+  background-color: #38a169; /* Slightly lighter green */
+  transform: translateY(-2px);
+}
+
+.btn-confirm {
+  margin-top: auto;
+  width: 100%;
+  padding: 16px;
+  background-color: var(--text-main);
+  color: var(--bg-primary);
+  border: none;
+  border-radius: 12px;
+  font-weight: 800;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: opacity 0.2s;
+}
+.btn-confirm:hover { 
+  opacity: 0.9;
+}
+
+/* Action Button (Crop/Cancel) */
+.action-btn {
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.2s;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+/* --- 7. MOBILE RESPONSIVE VIEW --- */
+@media (max-width: 900px) {
+  .design-wrapper {
+    flex-direction: column; /* Stack vertically */
+    height: auto;
+    min-height: calc(100vh - 70px);
+    overflow-y: auto; /* Enable scrolling on body */
+  }
+
+  /* 1. Sidebar becomes Top Bar */
+  .view-sidebar {
+    width: 100%;
+    height: auto;
+    flex-direction: row; /* Horizontal layout */
+    justify-content: center;
+    padding: 15px;
+    border-right: none;
+    border-bottom: 1px solid var(--border-color);
+    gap: 30px;
+  }
+
+  .view-thumb {
+    width: 50px;
+    height: 50px;
+  }
+  
+  /* Hide "Change Product" text link on mobile to save space, 
+     or style it as a button */
+  .view-sidebar button {
+    font-size: 0.7rem;
+  }
+
+  /* 2. Canvas Area */
+  .canvas-area {
+    padding: 40px 0; /* Add breathing room */
+    min-height: 400px; /* Ensure space for canvas */
+  }
+  
+  /* Scale down the canvas visual wrapper if needed */
+  .canvas-wrapper canvas {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* 3. Tools Panel becomes Bottom Section */
+  .tools-panel {
+    width: 100%;
+    border-left: none;
+    border-top: 1px solid var(--border-color);
+    padding: 20px;
+    box-shadow: none;
+  }
+
+  /* Modal Adjustments */
+  .modal-content {
+    padding: 30px 20px;
+    width: 95%;
+  }
+
+  .modal-options {
+    flex-direction: column; /* Stack options vertically */
+    align-items: center;
+    gap: 15px;
+  }
+
+  .option-card {
+    width: 100%;
+    height: 80px;
+    flex-direction: row; /* Horizontal card */
+    justify-content: flex-start;
+    padding: 0 30px;
+    gap: 20px;
+  }
+
+  .modal-product-img {
+    width: 50px;
+    height: 50px;
+    margin-bottom: 0;
+  }
+
+  .option-label {
+    margin-top: 0;
+  }
+
+  /* Preview Modal on Mobile */
+  .preview-container {
+    gap: 15px;
+  }
+  
+  .preview-img {
+    width: 150px;
+    height: 150px;
+  }
+}

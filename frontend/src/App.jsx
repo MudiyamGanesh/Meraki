@@ -1,27 +1,30 @@
-import React, { useState } from 'react'; // Import useState
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { WishlistProvider } from './Context/WishlistContext';
+import { AuthProvider } from './Context/AuthContext';
+
+// Components
 import SneakerDrop from './components/SneakerDrop';
 import Navbar from './components/Navbar';
 import SubNavbar from './components/SubNavbar';
 import HeroCarousel from './components/HeroCarousel';
-import HomePage from './HomePage.jsx';
 import Footer from './components/Footer.jsx';
-import ShowPage from './ShopPage.jsx';
-import WishlistPage from './WishlistPage.jsx';
-import LoginPage from './LoginPage.jsx';
-import { AuthProvider } from './Context/AuthContext';
 
-// Main Home Component wrapper to handle props passing
+// Pages
+import HomePage from './pages/HomePage.jsx';
+import ShowPage from './pages/ShopPage.jsx'; 
+import WishlistPage from './pages/WishlistPage.jsx';
+import LoginPage from './pages/LoginPage.jsx';
+import CartPage from './pages/CartPage.jsx';
+import AccountPage from './pages/AccountPage.jsx';
+
+import DesignStudio from './components/DesignStudio';
+
+// Main Home Component wrapper
 const MainHome = ({ activeTab, setActiveTab }) => (
   <>
-    {/* 1. Pass props to Navbar */}
-    <Navbar activeTab={activeTab} setActiveTab={setActiveTab} />
-    
-    {/* 2. SubNavbar (Will auto-hide on desktop via CSS) */}
     <SubNavbar activeTab={activeTab} setActiveTab={setActiveTab} />
     
-    {/* Logic for Sneaker Drop vs Normal Content */}
     {activeTab === 'Sneakers' ? (
       <SneakerDrop />
     ) : (
@@ -35,22 +38,25 @@ const MainHome = ({ activeTab, setActiveTab }) => (
 );
 
 function App() {
-  // State for Men/Women tabs (Default to 'Men')
   const [activeTab, setActiveTab] = useState('Men');
 
   return (
     <AuthProvider>
       <WishlistProvider>
         <Router>
-          <div>
-            <Navbar />
+          <div className="app-container">
+            <Navbar activeTab={activeTab} setActiveTab={setActiveTab} />
             
             <Routes>
-              {/* Pass state to MainHome */}
               <Route path="/Meraki" element={<MainHome activeTab={activeTab} setActiveTab={setActiveTab} />} />
+              
               <Route path="/Meraki/wishlist" element={<WishlistPage />} />
+              <Route path="/Meraki/cart" element={<CartPage />} />
 
-              <Route path="/login" element={<LoginPage />} />
+              <Route path="/Meraki/login" element={<LoginPage />} />
+              <Route path="/Meraki/account" element={<AccountPage />} />
+
+              <Route path="/Meraki/design" element={<DesignStudio />} />
             </Routes>
 
             <Footer />

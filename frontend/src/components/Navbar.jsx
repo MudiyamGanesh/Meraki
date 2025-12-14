@@ -1,32 +1,65 @@
-import React, { useState, useEffect } from 'react';
-// 1. ADD 'LogOut' to imports
-import { Menu, Search, ShoppingCart, Heart, User, X, ChevronRight, Sun, Moon, Lock, LogOut } from 'lucide-react'; 
-import { Link, useNavigate } from 'react-router-dom'; // Import useNavigate for redirect after logout
+import React, { useState, useEffect, useRef } from 'react';
+import { Menu, Search, ShoppingCart, Heart, User, X, ChevronRight, Sun, Moon, Lock, LogOut, UserPlus, LogIn, Settings } from 'lucide-react'; 
+import { Link, useNavigate, useLocation } from 'react-router-dom'; 
 import { useWishlist } from '../Context/WishlistContext';
 import { useAuth } from '../Context/AuthContext';
 import '../css/Navbar.css';
 
 const Navbar = ({ activeTab, setActiveTab }) => {
-  // ... (Keep all existing state and hooks) ...
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [showMobileSearch, setShowMobileSearch] = useState(false);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
+  
   const { wishlist } = useWishlist();
   const { user, logout } = useAuth();
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'dark');
+  
   const navigate = useNavigate();
+  const location = useLocation();
+  const navRef = useRef(null);
 
-  // ... (Keep existing useEffects and toggleTheme) ...
+  // Check if we are on the Home Page
+  const isHomePage = location.pathname === '/Meraki' || location.pathname === '/Meraki/';
+
+  // --- LISTEN FOR TAB UPDATES FROM OTHER PAGES ---
+  useEffect(() => {
+    if (location.state && location.state.activeTab) {
+      if (setActiveTab) {
+        setActiveTab(location.state.activeTab);
+      }
+    }
+  }, [location, setActiveTab]);
+
+  // Close menus on outside click
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (navRef.current && !navRef.current.contains(event.target)) {
+        setUserMenuOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  // Theme Toggle
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem('theme', theme);
   }, [theme]);
   const toggleTheme = () => setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
 
+  // --- NAVIGATION HANDLER ---
   const handleNavClick = (tab) => {
-    if (setActiveTab) setActiveTab(tab);
+    if (isHomePage) {
+      // If on Home, just switch tab
+      if (setActiveTab) setActiveTab(tab);
+    } else {
+      // If on other page, go Home and set tab
+      navigate('/Meraki', { state: { activeTab: tab } });
+    }
+    setMobileMenuOpen(false);
   };
 
-  // Helper to close menu and redirect
   const handleMobileLogout = () => {
     if (window.confirm("Sign out?")) {
       logout();
@@ -35,119 +68,170 @@ const Navbar = ({ activeTab, setActiveTab }) => {
     }
   };
 
+  const handleSearchSubmit = (e) => {
+    if (e.key === 'Enter') {
+      alert(`Searching for: ${e.target.value}`);
+      setShowMobileSearch(false);
+    }
+  };
+
   return (
     <>
-      <nav className="navbar">
-        {/* ... (Keep existing Navbar Desktop/Tablet code exactly as is) ... */}
-         <div className="nav-container">
-           {/* ... nav-left, nav-center, nav-right ... */}
+      <nav className="navbar" ref={navRef}>
+        <div className="nav-container">
+           {/* --- LEFT --- */}
            <div className="nav-left">
-            <button className="icon-btn mobile-only" onClick={() => setMobileMenuOpen(true)}>
-              <Menu size={28} />
-            </button>
-            <button className="icon-btn theme-toggle mobile-only" onClick={toggleTheme}>
-               {theme === 'light' ? <Moon size={26} /> : <Sun size={26} />}
-            </button>
-            {/* ... Desktop Links ... */}
-            <ul className="desktop-links desktop-only">
-               {/* ... (Keep your tabs) ... */}
-               <li className={activeTab === 'Men' ? 'active-nav-item' : ''}><button onClick={() => handleNavClick('Men')}>MEN</button></li>
-               <li className={activeTab === 'Women' ? 'active-nav-item' : ''}><button onClick={() => handleNavClick('Women')}>WOMEN</button></li>
-               <li className={`sneaker-nav-item ${activeTab === 'Sneakers' ? 'active-nav-item' : ''}`}><button onClick={() => handleNavClick('Sneakers')}>SNEAKERS<span className="nav-badge"><Lock size={8} /> DROP</span></button></li>
-               <li className="highlight-link"><a href="#sale">SALE</a></li>
-            </ul>
+             <button className="icon-btn mobile-only" onClick={() => setMobileMenuOpen(true)}>
+               <Menu size={28} />
+             </button>
+             <button className="icon-btn theme-toggle mobile-only" onClick={toggleTheme}>
+                {theme === 'light' ? <Moon size={26} /> : <Sun size={26} />}
+             </button>
+             
+             <ul className="desktop-links desktop-only">
+                <li className={isHomePage && activeTab === 'Men' ? 'active-nav-item' : ''}>
+                    <button onClick={() => handleNavClick('Men')}>MEN</button>
+                </li>
+                <li className={isHomePage && activeTab === 'Women' ? 'active-nav-item' : ''}>
+                    <button onClick={() => handleNavClick('Women')}>WOMEN</button>
+                </li>
+                <li className={`sneaker-nav-item ${isHomePage && activeTab === 'Sneakers' ? 'active-nav-item' : ''}`}>
+                    <button onClick={() => handleNavClick('Sneakers')}>SNEAKERS<span className="nav-badge"><Lock size={8} /> DROP</span></button>
+                </li>
+                <li className={`highlight-link ${location.pathname.includes('/design') ? 'active-nav-item' : ''}`}>
+                    <Link to="/Meraki/design">Design Studio</Link>
+                </li>
+             </ul>
            </div>
            
+           {/* --- CENTER --- */}
            <div className="nav-center">
              <Link to="/Meraki/" className="brand-logo">रीति</Link>
            </div>
 
+           {/* --- RIGHT --- */}
            <div className="nav-right">
              <div className="desktop-search desktop-only">
                <input type="text" placeholder="Search..." />
                <button className="search-btn"><Search size={18}/></button>
              </div>
+             
              <button className="icon-btn mobile-only" onClick={() => setShowMobileSearch(!showMobileSearch)}>
-               <Search size={26} />
+               {showMobileSearch ? <X size={26} /> : <Search size={26} />}
              </button>
+
              <div className="nav-icons">
                <button className="icon-btn theme-toggle desktop-only" onClick={toggleTheme}>
                  {theme === 'light' ? <Moon size={26} /> : <Sun size={26} />}
                </button>
-               {user ? (
-                <button className="icon-btn desktop-only" onClick={() => { if(window.confirm("Sign out?")) logout(); }} title={`Signed in as ${user.name}`}>
-                  <User size={26} fill="currentColor" />
-                </button>
-               ) : (
-                <Link to="/login" className="icon-btn desktop-only"><User size={26} /></Link>
-               )}
+
+               <div className="user-dropdown-container">
+                 <button className={`icon-btn desktop-only ${userMenuOpen ? 'active' : ''}`} onClick={() => setUserMenuOpen(!userMenuOpen)}>
+                   <User size={26} fill={user ? "currentColor" : "none"} />
+                 </button>
+                 {userMenuOpen && (
+                   <div className="nav-dropdown-menu">
+                     {user ? (
+                       <>
+                         <div className="dropdown-header">Hello, {user.name}</div>
+                         <Link to="/Meraki/account" className="dropdown-item" onClick={() => setUserMenuOpen(false)}>My Account</Link>
+                         <button className="dropdown-item logout" onClick={() => { logout(); setUserMenuOpen(false); }}>Sign Out <LogOut size={14} /></button>
+                       </>
+                     ) : (
+                       <>
+                         <Link to="/Meraki/login" state={{ isRegistering: false }} className="dropdown-item" onClick={() => setUserMenuOpen(false)}><LogIn size={16} /> Sign In</Link>
+                         <Link to="/Meraki/login" state={{ isRegistering: true }} className="dropdown-item" onClick={() => setUserMenuOpen(false)}><UserPlus size={16} /> Create Account</Link>
+                       </>
+                     )}
+                   </div>
+                 )}
+               </div>
+
                <Link to="/Meraki/wishlist" className="icon-btn">
                  <Heart size={26} fill={wishlist.length > 0 ? "#d32f2f" : "none"} color={wishlist.length > 0 ? "#d32f2f" : "currentColor"}/>
                  {wishlist.length > 0 && <span className="badge">{wishlist.length}</span>}
                </Link>
-               <button className="icon-btn cart-btn">
+               <Link to="/Meraki/cart" className="icon-btn cart-btn">
                  <ShoppingCart size={26} />
-                 <span className="badge">3</span>
-               </button>
+               </Link>
              </div>
            </div>
          </div>
          
          <div className={`mobile-search-container ${showMobileSearch ? 'active' : ''}`}>
-           <input type="text" placeholder="Search..." />
-           <Search size={20} />
+            <div className="mobile-search-wrapper">
+               <Search size={20} className="search-icon-marker" />
+               <input type="text" placeholder="Search products..." autoFocus={showMobileSearch} onKeyDown={handleSearchSubmit} />
+               <button className="mobile-search-close" onClick={() => setShowMobileSearch(false)}><X size={20} /></button>
+            </div>
          </div>
       </nav>
 
-      {/* --- UPDATED MOBILE DRAWER --- */}
+      {/* --- MOBILE DRAWER --- */}
       <div className={`mobile-drawer-overlay ${mobileMenuOpen ? 'open' : ''}`} onClick={() => setMobileMenuOpen(false)}></div>
-      
       <div className={`mobile-drawer ${mobileMenuOpen ? 'open' : ''}`}>
         <div className="drawer-header">
-          <span className="drawer-title">MENU</span>
-          <button className='drawer-close-btn' onClick={() => setMobileMenuOpen(false)}>
-            <X size={28} />
-          </button>
+           <span className="drawer-title">MENU</span>
+           <button className='drawer-close-btn' onClick={() => setMobileMenuOpen(false)}><X size={28}/></button>
         </div>
 
         <div className="drawer-content">
-          
-          {/* 1. DYNAMIC LOGIN/LOGOUT SECTION */}
+          {/* 1. AUTH SECTION */}
           {user ? (
-            <div className="user-profile-section">
-              <div className="drawer-link user-link" style={{ cursor: 'default' }}>
-                <User size={20} fill="currentColor" /> 
-                <span>Hi, {user.name}</span>
+            <div className="mobile-user-card">
+              <div className="user-greeting">
+                 <User size={24} className="greeting-icon" />
+                 <div className="greeting-text">
+                    <small>Welcome back,</small><strong>{user.name}</strong>
+                 </div>
               </div>
-              <button onClick={handleMobileLogout} className="drawer-link logout-btn" style={{ width: '100%', border: 'none', background: 'none', textAlign: 'left' }}>
-                 <LogOut size={20} /> Sign Out
-              </button>
+              <div className="mobile-auth-grid">
+                <Link to="/Meraki/account" className="mobile-auth-btn account-btn" onClick={() => setMobileMenuOpen(false)}>
+                   <Settings size={16} /> My Account
+                </Link>
+                <button onClick={handleMobileLogout} className="mobile-auth-btn logout-btn">
+                   <LogOut size={16} /> Sign Out
+                </button>
+              </div>
             </div>
           ) : (
-            <Link to="/login" className="drawer-link user-link" onClick={() => setMobileMenuOpen(false)}>
-              <User size={20} /> Login / Register
-            </Link>
+            <div className="mobile-auth-grid">
+               <Link to="/Meraki/login" state={{ isRegistering: false }} className="mobile-auth-btn login" onClick={() => setMobileMenuOpen(false)}>Sign In</Link>
+               <Link to="/Meraki/login" state={{ isRegistering: true }} className="mobile-auth-btn register" onClick={() => setMobileMenuOpen(false)}>Register</Link>
+            </div>
           )}
           
-          <hr style={{ margin: '10px 0', borderColor: 'var(--border-color)', opacity: 0.5 }} />
+          <hr style={{ margin: '20px 0', borderColor: 'var(--border-color)', opacity: 0.5 }} />
 
-          {/* 2. NAVIGATION LINKS */}
-          <Link to="/Meraki/" className="drawer-link" onClick={() => setMobileMenuOpen(false)}>
-            Home <ChevronRight size={16} />
-          </Link>
+          <Link to="/Meraki/" className="drawer-link" onClick={() => setMobileMenuOpen(false)}>Home <ChevronRight size={16} /></Link>
           
-          <Link to="/Meraki/wishlist" className="drawer-link" onClick={() => setMobileMenuOpen(false)}>
-            My Wishlist ({wishlist.length}) <ChevronRight size={16} />
-          </Link>
-        </div>
-        
-        <div className="drawer-footer">
-          <a href="#orders">Track Order</a>
-          <a href="#contact">Contact Us</a>
+          {/* 2. CATEGORY BUTTONS (Only if NOT on Home) */}
+          {!isHomePage && (
+            <div className="mobile-nav-group">
+              <button className="nav-card-btn" onClick={() => handleNavClick('Men')}>
+                <span className="nav-card-text">MEN</span>
+                <ChevronRight size={18} className="nav-arrow" />
+              </button>
+              
+              <button className="nav-card-btn" onClick={() => handleNavClick('Women')}>
+                <span className="nav-card-text">WOMEN</span>
+                <ChevronRight size={18} className="nav-arrow" />
+              </button>
+              
+              <button className="nav-card-btn special" onClick={() => handleNavClick('Sneakers')}>
+                <span className="nav-card-text">
+                  SNEAKERS <span className="nav-tag">DROP <Lock size={8} /></span>
+                </span>
+                <ChevronRight size={18} className="nav-arrow" />
+              </button>
+            </div>
+          )}
+          
+          <Link to="/Meraki/design" className="drawer-link" onClick={() => setMobileMenuOpen(false)}>Design Studio <ChevronRight size={16} /></Link>
+          <Link to="/Meraki/wishlist" className="drawer-link" onClick={() => setMobileMenuOpen(false)}>My Wishlist ({wishlist.length}) <ChevronRight size={16} /></Link>
         </div>
       </div>
     </>
   );
 };
-
 export default Navbar;
