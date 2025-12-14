@@ -3,12 +3,14 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { WishlistProvider } from './Context/WishlistContext';
 import SneakerDrop from './components/SneakerDrop';
 import Navbar from './components/Navbar';
-import SubNavbar from './components/SubNavbar'; // Import new component
+import SubNavbar from './components/SubNavbar';
 import HeroCarousel from './components/HeroCarousel';
 import HomePage from './HomePage.jsx';
 import Footer from './components/Footer.jsx';
 import ShowPage from './ShopPage.jsx';
 import WishlistPage from './WishlistPage.jsx';
+import LoginPage from './LoginPage.jsx';
+import { AuthProvider } from './Context/AuthContext';
 
 // Main Home Component wrapper to handle props passing
 const MainHome = ({ activeTab, setActiveTab }) => (
@@ -37,21 +39,25 @@ function App() {
   const [activeTab, setActiveTab] = useState('Men');
 
   return (
-    <WishlistProvider>
-      <Router>
-        <div>
-          <Navbar />
-          
-          <Routes>
-            {/* Pass state to MainHome */}
-            <Route path="/Meraki" element={<MainHome activeTab={activeTab} setActiveTab={setActiveTab} />} />
-            <Route path="/Meraki/wishlist" element={<WishlistPage />} />
-          </Routes>
+    <AuthProvider>
+      <WishlistProvider>
+        <Router>
+          <div>
+            <Navbar />
+            
+            <Routes>
+              {/* Pass state to MainHome */}
+              <Route path="/Meraki" element={<MainHome activeTab={activeTab} setActiveTab={setActiveTab} />} />
+              <Route path="/Meraki/wishlist" element={<WishlistPage />} />
 
-          <Footer />
-        </div>
-      </Router>
-    </WishlistProvider>
+              <Route path="/login" element={<LoginPage />} />
+            </Routes>
+
+            <Footer />
+          </div>
+        </Router>
+      </WishlistProvider>
+    </AuthProvider>
   );
 }
 

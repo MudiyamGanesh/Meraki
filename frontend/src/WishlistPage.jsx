@@ -12,7 +12,7 @@ const WishlistPage = () => {
       <div className="wishlist-empty">
         <h2>Your Wishlist is Empty</h2>
         <p>Explore our collections and add some items!</p>
-        <a href="/Meraki" className="btn-primary">Go Shopping</a>
+        <a href="/Meraki/" className="btn-primary">Go Shopping</a>
       </div>
     );
   }

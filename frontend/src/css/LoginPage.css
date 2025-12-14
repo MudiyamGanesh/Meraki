@@ -1,0 +1,158 @@
+/* LoginPage.css */
+.auth-container {
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  background-color: var(--bg-primary);
+}
+
+.auth-card {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Split 50/50 */
+  width: 100%;
+  max-width: 900px;
+  min-height: 550px;
+  background-color: var(--bg-input);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+  border: 1px solid var(--border-color);
+}
+
+/* --- IMAGE SIDE --- */
+.auth-image-side {
+  position: relative;
+  overflow: hidden;
+}
+
+.auth-image-side img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.auth-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 40px;
+  background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+  color: white;
+  z-index: 2;
+}
+
+.auth-overlay h1 {
+  font-size: 2.5rem;
+  line-height: 1.1;
+  margin-bottom: 10px;
+}
+
+/* --- FORM SIDE --- */
+.auth-form-side {
+  padding: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.form-wrapper {
+  width: 100%;
+  max-width: 350px;
+}
+
+.form-wrapper h2 {
+  font-size: 2rem;
+  color: var(--text-main);
+  margin-bottom: 5px;
+}
+
+.subtitle {
+  color: var(--text-secondary);
+  margin-bottom: 30px;
+  font-size: 0.9rem;
+}
+
+/* Inputs */
+.input-group {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.input-icon {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-secondary);
+}
+
+.input-group input {
+  width: 100%;
+  padding: 12px 12px 12px 45px; /* Space for icon */
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-primary);
+  color: var(--text-main);
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.input-group input:focus {
+  border-color: var(--accent-hover);
+}
+
+/* Button */
+.auth-btn {
+  width: 100%;
+  padding: 12px;
+  background-color: var(--text-main);
+  color: var(--bg-primary);
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 10px;
+  transition: opacity 0.2s;
+}
+
+.auth-btn:hover {
+  opacity: 0.9;
+}
+
+/* Footer Switcher */
+.auth-footer {
+  margin-top: 25px;
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.toggle-link {
+  background: none;
+  border: none;
+  color: var(--accent-hover);
+  font-weight: bold;
+  cursor: pointer;
+  margin-left: 5px;
+  text-decoration: underline;
+}
+
+/* --- MOBILE --- */
+@media (max-width: 768px) {
+  .auth-card {
+    grid-template-columns: 1fr; /* Stack vertically */
+  }
+  .auth-image-side {
+    display: none; /* Hide image on mobile for cleaner look */
+  }
+}
