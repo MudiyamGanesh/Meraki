@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react'; // 1. Import useEffect
 import { Link } from 'react-router-dom';
 import { useWishlist } from '../Context/WishlistContext';
 import { Trash2, ShoppingCart, Heart, ArrowRight, Star } from 'lucide-react';
@@ -7,7 +7,13 @@ import '../css/WishlistPage.css';
 const WishlistPage = () => {
   const { wishlist, removeFromWishlist } = useWishlist();
 
-  // Mock data for suggestions (To keep user engaged)
+  // --- THE FIX ---
+  // Scroll to top immediately when Wishlist Page opens
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  // Mock data for suggestions
   const suggestions = [
     {
       id: 101,
@@ -46,7 +52,7 @@ const WishlistPage = () => {
             <p>Save items you love here. Review them anytime <br />and easily move them to the bag.</p>
             
             <div className="empty-actions">
-              <Link to="/Meraki" className="primary-btn">
+              <Link to="/" className="primary-btn">
                 Start Shopping <ArrowRight size={18} />
               </Link>
             </div>
@@ -104,7 +110,6 @@ const WishlistPage = () => {
                   onClick={() => removeFromWishlist(item.id)}
                   title="Remove"
                 >
-                  <XIcon /> {/* Helper component or inline SVG below */}
                   <Trash2 size={18} />
                 </button>
               </div>
@@ -126,8 +131,5 @@ const WishlistPage = () => {
     </div>
   );
 };
-
-// Helper for consistency if needed, or just use Trash2 directly
-const XIcon = () => <span style={{display:'none'}}>x</span>; 
 
 export default WishlistPage;

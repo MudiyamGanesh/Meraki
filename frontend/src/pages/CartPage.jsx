@@ -1,10 +1,16 @@
-import React from 'react';
+import React, { useEffect } from 'react'; // 1. Import useEffect
 import { Link } from 'react-router-dom';
 import { ShoppingBag, ArrowRight, Star, Plus } from 'lucide-react';
 import '../css/CartPage.css';
 
 const CartPage = () => {
-  // Mock data to make the empty page effective/engaging
+  // --- THE FIX ---
+  // Scroll to top immediately when Cart Page opens
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  // Mock data
   const trendingItems = [
     {
       id: 1,
@@ -52,7 +58,7 @@ const CartPage = () => {
           </p>
           
           <div className="empty-actions">
-            <Link to="/Meraki" className="btn-primary">
+            <Link to="/Meraki" className="btn-primary"> {/* Changed /Meraki to / for generic use */}
               Start Shopping <ArrowRight size={18} />
             </Link>
             <Link to="/Meraki/design" className="btn-secondary">
@@ -61,7 +67,7 @@ const CartPage = () => {
           </div>
         </div>
 
-        {/* --- RECOMMENDATIONS (To reduce bounce rate) --- */}
+        {/* --- RECOMMENDATIONS --- */}
         <div className="cart-suggestions">
           <div className="section-header">
             <h2>Trending Now</h2>

@@ -1,5 +1,3 @@
-// src/utils/cropUtils.js
-
 export const getCroppedImg = (imageSrc, pixelCrop) => {
   const createImage = (url) =>
     new Promise((resolve, reject) => {
