@@ -1,10 +1,9 @@
-import React, { useState, useMemo } from 'react';
-import { Heart } from 'lucide-react'; // Import Heart Icon
-import { useWishlist } from '../Context/WishlistContext'; // Import Context
+import React, { useState, useMemo, useEffect } from 'react'; // 1. Import useEffect
+import { Heart } from 'lucide-react'; 
+import { useWishlist } from '../Context/WishlistContext'; 
 import '../css/ProductShowcase.css';
 
-// ProductShowcase.jsx
-
+// --- ProductCard Component (No changes needed here) ---
 const ProductCard = ({ data }) => {
   const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
   const isLiked = isInWishlist(data.id);
@@ -23,17 +22,11 @@ const ProductCard = ({ data }) => {
   return (
     <div className="product-card">
       <div className="product-image-wrapper">
-        
-        {/* --- IMAGES FIRST --- */}
-        
-        {/* 1. Main Image */}
         <img 
           src={data.image} 
           alt={data.name} 
           className="product-img-main"
         />
-
-        {/* 2. Hover Image */}
         {data.hoverImage && (
           <img 
             src={data.hoverImage} 
@@ -41,15 +34,11 @@ const ProductCard = ({ data }) => {
             className="product-img-hover"
           />
         )}
-        
-        {/* Overlay Badge */}
         {data.overlayText && (
           <div className="image-overlay">
             {data.overlayText}
           </div>
         )}
-
-        {/* --- BUTTON LAST (Fixes disappearing issue) --- */}
         <button 
           className="wishlist-btn" 
           onClick={handleWishlistClick}
@@ -61,7 +50,6 @@ const ProductCard = ({ data }) => {
             strokeWidth={2}
           />
         </button>
-
       </div>
       
       <div className="product-details">
@@ -73,9 +61,16 @@ const ProductCard = ({ data }) => {
   );
 };
 
-// ... (Keep the rest of your ProductShowcase component exactly as it is) ...
+// --- Main Showcase Component ---
 const ProductShowcase = ({ title = "Our Collection", products = [], categories = [] }) => {
   const [activeCategory, setActiveCategory] = useState('All');
+
+  // --- THE FIX ---
+  // When the data (products) or available categories change (e.g. switching Men -> Women),
+  // reset the local filter back to 'All'.
+  useEffect(() => {
+    setActiveCategory('All');
+  }, [products, categories]);
 
   const filteredProducts = useMemo(() => {
     if (activeCategory === 'All') return products;
@@ -84,6 +79,7 @@ const ProductShowcase = ({ title = "Our Collection", products = [], categories =
 
   return (
     <div className="product-showcase-section">
+      {/* Category Filter Buttons */}
       {categories.length > 0 && (
         <div className="filter-container">
           <button 
@@ -104,12 +100,14 @@ const ProductShowcase = ({ title = "Our Collection", products = [], categories =
         </div>
       )}
 
+      {/* Grid */}
       <div className="product-grid">
         {filteredProducts.map((product) => (
           <ProductCard key={product.id} data={product} />
         ))}
       </div>
       
+      {/* Empty State */}
       {filteredProducts.length === 0 && (
         <div style={{ padding: '40px', textAlign: 'center', color: 'var(--text-secondary)' }}>
           No products found in this category.

@@ -1,4 +1,3 @@
-// src/components/SubNavbar.jsx
 import React from 'react';
 import { Lock } from 'lucide-react';
 import '../css/SubNavbar.css';
@@ -7,7 +6,6 @@ const SubNavbar = ({ activeTab, setActiveTab }) => {
   return (
     <div className="sub-navbar">
       <div className="sub-nav-container">
-        {/* Men & Women Tabs (Same as before) */}
         <button 
           className={`sub-nav-item ${activeTab === 'Men' ? 'active' : ''}`}
           onClick={() => setActiveTab('Men')}
@@ -22,7 +20,6 @@ const SubNavbar = ({ activeTab, setActiveTab }) => {
           WOMEN
         </button>
 
-        {/* --- UNLOCKED SNEAKERS TAB --- */}
         <button 
           className={`sub-nav-item ${activeTab === 'Sneakers' ? 'active' : ''}`}
           onClick={() => setActiveTab('Sneakers')}

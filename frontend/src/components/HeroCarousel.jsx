@@ -65,10 +65,9 @@ const HeroCarousel = ({ activeTab = 'Men' }) => {
   const length = categories.length;
 
   // --- 1. FORCE SCROLL RESET ON MOUNT & TAB CHANGE ---
-  // useLayoutEffect runs BEFORE the paint, preventing visual glitching
   useLayoutEffect(() => {
     if (scrollRef.current) {
-      scrollRef.current.scrollLeft = 0; // Hard reset DOM property
+      scrollRef.current.scrollLeft = 0; 
     }
     setCurrentIndex(0);
     setMobileActiveIndex(0);
@@ -81,7 +80,6 @@ const HeroCarousel = ({ activeTab = 'Men' }) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           const index = Number(entry.target.getAttribute("data-index"));
-          // Safety: ensure index is a valid number
           if (!isNaN(index)) {
             setMobileActiveIndex(index);
           }
@@ -91,10 +89,9 @@ const HeroCarousel = ({ activeTab = 'Men' }) => {
 
     const observer = new IntersectionObserver(observerCallback, {
       root: scrollRef.current,
-      threshold: 0.5, // 50% visibility required
+      threshold: 0.5, 
     });
 
-    // Small timeout ensures DOM is fully painted before observing
     const timeoutId = setTimeout(() => {
       cardRefs.current.forEach((card) => {
         if (card) observer.observe(card);
@@ -105,7 +102,7 @@ const HeroCarousel = ({ activeTab = 'Men' }) => {
       observer.disconnect();
       clearTimeout(timeoutId);
     };
-  }, [categories]); // Re-run when data changes
+  }, [categories]); 
 
 
   // --- DESKTOP NAVIGATION ---
@@ -125,14 +122,10 @@ const HeroCarousel = ({ activeTab = 'Men' }) => {
 
         <div className="cards-wrapper">
           {categories.map((item, index) => {
-            // Calculate Desktop Position
             const position = (index === currentIndex) ? "center" : 
                              (index === (currentIndex - 1 + length) % length) ? "left" : 
                              (index === (currentIndex + 1) % length) ? "right" : "hidden";
             
-            // LOGIC:
-            // Mobile: use mobileActiveIndex
-            // Desktop: use Hover or CurrentIndex
             const isMobile = window.innerWidth <= 900;
             const isActive = isMobile 
                 ? index === mobileActiveIndex 
@@ -147,25 +140,51 @@ const HeroCarousel = ({ activeTab = 'Men' }) => {
                 onMouseEnter={() => setHoveredIndex(index)}
                 onMouseLeave={() => setHoveredIndex(null)}
                 layout
+                style={{ 
+                    position: 'relative', 
+                    overflow: 'hidden',
+                    minHeight: '400px' 
+                }}
                 animate={{ 
                   scale: isActive ? 1.05 : 0.95, 
                   zIndex: isActive ? 20 : 5 
                 }}
                 transition={{ type: "spring", stiffness: 300, damping: 25 }}
               >
-                {/* Image */}
-                <div className="card-image-box">
+                <div className="card-image-box" style={{ 
+                    position: 'absolute', 
+                    top: 0, 
+                    left: 0, 
+                    width: '100%', 
+                    height: '100%', 
+                    zIndex: 0 
+                }}>
                   <motion.img 
                     src={item.image} 
                     alt={item.title} 
+                    style={{ 
+                        width: '100%', 
+                        height: '100%', 
+                        objectFit: 'cover' 
+                    }}
                     animate={{ scale: isActive ? 1.15 : 1 }}
                     transition={{ duration: 0.8 }}
                   />
                 </div>
 
-                {/* Content */}
-                <div className="card-content">
-                  <motion.h3 className="card-title">{item.title}</motion.h3>
+                <div className="card-content" style={{
+                    position: 'absolute',
+                    bottom: 0,
+                    left: 0,
+                    width: '100%',
+                    zIndex: 10,
+                    background: 'linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.6) 25%, rgba(0,0,0,0.3) 50%, rgba(0, 0, 0, 0.1) 75%, transparent 100%)',
+                    padding: '20px',
+                    boxSizing: 'border-box'
+                }}>
+                  <motion.h3 className="card-title" style={{ marginTop: 0 }}>
+                    {item.title}
+                  </motion.h3>
                   
                   <AnimatePresence mode="wait">
                     {isActive && (

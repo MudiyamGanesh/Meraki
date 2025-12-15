@@ -18,10 +18,9 @@ const Navbar = ({ activeTab, setActiveTab }) => {
   const location = useLocation();
   const navRef = useRef(null);
 
-  // Check if we are on the Home Page
-  const isHomePage = location.pathname === '/Meraki' || location.pathname === '/Meraki/';
+  // Helper: Check if we are strictly on the Home Page
+  const isHomePage = location.pathname === '/Meraki/' || location.pathname === '/Meraki';
 
-  // --- LISTEN FOR TAB UPDATES FROM OTHER PAGES ---
   useEffect(() => {
     if (location.state && location.state.activeTab) {
       if (setActiveTab) {
@@ -30,7 +29,7 @@ const Navbar = ({ activeTab, setActiveTab }) => {
     }
   }, [location, setActiveTab]);
 
-  // Close menus on outside click
+  // --- 2. CLOSE MENUS ON OUTSIDE CLICK ---
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (navRef.current && !navRef.current.contains(event.target)) {
@@ -41,30 +40,30 @@ const Navbar = ({ activeTab, setActiveTab }) => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Theme Toggle
+  // --- 3. THEME TOGGLE ---
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem('theme', theme);
   }, [theme]);
   const toggleTheme = () => setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
 
-  // --- NAVIGATION HANDLER ---
+  // --- 4. NAVIGATION HANDLER ---
   const handleNavClick = (tab) => {
     if (isHomePage) {
-      // If on Home, just switch tab
+      // If already on Home, just switch the tab content
       if (setActiveTab) setActiveTab(tab);
     } else {
-      // If on other page, go Home and set tab
-      navigate('/Meraki', { state: { activeTab: tab } });
+      // If on Cart/Wishlist, go Home AND pass the tab to open
+      navigate('/Meraki/', { state: { activeTab: tab } });
     }
-    setMobileMenuOpen(false);
+    setMobileMenuOpen(false); // Close drawer
   };
 
   const handleMobileLogout = () => {
     if (window.confirm("Sign out?")) {
       logout();
       setMobileMenuOpen(false);
-      navigate('/Meraki'); 
+      navigate('/Meraki/'); 
     }
   };
 
@@ -79,7 +78,7 @@ const Navbar = ({ activeTab, setActiveTab }) => {
     <>
       <nav className="navbar" ref={navRef}>
         <div className="nav-container">
-           {/* --- LEFT --- */}
+           {/* --- LEFT SECTION --- */}
            <div className="nav-left">
              <button className="icon-btn mobile-only" onClick={() => setMobileMenuOpen(true)}>
                <Menu size={28} />
@@ -88,7 +87,9 @@ const Navbar = ({ activeTab, setActiveTab }) => {
                 {theme === 'light' ? <Moon size={26} /> : <Sun size={26} />}
              </button>
              
+             {/* DESKTOP LINKS */}
              <ul className="desktop-links desktop-only">
+                {/* Only show active underline if on Home Page */}
                 <li className={isHomePage && activeTab === 'Men' ? 'active-nav-item' : ''}>
                     <button onClick={() => handleNavClick('Men')}>MEN</button>
                 </li>
@@ -98,18 +99,18 @@ const Navbar = ({ activeTab, setActiveTab }) => {
                 <li className={`sneaker-nav-item ${isHomePage && activeTab === 'Sneakers' ? 'active-nav-item' : ''}`}>
                     <button onClick={() => handleNavClick('Sneakers')}>SNEAKERS<span className="nav-badge"><Lock size={8} /> DROP</span></button>
                 </li>
-                <li className={`highlight-link ${location.pathname.includes('/design') ? 'active-nav-item' : ''}`}>
+                <li className={`highlight-link ${location.pathname.includes('/Meraki/design') ? 'active-nav-item' : ''}`}>
                     <Link to="/Meraki/design">Design Studio</Link>
                 </li>
              </ul>
            </div>
            
-           {/* --- CENTER --- */}
+           {/* --- CENTER SECTION --- */}
            <div className="nav-center">
-             <Link to="/Meraki/" className="brand-logo">रीति</Link>
+             <Link to="/" className="brand-logo">रीति</Link>
            </div>
 
-           {/* --- RIGHT --- */}
+           {/* --- RIGHT SECTION --- */}
            <div className="nav-right">
              <div className="desktop-search desktop-only">
                <input type="text" placeholder="Search..." />
@@ -125,6 +126,7 @@ const Navbar = ({ activeTab, setActiveTab }) => {
                  {theme === 'light' ? <Moon size={26} /> : <Sun size={26} />}
                </button>
 
+               {/* USER DROPDOWN */}
                <div className="user-dropdown-container">
                  <button className={`icon-btn desktop-only ${userMenuOpen ? 'active' : ''}`} onClick={() => setUserMenuOpen(!userMenuOpen)}>
                    <User size={26} fill={user ? "currentColor" : "none"} />
@@ -158,6 +160,7 @@ const Navbar = ({ activeTab, setActiveTab }) => {
            </div>
          </div>
          
+         {/* --- MOBILE SEARCH BAR --- */}
          <div className={`mobile-search-container ${showMobileSearch ? 'active' : ''}`}>
             <div className="mobile-search-wrapper">
                <Search size={20} className="search-icon-marker" />
@@ -167,7 +170,7 @@ const Navbar = ({ activeTab, setActiveTab }) => {
          </div>
       </nav>
 
-      {/* --- MOBILE DRAWER --- */}
+      {/* --- MOBILE DRAWER (SIDEBAR) --- */}
       <div className={`mobile-drawer-overlay ${mobileMenuOpen ? 'open' : ''}`} onClick={() => setMobileMenuOpen(false)}></div>
       <div className={`mobile-drawer ${mobileMenuOpen ? 'open' : ''}`}>
         <div className="drawer-header">
@@ -176,7 +179,7 @@ const Navbar = ({ activeTab, setActiveTab }) => {
         </div>
 
         <div className="drawer-content">
-          {/* 1. AUTH SECTION */}
+          {/* USER INFO CARD */}
           {user ? (
             <div className="mobile-user-card">
               <div className="user-greeting">
@@ -203,9 +206,9 @@ const Navbar = ({ activeTab, setActiveTab }) => {
           
           <hr style={{ margin: '20px 0', borderColor: 'var(--border-color)', opacity: 0.5 }} />
 
-          <Link to="/Meraki/" className="drawer-link" onClick={() => setMobileMenuOpen(false)}>Home <ChevronRight size={16} /></Link>
+          <Link to="/Meraki" className="drawer-link" onClick={() => setMobileMenuOpen(false)}>Home <ChevronRight size={16} /></Link>
           
-          {/* 2. CATEGORY BUTTONS (Only if NOT on Home) */}
+          {/* PREMIUM CATEGORY CARDS (Only show if NOT on Home) */}
           {!isHomePage && (
             <div className="mobile-nav-group">
               <button className="nav-card-btn" onClick={() => handleNavClick('Men')}>

@@ -11,6 +11,9 @@
   --font-main: 'Open Sans', sans-serif;
   --sale-red: #d32f2f;
   --white: #ffffff;
+
+  /* LIGHT MODE GLOW (Subtle dark shadow to make items pop off white bg) */
+  --nav-glow: 0 2px 4px rgba(0, 0, 0, 0.15); 
 }
 
 [data-theme="dark"] {
@@ -22,6 +25,9 @@
   --border-color: #4A5568;
   --accent-hover: #90CDF4;
   --accent-active: #68D391;
+
+  /* DARK MODE GLOW (White/Soft light bloom) */
+  --nav-glow: 0 0 10px rgba(255, 255, 255, 0.4), 0 0 20px rgba(255, 255, 255, 0.1);
 }
 
 /* GLOBAL RESET FOR WIDTH ISSUES */
@@ -30,7 +36,7 @@
 html, body {
   width: 100%;
   max-width: 100vw;
-  overflow-x: hidden; /* Prevent horizontal scroll */
+  overflow-x: hidden; /* CRITICAL: Prevent horizontal scroll */
 }
 
 body {
@@ -44,8 +50,9 @@ body {
 /* --- MAIN NAVBAR --- */
 .navbar {
   position: fixed;
-  top: 0; left: 0; 
-  width: 100%; 
+  top: 0; 
+  left: 0; 
+  right: 0; 
   height: 70px;
   background: rgba(0, 0, 0, 0.2);
   backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
@@ -71,13 +78,24 @@ body {
 
 .desktop-links { list-style: none; display: flex; gap: 25px; }
 .desktop-links a, .desktop-links button {
-  text-decoration: none; color: var(--white); font-weight: 700;
+  text-decoration: none; color: var(--text-main); /* Changed from white to text-main so it works in Light mode */
+  font-weight: 700;
   font-size: 14px; letter-spacing: 0.5px; text-transform: uppercase;
   transition: color 0.3s ease; background: none; border: none; cursor: pointer;
   padding-bottom: 4px; border-bottom: 2px solid transparent;
   font-family: var(--font-main); display: flex; align-items: center; gap: 5px;
+  
+  /* Apply Glow to Links */
+  text-shadow: var(--nav-glow);
 }
-.desktop-links a:hover, .desktop-links button:hover { color: rgb(217, 89, 89); }
+
+/* Specific overwrite for Dark Mode links if they need to be purely white */
+[data-theme="dark"] .desktop-links a, 
+[data-theme="dark"] .desktop-links button {
+    color: var(--white);
+}
+
+.desktop-links a:hover, .desktop-links button:hover { color: rgb(217, 89, 89); text-shadow: none; }
 .active-nav-item button, .active-nav-item a { color: rgb(217, 89, 89); border-bottom: 2px solid var(--white); }
 .highlight-link a { color: var(--sale-red); }
 
@@ -85,14 +103,25 @@ body {
   font-size: 8px; background: linear-gradient(45deg, #ff00cc, #333399);
   color: white; padding: 1px 4px; border-radius: 3px; display: flex;
   align-items: center; gap: 2px; animation: pulse 2s infinite; margin-left: 2px;
+  box-shadow: 0 0 5px rgba(255, 0, 204, 0.5); /* Constant glow for badge */
 }
 
 /* --- CENTER --- */
 .nav-center { display: flex; justify-content: center; }
+
 .brand-logo {
-  font-size: 40px; font-weight: 500; color: var(--white); text-decoration: none;
+  font-size: 40px; font-weight: 500; 
+  color: var(--text-main); 
+  text-decoration: none;
   letter-spacing: 1px; text-transform: uppercase; white-space: nowrap;
+  
+  /* LOGO GLOW EFFECT */
+  text-shadow: var(--nav-glow);
+  transition: text-shadow 0.3s ease;
 }
+
+/* Ensure logo is white in dark mode explicitly if needed */
+[data-theme="dark"] .brand-logo { color: var(--white); }
 
 /* --- RIGHT --- */
 .nav-right { display: flex; justify-content: flex-end; align-items: center; gap: 15px; }
@@ -102,25 +131,43 @@ body {
   padding: 8px 35px 8px 12px; border-radius: 25px; border: 1px solid var(--border-color);
   background-color: var(--bg-input); height: 40px; width: 250px; font-size: 14px; color: var(--text-main);
   transition: all 0.3s ease; outline: none;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); /* Slight inner shadow */
 }
-.desktop-search input:focus { width: 280px; border-color: var(--accent-hover); }
+.desktop-search input:focus { width: 280px; border-color: var(--accent-hover); box-shadow: 0 0 8px var(--accent-hover); }
 .search-btn {
   position: absolute; right: 5px; top: 50%; transform: translateY(-50%);
   background: none; border: none; color: var(--accent-hover); cursor: pointer;
 }
 
 .nav-icons { display: flex; align-items: center; gap: 25px; }
+
 .icon-btn {
-  background: none; border: none; cursor: pointer; color: var(--white);
+  background: none; border: none; cursor: pointer; 
+  color: var(--text-main); /* Match theme text */
   display: flex; align-items: center; position: relative; padding: 0;
   transition: color 0.2s ease, transform 0.1s ease;
 }
+
+/* Dark mode specific color override */
+[data-theme="dark"] .icon-btn { color: var(--white); }
+
+/* ICON GLOW EFFECT (Targeting SVG inside button) */
+.icon-btn svg {
+    filter: drop-shadow(var(--nav-glow));
+    transition: filter 0.3s ease;
+}
+
 .icon-btn:hover { color: var(--accent-hover); }
+/* Enhance glow on hover */
+.icon-btn:hover svg { filter: drop-shadow(0 0 8px var(--accent-hover)); }
+
 .icon-btn:active { transform: scale(0.95); }
+
 .badge {
   position: absolute; top: -6px; right: -8px; background-color: var(--accent-active);
   color: var(--white); font-size: 10px; font-weight: bold; height: 16px; width: 16px;
   border-radius: 50%; display: flex; justify-content: center; align-items: center;
+  box-shadow: 0 0 5px var(--accent-active); /* Badge always glows its own color */
 }
 
 /* --- USER DROPDOWN (Desktop) --- */
@@ -151,11 +198,12 @@ body {
 .dropdown-item.logout { color: #ef4444; }
 .dropdown-item.logout:hover { background-color: #fee2e2; }
 
-/* --- MOBILE SEARCH DROPDOWN --- */
+/* --- MOBILE SEARCH BAR --- */
 .mobile-search-container {
   background-color: var(--bg-primary); height: 60px; padding: 10px 20px;
-  position: absolute; top: 70px; left: 0; width: 100%; display: none;
-  align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  position: absolute; top: 70px; left: 0; right: 0; /* Ensure fit */
+  display: none; align-items: center; justify-content: center; 
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
   border-bottom: 1px solid var(--border-color); z-index: 900; transition: background-color 0.3s ease;
 }
 .mobile-search-container.active { display: flex; animation: slideDown 0.2s ease-out; }
@@ -207,7 +255,7 @@ body {
 }
 .drawer-link:active { color: var(--accent-hover); background-color: rgba(0,0,0,0.02); }
 
-/* --- PREMIUM MOBILE NAV CARDS --- */
+/* --- PREMIUM MOBILE NAV CARDS (Men/Women/Sneakers) --- */
 .mobile-nav-group {
   display: flex; flex-direction: column; gap: 12px; margin: 20px 0; padding: 10px 0;
 }
@@ -215,6 +263,7 @@ body {
   display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 20px;
   background-color: var(--bg-secondary); border: 1px solid var(--border-color);
   border-radius: 16px; cursor: pointer; transition: all 0.2s ease; position: relative; overflow: hidden;
+  box-shadow: var(--nav-glow); /* Apply glow to cards too */
 }
 .nav-card-btn:active { transform: scale(0.98); background-color: var(--border-color); }
 .nav-card-text {
@@ -232,12 +281,14 @@ body {
   background: linear-gradient(45deg, #ff00cc, #333399); color: white;
   font-size: 0.6rem; padding: 4px 8px; border-radius: 20px; display: flex;
   align-items: center; gap: 4px; font-weight: 700; letter-spacing: 0.5px;
+  box-shadow: 0 0 5px rgba(255, 0, 204, 0.5);
 }
 
 /* User Card */
 .mobile-user-card {
   background-color: var(--bg-input); border: 1px solid var(--border-color);
   border-radius: 12px; padding: 15px; margin-bottom: 20px;
+  box-shadow: var(--nav-glow);
 }
 .user-greeting {
   display: flex; align-items: center; gap: 12px; margin-bottom: 15px;
@@ -246,6 +297,7 @@ body {
 .greeting-icon {
   color: var(--accent-hover); background: rgba(0,0,0,0.05); padding: 8px;
   width: 40px; height: 40px; border-radius: 50%;
+  box-shadow: var(--nav-glow);
 }
 .greeting-text { display: flex; flex-direction: column; }
 .greeting-text small { font-size: 11px; color: var(--text-secondary); text-transform: uppercase; }
@@ -257,6 +309,7 @@ body {
   display: flex; align-items: center; justify-content: center; gap: 8px;
   padding: 12px; border-radius: 8px; font-size: 13px; font-weight: 700;
   text-decoration: none; cursor: pointer; border: 1px solid transparent; transition: all 0.2s;
+  box-shadow: var(--nav-glow);
 }
 .mobile-auth-btn.login, .account-btn {
   background-color: var(--bg-primary); border-color: var(--border-color); color: var(--text-main);
@@ -264,20 +317,21 @@ body {
 .mobile-auth-btn.register { background-color: var(--text-main); color: var(--bg-primary); }
 .logout-btn { background-color: #fee2e2; color: #ef4444; border: none; }
 
-/* --- RESPONSIVE BREAKPOINTS (FIXED WIDTH) --- */
+/* --- RESPONSIVE BREAKPOINTS (MOBILE FIX) --- */
 @media (max-width: 900px) {
   .desktop-only { display: none !important; }
   .mobile-only { display: flex !important; }
   .brand-logo { font-size: 32px; }
   
-  /* Fix Mobile Navbar Width */
+  /* Fix Mobile Navbar Width: use 100% and auto columns to prevent overflow */
   .navbar { 
     padding: 0 15px; 
     height: 60px; 
     width: 100%;
-    right: 0; /* Ensure right alignment */
+    right: 0; left: 0;
   }
   
+  /* Adjust Grid for Mobile: Auto / 1fr / Auto */
   .nav-container { 
     grid-template-columns: auto 1fr auto; 
     width: 100%;

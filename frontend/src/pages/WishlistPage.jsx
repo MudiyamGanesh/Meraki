@@ -46,7 +46,7 @@ const WishlistPage = () => {
             <p>Save items you love here. Review them anytime <br />and easily move them to the bag.</p>
             
             <div className="empty-actions">
-              <Link to="/Meraki/" className="primary-btn">
+              <Link to="/Meraki" className="primary-btn">
                 Start Shopping <ArrowRight size={18} />
               </Link>
             </div>

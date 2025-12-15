@@ -1,9 +1,16 @@
-import React, { useState } from 'react';
-import '../css/ProductSection.css'; // Make sure this path matches your folder structure
+import React, { useState, useEffect } from 'react'; // 1. Import useEffect
+import { ChevronLeft, ChevronRight } from 'lucide-react'; // I added icons back for consistency
+import '../css/ProductSection.css';
 
 const ProductSection = ({ title, subtitle, products }) => {
   const [startIndex, setStartIndex] = useState(0);
   const itemsPerPage = 4;
+
+  // --- THE FIX ---
+  // whenever 'products' (or 'title') changes, reset the index to 0
+  useEffect(() => {
+    setStartIndex(0);
+  }, [products, title]); 
 
   // Slice the data to show only 4 items at a time
   const visibleProducts = products.slice(startIndex, startIndex + itemsPerPage);
@@ -30,17 +37,17 @@ const ProductSection = ({ title, subtitle, products }) => {
       </div>
 
       <div className="carousel-container">
-        {/* Left Arrow Button - Disabled if at start */}
+        {/* Left Arrow Button */}
         <button 
           className="nav-btn prev-btn" 
           onClick={handlePrev}
           disabled={startIndex === 0}
           aria-label="Previous products"
         >
-          &#10094;
+          <ChevronLeft size={24} strokeWidth={2.5} />
         </button>
 
-        {/* Product Grid - Displays 4 items (Desktop) or 2x2 (Mobile) */}
+        {/* Product Grid */}
         <div className="product-grid">
           {visibleProducts.map((product) => (
             <div key={product.id} className="product-card">
@@ -60,14 +67,14 @@ const ProductSection = ({ title, subtitle, products }) => {
           ))}
         </div>
 
-        {/* Right Arrow Button - Disabled if no more products */}
+        {/* Right Arrow Button */}
         <button 
           className="nav-btn next-btn" 
           onClick={handleNext}
           disabled={startIndex + itemsPerPage >= products.length}
           aria-label="Next products"
         >
-          &#10095;
+          <ChevronRight size={24} strokeWidth={2.5} />
         </button>
       </div>
     </section>

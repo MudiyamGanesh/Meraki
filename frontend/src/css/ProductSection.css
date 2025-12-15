@@ -1,118 +1,187 @@
 /* --- THEME VARIABLES --- */
-/* (Inherited from your global CSS, ensuring consistency) */
+:root {
+  /* Your Original Theme Variables */
+  --bg-primary: #FCFCF5;
+  --bg-secondary: #F7F7F0;
+  --bg-input: #FFFFFF;
+  --text-main: #4A5568;
+  --text-secondary: #666;
+  --border-color: #E4E4E4;
+  --accent-hover: #5D7A9E;
+  --accent-active: #4A6D5E;
+  --font-main: 'Open Sans', sans-serif;
+  --sale-red: #d32f2f;
+  --white: #ffffff;
 
-.product-section {
-  padding: 40px 20px;
-  background-color: var(--bg-primary);
-  max-width: 1440px;
-  margin: 0 auto;
+  /* --- NEW: CUSTOM VARIABLES FOR PRODUCT SECTION --- */
+  --accent-gold: #fbbf24;      
+  --accent-gold-hover: #d97706; 
+  
+  /* LIGHT MODE HOVER: Gold border is fine here */
+  --card-border-hover: var(--accent-gold); 
+  --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  --card-shadow-hover: 0 15px 30px rgba(0,0,0,0.25);
 }
 
-/* Header Styles */
+[data-theme="dark"] {
+  /* Your Original Dark Variables */
+  --bg-primary: #1A202C;
+  --bg-secondary: #2D3748;
+  --bg-input: #2D3748;
+  --text-main: #E2E8F0;
+  --text-secondary: #A0AEC0;
+  --border-color: #4A5568;
+  --accent-hover: #90CDF4;
+  --accent-active: #68D391;
+
+  /* --- DARK MODE ADJUSTMENTS --- */
+  
+  /* DARK MODE HOVER: Gold border is too harsh. Use a lighter grey/white mix. */
+  --card-border-hover: rgba(255, 255, 255, 0.3); 
+
+  --card-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  
+  /* GOLD GLOW: We move the gold into the shadow for a premium backlight effect */
+  --card-shadow-hover: 0 20px 40px rgba(251, 191, 36, 0.15);
+}
+
+/* --- MAIN SECTION LAYOUT --- */
+.product-section {
+  padding: 60px 20px;
+  background-color: var(--bg-primary);
+  width: 100%;
+  box-sizing: border-box;
+  font-family: var(--font-main);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* --- HEADER STYLES --- */
 .section-header {
   text-align: center;
-  margin-bottom: 30px;
+  margin-bottom: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .section-title {
-  font-size: 24px;
+  font-size: 32px;
   font-weight: 800;
   text-transform: uppercase;
   color: var(--text-main);
-  letter-spacing: 1px;
-  margin-bottom: 5px;
+  letter-spacing: 2px;
+  margin: 0 0 10px 0;
+  position: relative;
+}
+
+/* Decorative Underline */
+.section-title::after {
+  content: '';
+  display: block;
+  width: 60px;
+  height: 4px;
+  background-color: var(--accent-gold); 
+  margin: 8px auto 0;
+  border-radius: 2px;
 }
 
 .section-subtitle {
   font-size: 14px;
   color: var(--text-secondary);
   text-transform: uppercase;
-  letter-spacing: 2px;
+  letter-spacing: 3px;
+  font-weight: 500;
 }
 
-/* Carousel Container */
+/* --- CAROUSEL CONTAINER --- */
 .carousel-container {
   position: relative;
+  max-width: 1200px;
+  margin: 0 auto;
   display: flex;
   align-items: center;
-  justify-content: center; /* Centers the grid */
+  justify-content: center;
 }
 
-/* THE GRID SYSTEM */
+/* --- GRID SYSTEM --- */
 .product-grid {
   display: grid;
-  /* Desktop: 4 Equal Columns */
-  grid-template-columns: repeat(4, 1fr); 
-  gap: 20px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
   width: 100%;
-  padding: 10px 40px; /* Side padding to make room for arrows */
+  padding: 10px 0;
 }
 
-/* Product Card */
+/* --- CARD STYLING --- */
 .product-card {
   background-color: var(--bg-input);
-  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
   overflow: hidden;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s;
   cursor: pointer;
-  border: 1px solid transparent;
   display: flex;
   flex-direction: column;
+  box-shadow: var(--card-shadow);
 }
 
 .product-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 20px rgba(0,0,0,0.08);
-  border-color: var(--border-color);
+  transform: translateY(-8px);
+  /* Uses the new variables logic for Dark vs Light mode */
+  box-shadow: var(--card-shadow-hover);
+  border-color: var(--card-border-hover); 
 }
 
 /* Image Area */
 .image-wrapper {
   position: relative;
   width: 100%;
-  aspect-ratio: 3 / 4; 
+  aspect-ratio: 3 / 4;
   overflow: hidden;
-  background-color: #f0f0f0;
+  background-color: var(--bg-secondary);
 }
 
 .product-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.5s ease;
+  transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .product-card:hover .product-image {
-  transform: scale(1.05);
+  transform: scale(1.1);
 }
 
 /* Badge */
 .product-badge {
   position: absolute;
-  top: 10px;
-  left: 10px;
-  background-color: rgba(0,0,0,0.7);
-  color: var(--white);
-  font-size: 10px;
-  font-weight: 700;
-  padding: 4px 8px;
+  top: 12px;
+  left: 12px;
+  background-color: var(--accent-gold); 
+  color: #000; 
+  font-size: 11px;
+  font-weight: 800;
+  padding: 5px 10px;
   text-transform: uppercase;
   z-index: 2;
   border-radius: 4px;
-  transform: rotate(-5deg);
+  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
 }
 
 /* Details Area */
 .product-details {
-  padding: 15px;
+  padding: 18px;
   text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
 .product-name {
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 700;
   color: var(--text-main);
-  margin-bottom: 4px;
+  margin: 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -121,16 +190,19 @@
 .product-category {
   font-size: 12px;
   color: var(--text-secondary);
-  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0;
 }
 
 .product-price {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--text-main);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--accent-gold-hover);
+  margin-top: 4px;
 }
 
-/* Navigation Buttons */
+/* --- NAVIGATION BUTTONS --- */
 .nav-btn {
   position: absolute;
   top: 50%;
@@ -138,67 +210,80 @@
   background-color: var(--bg-input);
   border: 1px solid var(--border-color);
   color: var(--text-main);
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   cursor: pointer;
   z-index: 10;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  box-shadow: var(--card-shadow);
   transition: all 0.2s ease;
 }
 
+.prev-btn { left: -60px; }
+.next-btn { right: -60px; }
+
 .nav-btn:hover:not(:disabled) {
-  background-color: var(--accent-hover);
-  color: var(--white);
-  border-color: var(--accent-hover);
+  background-color: var(--accent-gold);
+  color: #000;
+  border-color: var(--accent-gold);
+  transform: translateY(-50%) scale(1.1);
 }
 
-/* Disable button style */
 .nav-btn:disabled {
   opacity: 0.3;
   cursor: not-allowed;
-  box-shadow: none;
+  background-color: var(--bg-secondary);
 }
 
-.prev-btn { left: -5px; } /* Adjusted closer to edge */
-.next-btn { right: -5px; }
-
-/* RESPONSIVE: MOBILE VIEW */
-@media (max-width: 768px) {
+/* --- RESPONSIVE: TABLET (Under 1024px) --- */
+@media (max-width: 1024px) {
   .product-grid {
-    /* Mobile: 2 Columns = 2x2 Layout for 4 items */
-    grid-template-columns: repeat(2, 1fr);
-    padding: 0; /* Remove side padding on mobile */
-    gap: 15px;
+    grid-template-columns: repeat(3, 1fr);
   }
-  
-  /* We generally hide arrows on mobile if it's touch, 
-     but since this is pagination (not scroll), we usually KEEP arrows.
-     However, if you want them hidden and use swipe, that requires more complex JS.
-     Based on your request "add those 4 cards into 2 rows", I will keep arrows 
-     positioned differently or hide them if you only have 4 items total.
-     
-     Let's position arrows at the bottom for mobile or make them smaller.
-  */
-  
-  .nav-btn {
-    width: 35px;
-    height: 35px;
-    /* Adjust position if needed, or hide if you prefer standard mobile stack */
+  .prev-btn { left: -20px; }
+  .next-btn { right: -20px; }
+}
+
+/* --- RESPONSIVE: MOBILE (Under 768px) --- */
+@media (max-width: 768px) {
+  .product-section {
+    padding: 40px 15px;
   }
-  
-  .product-details {
-    padding: 10px;
-  }
-  
-  .product-name {
-    font-size: 13px;
-  }
-  
+
   .section-title {
-    font-size: 20px;
+    font-size: 24px;
+  }
+  
+  .section-subtitle {
+    font-size: 12px;
+  }
+
+  .carousel-container {
+    padding-bottom: 60px; 
+  }
+
+  .product-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px; 
+  }
+
+  .nav-btn {
+    top: auto;
+    bottom: 0;
+    transform: none;
+  }
+  
+  .prev-btn {
+    left: 35%; 
+    transform: translateX(-50%);
+  }
+  
+  .next-btn {
+    right: 35%;
+    left: auto;
+    transform: translateX(50%);
   }
 }
