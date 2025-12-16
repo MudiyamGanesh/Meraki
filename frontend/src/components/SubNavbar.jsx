@@ -1,35 +1,37 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Lock } from 'lucide-react';
 import '../css/SubNavbar.css';
 
-const SubNavbar = ({ activeTab, setActiveTab }) => {
+const SubNavbar = ({ activeCategory }) => {
   return (
     <div className="sub-navbar">
       <div className="sub-nav-container">
-        <button 
-          className={`sub-nav-item ${activeTab === 'Men' ? 'active' : ''}`}
-          onClick={() => setActiveTab('Men')}
+        
+        <Link 
+          to="/men" 
+          className={`sub-nav-item ${activeCategory === 'Men' ? 'active' : ''}`}
         >
           MEN
-        </button>
+        </Link>
 
-        <button 
-          className={`sub-nav-item ${activeTab === 'Women' ? 'active' : ''}`}
-          onClick={() => setActiveTab('Women')}
+        <Link 
+          to="/women" 
+          className={`sub-nav-item ${activeCategory === 'Women' ? 'active' : ''}`}
         >
           WOMEN
-        </button>
+        </Link>
 
-        <button 
-          className={`sub-nav-item ${activeTab === 'Sneakers' ? 'active' : ''}`}
-          onClick={() => setActiveTab('Sneakers')}
+        <Link 
+          to="/sneakers" 
+          className={`sub-nav-item ${activeCategory === 'Sneakers' ? 'active' : ''}`}
         >
           <span>SNEAKERS</span>
           <span className="hype-badge">
             <Lock size={10} style={{ marginRight: '3px' }} /> 
             DROPPING SOON
           </span>
-        </button>
+        </Link>
 
       </div>
     </div>

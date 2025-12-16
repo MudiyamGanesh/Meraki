@@ -58,10 +58,10 @@ const CartPage = () => {
           </p>
           
           <div className="empty-actions">
-            <Link to="/Meraki" className="btn-primary"> {/* Changed /Meraki to / for generic use */}
+            <Link to="/" className="btn-primary"> {/* Changed / to / for generic use */}
               Start Shopping <ArrowRight size={18} />
             </Link>
-            <Link to="/Meraki/design" className="btn-secondary">
+            <Link to="/design" className="btn-secondary">
               Design Your Own
             </Link>
           </div>

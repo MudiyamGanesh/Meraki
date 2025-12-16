@@ -33,7 +33,7 @@ const LoginPage = () => {
     }
     
     // Redirect to Home after success
-    navigate('/Meraki');
+    navigate('/');
   };
 
   return (

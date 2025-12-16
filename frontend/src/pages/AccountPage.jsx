@@ -31,7 +31,7 @@ const AccountPage = () => {
   };
 
   if (!user) {
-    navigate('/Meraki/login');
+    navigate('/login');
     return null;
   }
 

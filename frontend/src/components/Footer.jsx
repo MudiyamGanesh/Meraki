@@ -116,7 +116,7 @@ const Footer = () => {
           </div>
 
           {/* Copyright Section */}
-          <div className="copyright">© RITI 2025-26</div>
+          <div className="copyright">© रीति</div>
         
         </div> {/* End of Collapsible */}
       </div>

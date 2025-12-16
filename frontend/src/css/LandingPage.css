@@ -1,0 +1,263 @@
+/* --- GLOBAL LAYOUT --- */
+.landing-page {
+  width: 100%;
+  overflow-x: hidden;
+  background-color: var(--bg-primary);
+  color: var(--text-main);
+}
+
+/* --- 1. HERO FULLSCREEN --- */
+.hero-fullscreen {
+  position: relative;
+  height: 90vh; /* Almost full screen */
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* Align text to left */
+  padding: 0 5%;
+  overflow: hidden;
+}
+
+.hero-video-bg {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  z-index: 1;
+}
+
+.hero-video-bg img {
+  width: 100%; height: 100%; object-fit: cover;
+  filter: brightness(0.6); /* Darken image slightly */
+}
+
+.hero-content {
+  position: relative;
+  z-index: 3;
+  color: white;
+  max-width: 600px;
+}
+
+.hero-tag {
+  font-size: 0.9rem;
+  letter-spacing: 3px;
+  font-weight: 700;
+  color: #fbbf24; /* Theme Gold */
+  margin-bottom: 10px;
+  display: block;
+}
+
+.hero-content h1 {
+  font-size: 5rem;
+  line-height: 0.95;
+  font-weight: 900;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+
+/* Hollow text effect */
+.outline-text {
+  -webkit-text-stroke: 2px white;
+  color: transparent;
+}
+
+.hero-content p {
+  font-size: 1.2rem;
+  margin-bottom: 40px;
+  opacity: 0.9;
+  font-weight: 300;
+}
+
+.cta-group {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.btn-primary-glow {
+  background: white;
+  color: black;
+  border: none;
+  padding: 16px 40px;
+  font-size: 1rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+  transition: transform 0.3s;
+}
+.btn-primary-glow:hover { transform: translateY(-4px); }
+
+.btn-text-only {
+  background: transparent;
+  color: white;
+  border: none;
+  font-size: 1rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+.btn-text-only:hover { gap: 15px; transition: 0.3s; }
+
+/* --- 2. MARQUEE --- */
+.marquee-container {
+  background: var(--accent-active); /* Theme Green or use #000 */
+  color: white;
+  padding: 15px 0;
+  overflow: hidden;
+  white-space: nowrap;
+  position: relative;
+  z-index: 5;
+}
+
+.marquee-content {
+  display: inline-block;
+  animation: scroll 20s linear infinite;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 0.9rem;
+}
+
+@keyframes scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+/* --- 3. BENTO GRID --- */
+.bento-section {
+  max-width: 1200px;
+  margin: 80px auto;
+  padding: 0 20px;
+}
+
+.section-header.center { text-align: center; margin-bottom: 40px; }
+.section-header h2 { font-size: 2.5rem; font-weight: 800; text-transform: uppercase; margin: 0; }
+.header-underline { width: 60px; height: 4px; background: var(--accent-hover); margin: 10px auto; }
+
+.bento-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  grid-template-rows: 300px 300px;
+  gap: 20px;
+}
+
+.bento-item {
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.bento-item img {
+  width: 100%; height: 100%; object-fit: cover;
+  transition: transform 0.5s ease;
+}
+.bento-item:hover img { transform: scale(1.05); }
+
+/* Item Spanning Logic */
+.item-large { grid-row: span 2; } /* Sneakers take full left column */
+.item-wide { grid-column: span 1; background: #111; color: white; display: flex; align-items: center; justify-content: center;}
+
+.bento-overlay {
+  position: absolute;
+  bottom: 0; left: 0; width: 100%;
+  padding: 30px;
+  background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+  color: white;
+}
+.bento-overlay h3 { font-size: 1.8rem; margin: 0; font-weight: 800; }
+.bento-overlay p { margin: 5px 0 0 0; opacity: 0.8; font-size: 0.9rem; }
+
+.btn-circle {
+  position: absolute; bottom: 30px; right: 30px;
+  background: white; color: black;
+  width: 40px; height: 40px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.design-studio-bg {
+    text-align: center;
+    border: 2px dashed #444;
+    width: 100%; height: 100%;
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: center;
+    transition: background 0.3s;
+}
+.design-studio-bg:hover { background: #222; }
+.design-studio-bg span { font-size: 0.6rem; background: var(--sale-red); padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 5px; }
+
+/* --- 4. TRUST STRIP --- */
+.trust-strip {
+  background: var(--bg-secondary);
+  padding: 40px 20px;
+  display: flex;
+  justify-content: center;
+  gap: 60px;
+  margin: 60px 0;
+  flex-wrap: wrap;
+}
+.trust-item {
+  display: flex; align-items: center; gap: 15px;
+  color: var(--text-main);
+}
+.trust-item svg { color: var(--accent-active); }
+.trust-item h4 { margin: 0; font-weight: 700; text-transform: uppercase; font-size: 0.9rem; }
+.trust-item p { margin: 0; font-size: 0.8rem; color: var(--text-secondary); }
+
+/* --- 5. CURATED --- */
+.curated-section { max-width: 1200px; margin: 0 auto 80px; padding: 0 20px; }
+.curated-section .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+.view-all-btn { background: none; border: none; border-bottom: 1px solid var(--text-main); color: var(--text-main); cursor: pointer; }
+
+.curated-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+
+.curated-card { cursor: pointer; }
+.curated-img-box { position: relative; width: 100%; aspect-ratio: 3/4; border-radius: 8px; overflow: hidden; margin-bottom: 12px; }
+.curated-img-box img { width: 100%; height: 100%; object-fit: cover; }
+.badge-overlay { position: absolute; top: 10px; left: 10px; background: white; color: black; font-weight: 800; font-size: 0.7rem; padding: 4px 8px; }
+
+.quick-add-btn {
+  position: absolute; bottom: 0; left: 0; width: 100%;
+  background: var(--text-main); color: var(--bg-primary);
+  border: none; padding: 12px; font-weight: 600; text-transform: uppercase;
+  transform: translateY(100%); transition: transform 0.3s ease;
+  cursor: pointer;
+}
+.curated-card:hover .quick-add-btn { transform: translateY(0); }
+
+.curated-info h3 { font-size: 1rem; margin: 5px 0; }
+.price-row { display: flex; justify-content: space-between; align-items: center; }
+.rating { display: flex; align-items: center; gap: 3px; font-size: 0.8rem; font-weight: 600; color: #fbbf24; }
+.price { font-weight: 700; color: var(--accent-hover); }
+
+/* --- 6. VIBE SECTION (Newsletter) --- */
+.vibe-section {
+  background: url('https://images.unsplash.com/photo-1549298916-b41d501d3772?auto=format&fit=crop&w=1920&q=80');
+  background-size: cover;
+  background-position: center;
+  padding: 80px 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+.vibe-section::before { content: ''; position: absolute; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.7); }
+
+.vibe-content { position: relative; z-index: 2; text-align: center; color: white; max-width: 500px; }
+.vibe-content h2 { font-size: 3rem; font-weight: 900; text-transform: uppercase; margin-bottom: 10px; }
+.vibe-content p { margin-bottom: 30px; font-size: 1.1rem; opacity: 0.9; }
+
+.input-group { display: flex; }
+.input-group input { flex: 1; padding: 15px; border: none; outline: none; border-radius: 4px 0 0 4px; font-size: 1rem; }
+.input-group button { padding: 15px 30px; background: var(--sale-red); color: white; border: none; font-weight: 800; cursor: pointer; border-radius: 0 4px 4px 0; }
+
+/* --- MOBILE RESPONSIVE --- */
+@media (max-width: 900px) {
+  .hero-content h1 { font-size: 3rem; }
+  .bento-grid { grid-template-columns: 1fr; grid-template-rows: auto; }
+  .item-large { grid-row: auto; height: 350px; }
+  .curated-grid { grid-template-columns: repeat(2, 1fr); }
+  .trust-strip { gap: 30px; justify-content: flex-start; }
+}
