@@ -1,30 +1,52 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Menu, Search, ShoppingCart, Heart, User, X, ChevronRight, Sun, Moon, Lock, LogOut, UserPlus, LogIn, Settings, Bell, Globe } from 'lucide-react'; 
+import { 
+  Menu, Search, ShoppingCart, Heart, User, X, ChevronRight, 
+  Sun, Moon, Lock, LogOut, UserPlus, LogIn, Settings, 
+  Bell, Globe, Mic 
+} from 'lucide-react'; 
 import { Link, useNavigate, useLocation } from 'react-router-dom'; 
 import { useWishlist } from '../Context/WishlistContext';
 import { useAuth } from '../Context/AuthContext';
 import '../css/Navbar.css';
 
 const Navbar = () => {
+  // --- UI & DRAWER STATES ---
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [showMobileSearch, setShowMobileSearch] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [showSettingsModal, setShowSettingsModal] = useState(false); 
   
+  // --- SMART SCROLL STATES ---
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [visible, setVisible] = useState(true);
+  const [prevScrollPos, setPrevScrollPos] = useState(window.scrollY);
+
+  // --- SEARCH & VOICE STATES ---
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const [isListening, setIsListening] = useState(false);
+
+  // Hooks & Context
   const { wishlist } = useWishlist();
   const { user, logout } = useAuth();
-  
-  // Theme State (Used in Settings Modal)
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'dark');
-  
   const navigate = useNavigate();
   const location = useLocation();
   const navRef = useRef(null);
 
-  // Helper to check active path for styling
   const isActive = (path) => location.pathname === path;
 
-  // --- THEME EFFECT ---
+  // Mock Search Data (Replace with your API/DB results)
+  const sampleProducts = [
+    { id: 1, name: "Oversized Graphic Tee", category: "Men" },
+    { id: 2, name: "Classic White Sneakers", category: "Sneakers" },
+    { id: 3, name: "Premium Denim Jacket", category: "Women" },
+    { id: 4, name: "High-top Streetwear", category: "Sneakers" },
+    { id: 5, name: "Riti Signature Hoodie", category: "Unisex" },
+  ];
+
+  // --- THEME MANAGEMENT ---
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem('theme', theme);
@@ -32,7 +54,102 @@ const Navbar = () => {
   
   const toggleTheme = () => setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
 
-  // --- OUTSIDE CLICK ---
+  // --- SMART SCROLL LOGIC ---
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollPos = window.scrollY;
+      setIsScrolled(currentScrollPos > 20);
+      const isVisible = prevScrollPos > currentScrollPos || currentScrollPos < 10;
+      setVisible(isVisible);
+      setPrevScrollPos(currentScrollPos);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [prevScrollPos]);
+
+  // --- DEBOUNCED SEARCH LOGIC ---
+  useEffect(() => {
+    if (!searchQuery || searchQuery.trim().length === 0) {
+      setSearchResults([]);
+      setIsSearching(false);
+      return;
+    }
+
+    setIsSearching(true);
+
+    const delayDebounceFn = setTimeout(() => {
+      const filtered = sampleProducts.filter(product =>
+        product.name.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      setSearchResults(filtered);
+      setIsSearching(false);
+    }, 500);
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [searchQuery]);
+
+  // --- VOICE SEARCH ---
+  const handleVoiceSearch = () => {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    
+    if (!SpeechRecognition) {
+      alert("Voice search is not supported in this browser.");
+      return;
+    }
+
+    try {
+      const recognition = new SpeechRecognition();
+      recognition.lang = 'en-US';
+      recognition.continuous = false;
+      
+      recognition.onstart = () => {
+        setIsListening(true);
+      };
+
+      recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        setSearchQuery(transcript);
+        setIsListening(false);
+      };
+
+      recognition.onerror = (event) => {
+        console.error("Voice error:", event.error);
+        setIsListening(false);
+        if(event.error === 'not-allowed') {
+            alert("Microphone permission denied. Check your settings.");
+        }
+      };
+
+      recognition.onend = () => setIsListening(false);
+      
+      recognition.start();
+    } catch (error) {
+      console.error("Voice setup error:", error);
+      setIsListening(false);
+    }
+  };
+
+  // --- SEARCH UTILITIES ---
+  const clearSearch = () => {
+    setSearchQuery("");
+    setSearchResults([]);
+  };
+
+  const handleSearchSubmit = (e) => {
+    if (e.key === 'Enter') {
+      alert(`Searching for: ${searchQuery}`);
+      clearSearch();
+      setShowMobileSearch(false);
+    }
+  };
+
+  // --- NEW HANDLER: Clears text AND Closes Mobile Bar ---
+  const handleMobileSearchClose = () => {
+    clearSearch(); // Clears the text
+    setShowMobileSearch(false); // Hides the bar
+  };
+
+  // --- UTILITY HANDLERS ---
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (navRef.current && !navRef.current.contains(event.target)) {
@@ -43,21 +160,6 @@ const Navbar = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const handleMobileLogout = () => {
-    if (window.confirm("Sign out?")) {
-      logout();
-      setMobileMenuOpen(false);
-      navigate('/'); 
-    }
-  };
-
-  const handleSearchSubmit = (e) => {
-    if (e.key === 'Enter') {
-      alert(`Searching for: ${e.target.value}`);
-      setShowMobileSearch(false);
-    }
-  };
-
   const openSettings = () => {
     setMobileMenuOpen(false);
     setUserMenuOpen(false);
@@ -66,51 +168,100 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className="navbar" ref={navRef}>
+      <nav 
+        className={`navbar ${isScrolled ? 'scrolled' : ''} ${visible ? '' : 'nav-hidden'}`} 
+        ref={navRef}
+      >
         <div className="nav-container">
-           {/* LEFT SECTION */}
+           {/* LEFT: NAV LINKS */}
            <div className="nav-left">
              <button className="icon-btn mobile-only" onClick={() => setMobileMenuOpen(true)}>
                <Menu size={28} />
              </button>
              
-             {/* DESKTOP LINKS */}
              <ul className="desktop-links desktop-only">
-                <li className={isActive('/men') ? 'active-nav-item' : ''}>
-                    <Link to="/men">MEN</Link>
-                </li>
-                <li className={isActive('/women') ? 'active-nav-item' : ''}>
-                    <Link to="/women">WOMEN</Link>
-                </li>
+                <li className={isActive('/men') ? 'active-nav-item' : ''}><Link to="/men">MEN</Link></li>
+                <li className={isActive('/women') ? 'active-nav-item' : ''}><Link to="/women">WOMEN</Link></li>
                 <li className={`sneaker-nav-item ${isActive('/sneakers') ? 'active-nav-item' : ''}`}>
                     <Link to="/sneakers">SNEAKERS<span className="nav-badge"><Lock size={8} /> DROP</span></Link>
-                </li>
-                <li className={`highlight-link ${isActive('/design') ? 'active-nav-item' : ''}`}>
-                    <Link to="/design">Design Studio</Link>
                 </li>
              </ul>
            </div>
            
-           {/* CENTER SECTION */}
+           {/* CENTER: LOGO */}
            <div className="nav-center">
              <Link to="/" className="brand-logo">रीति</Link>
            </div>
 
-           {/* RIGHT SECTION */}
+           {/* RIGHT: SEARCH & ICONS */}
            <div className="nav-right">
+             
+             {/* --- DESKTOP SEARCH --- */}
              <div className="desktop-search desktop-only">
-               <input type="text" placeholder="Search..." />
-               <button className="search-btn"><Search size={18}/></button>
+               <div className={`search-input-wrapper ${searchQuery.length > 0 ? 'active-glow' : ''}`}>
+                  <input 
+                    type="text" 
+                    placeholder="Search products..." 
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onKeyDown={handleSearchSubmit}
+                  />
+                  
+                  <div className="search-actions">
+                    <button 
+                      className={`mic-btn ${isListening ? 'listening' : ''}`} 
+                      onClick={handleVoiceSearch}
+                      title="Search by voice"
+                    >
+                      <Mic size={18} />
+                    </button>
+
+                    {searchQuery.length > 0 && (
+                      <button className="clear-btn" onClick={clearSearch} title="Clear search">
+                        <X size={16} />
+                      </button>
+                    )}
+
+                    <button className="search-btn">
+                      {isSearching ? <div className="spinner-small"></div> : <Search size={18}/>}
+                    </button>
+                  </div>
+               </div>
+
+               {/* DESKTOP RESULTS */}
+               {searchQuery.length >= 2 && (
+                 <div className="search-results-dropdown">
+                   {searchResults.length > 0 ? (
+                     searchResults.map(result => (
+                       <Link 
+                         key={result.id} 
+                         to={`/product/${result.id}`} 
+                         className="result-item"
+                         onClick={clearSearch}
+                       >
+                         <div className="result-info">
+                           <span className="result-name">{result.name}</span>
+                           <span className="result-category">{result.category}</span>
+                         </div>
+                         <ChevronRight size={14} />
+                       </Link>
+                     ))
+                   ) : (
+                     <div className="no-results">
+                       <p>No results for "<strong>{searchQuery}</strong>"</p>
+                     </div>
+                   )}
+                 </div>
+               )}
              </div>
              
+             {/* MOBILE SEARCH TRIGGER ICON */}
              <button className="icon-btn mobile-only" onClick={() => setShowMobileSearch(!showMobileSearch)}>
-               {showMobileSearch ? <X size={26} /> : <Search size={26} />}
+               <Search size={26} />
              </button>
 
+             {/* ICONS & USER MENU */}
              <div className="nav-icons">
-               {/* --- THEME TOGGLE REMOVED FROM HERE --- */}
-
-               {/* USER DROPDOWN */}
                <div className="user-dropdown-container">
                  <button className={`icon-btn desktop-only ${userMenuOpen ? 'active' : ''}`} onClick={() => setUserMenuOpen(!userMenuOpen)}>
                    <User size={26} fill={user ? "currentColor" : "none"} />
@@ -144,109 +295,43 @@ const Navbar = () => {
                </Link>
              </div>
            </div>
-         </div>
-         
-         {/* MOBILE SEARCH */}
-         <div className={`mobile-search-container ${showMobileSearch ? 'active' : ''}`}>
-            <div className="mobile-search-wrapper">
-               <Search size={20} className="search-icon-marker" />
-               <input type="text" placeholder="Search products..." autoFocus={showMobileSearch} onKeyDown={handleSearchSubmit} />
-               <button className="mobile-search-close" onClick={() => setShowMobileSearch(false)}><X size={20} /></button>
-            </div>
-         </div>
+        </div>
+        
+        {/* --- MOBILE SEARCH BAR (FIXED) --- */}
+        <div className={`mobile-search-container ${showMobileSearch ? 'active' : ''}`}>
+           <div className="mobile-search-wrapper">
+              <Search size={20} className="search-icon-marker" />
+              
+              <input 
+                type="search" 
+                placeholder="Search products..." 
+                autoFocus={showMobileSearch} 
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={handleSearchSubmit} 
+              />
+              
+              <div className="mobile-search-actions">
+                <button 
+                  type="button" 
+                  className={`mobile-mic-btn ${isListening ? 'listening' : ''}`} 
+                  onClick={handleVoiceSearch}
+                >
+                  <Mic size={20} />
+                </button>
+                
+                <div style={{width: '1px', height: '20px', background: 'var(--border-color)'}}></div>
+
+                {/* UPDATED CLOSE BUTTON: Now clears text AND closes bar */}
+                <button className="mobile-search-close" onClick={handleMobileSearchClose}>
+                   <X size={22} />
+                </button>
+              </div>
+           </div>
+        </div>
       </nav>
-
-      {/* MOBILE DRAWER */}
-      <div className={`mobile-drawer-overlay ${mobileMenuOpen ? 'open' : ''}`} onClick={() => setMobileMenuOpen(false)}></div>
-      <div className={`mobile-drawer ${mobileMenuOpen ? 'open' : ''}`}>
-        <div className="drawer-header">
-           <span className="drawer-title">MENU</span>
-           <button className='drawer-close-btn' onClick={() => setMobileMenuOpen(false)}><X size={28}/></button>
-        </div>
-
-        <div className="drawer-content">
-          {user ? (
-            <div className="mobile-user-card">
-              <div className="user-greeting">
-                 <User size={24} className="greeting-icon" />
-                 <div className="greeting-text"><small>Welcome back,</small><strong>{user.name}</strong></div>
-              </div>
-              <div className="mobile-auth-grid">
-                <Link to="/account" className="mobile-auth-btn account-btn" onClick={() => setMobileMenuOpen(false)}><User size={16} /> Account</Link>
-                <button onClick={handleMobileLogout} className="mobile-auth-btn logout-btn"><LogOut size={16} /> Sign Out</button>
-              </div>
-            </div>
-          ) : (
-            <div className="mobile-auth-grid">
-               <Link to="/login" state={{ isRegistering: false }} className="mobile-auth-btn login" onClick={() => setMobileMenuOpen(false)}>Sign In</Link>
-               <Link to="/login" state={{ isRegistering: true }} className="mobile-auth-btn register" onClick={() => setMobileMenuOpen(false)}>Register</Link>
-            </div>
-          )}
-          
-          <hr style={{ margin: '20px 0', borderColor: 'var(--border-color)', opacity: 0.5 }} />
-
-          <Link to="/" className="drawer-link" onClick={() => setMobileMenuOpen(false)}>Home <ChevronRight size={16} /></Link>
-          
-          <div className="mobile-nav-group">
-            <Link to="/men" className="nav-card-btn" onClick={() => setMobileMenuOpen(false)}>
-              <span className="nav-card-text">MEN</span><ChevronRight size={18} className="nav-arrow" />
-            </Link>
-            <Link to="/women" className="nav-card-btn" onClick={() => setMobileMenuOpen(false)}>
-              <span className="nav-card-text">WOMEN</span><ChevronRight size={18} className="nav-arrow" />
-            </Link>
-            <Link to="/sneakers" className="nav-card-btn special" onClick={() => setMobileMenuOpen(false)}>
-              <span className="nav-card-text">SNEAKERS <span className="nav-tag">DROP <Lock size={8} /></span></span><ChevronRight size={18} className="nav-arrow" />
-            </Link>
-          </div>
-          
-          <Link to="/design" className="drawer-link" onClick={() => setMobileMenuOpen(false)}>Design Studio <ChevronRight size={16} /></Link>
-          <Link to="/wishlist" className="drawer-link" onClick={() => setMobileMenuOpen(false)}>My Wishlist ({wishlist.length}) <ChevronRight size={16} /></Link>
-          
-          <button className="drawer-link" onClick={openSettings}>
-             <div style={{display:'flex', alignItems:'center', gap:'10px'}}>Settings</div>
-             <Settings size={16} />
-          </button>
-        </div>
-      </div>
-
-      {/* SETTINGS MODAL */}
-      {showSettingsModal && (
-        <div className="settings-overlay" onClick={() => setShowSettingsModal(false)}>
-          <div className="settings-modal" onClick={(e) => e.stopPropagation()}>
-            <div className="settings-header">
-              <h2>Settings</h2>
-              <button className="settings-close-btn" onClick={() => setShowSettingsModal(false)}><X size={24}/></button>
-            </div>
-            
-            <div className="settings-body">
-              {/* Appearance */}
-              <div className="setting-section">
-                <h3>Appearance</h3>
-                <div className="setting-item">
-                  <div className="setting-info">
-                    {theme === 'light' ? <Sun size={20} /> : <Moon size={20} />}
-                    <span>App Theme</span>
-                  </div>
-                  <button className="theme-toggle-switch" onClick={toggleTheme}>
-                    <span className="current-theme-name">{theme === 'light' ? 'Light Mode' : 'Dark Mode'}</span>
-                    <div className={`toggle-track ${theme === 'dark' ? 'active' : ''}`}>
-                      <div className="toggle-thumb"></div>
-                    </div>
-                  </button>
-                </div>
-              </div>
-
-              {/* General */}
-              <div className="setting-section">
-                <h3>General</h3>
-                <div className="setting-item"><div className="setting-info"><Bell size={20} /><span>Notifications</span></div><div className="toggle-track active"><div className="toggle-thumb"></div></div></div>
-                <div className="setting-item"><div className="setting-info"><Globe size={20} /><span>Language</span></div><span className="setting-value">English (US)</span></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
     </>
   );
 };
+
 export default Navbar;
