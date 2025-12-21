@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRight, Star, Truck, ShieldCheck, Zap, MoveRight } from 'lucide-react';
+import { ArrowRight, Star, Truck, ShieldCheck, Zap, MoveRight, Plus } from 'lucide-react';
 import { useNavigate } from 'react-router-dom'; // Import Navigation
 import '../css/LandingPage.css';
 
@@ -152,7 +152,9 @@ const LandingPage = () => {
               <div className="curated-img-box">
                 {item.badge && <span className="badge-overlay">{item.badge}</span>}
                 <img src={item.image} alt={item.name} />
-                <button className="quick-add-btn">Add to Bag</button>
+                <button className="quick-add-btn">
+                  <Plus size={18} />
+                </button>
               </div>
               <div className="curated-info">
                 <span>{item.category}</span>

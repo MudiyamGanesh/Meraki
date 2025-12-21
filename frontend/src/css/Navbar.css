@@ -11,6 +11,7 @@
   --font-main: 'Open Sans', sans-serif;
   --sale-red: #d32f2f;
   --white: #ffffff;
+  
   /* LIGHT MODE GLOW */
   --nav-glow: 0 2px 4px rgba(0, 0, 0, 0.15); 
   --search-glow: 0 0 10px rgba(93, 122, 158, 0.3);
@@ -25,17 +26,24 @@
   --border-color: #4A5568;
   --accent-hover: #00bcd4; /* Cyan for dark mode glow */
   --accent-active: #68D391;
+  
   /* DARK MODE GLOW */
   --nav-glow: 0 0 10px rgba(255, 255, 255, 0.4);
   --search-glow: 0 0 15px rgba(0, 188, 212, 0.4), inset 0 0 10px rgba(0, 188, 212, 0.1);
 }
 
-/* GLOBAL RESET */
+/* --- GLOBAL RESET --- */
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html, body { width: 100%; max-width: 100vw; overflow-x: hidden; }
-body { padding-top: 80px; font-family: var(--font-main); background-color: var(--bg-primary); color: var(--text-main); transition: 0.3s; }
+body { 
+  padding-top: 80px; 
+  font-family: var(--font-main); 
+  background-color: var(--bg-primary); 
+  color: var(--text-main); 
+  transition: background-color 0.3s ease; 
+}
 
-/* --- MAIN NAVBAR --- */
+/* --- MAIN NAVBAR CONTAINER --- */
 .navbar {
   position: fixed; top: 0; left: 0; right: 0; height: 70px;
   background: rgba(0, 0, 0, 0.2);
@@ -47,13 +55,10 @@ body { padding-top: 80px; font-family: var(--font-main); background-color: var(-
 }
 
 .navbar.scrolled {
-  background: rgba(var(--bg-rgb, 0, 0, 0), 0.7);
-  backdrop-filter: blur(12px);
+  background: rgba(252, 252, 245, 0.95);
   height: 65px;
 }
-
-[data-theme="light"] .navbar.scrolled { background: rgba(252, 252, 245, 0.8); }
-[data-theme="dark"] .navbar.scrolled { background: rgba(26, 32, 44, 0.8); }
+[data-theme="dark"] .navbar.scrolled { background: rgba(26, 32, 44, 0.95); }
 .navbar.nav-hidden { transform: translateY(-100%); }
 
 .nav-container {
@@ -71,13 +76,14 @@ body { padding-top: 80px; font-family: var(--font-main); background-color: var(-
 }
 [data-theme="dark"] .desktop-links a { color: var(--white); }
 .desktop-links a:hover { color: rgb(217, 89, 89); text-shadow: none; }
+
 .nav-badge {
   font-size: 8px; background: linear-gradient(45deg, #ff00cc, #333399); color: white;
   padding: 1px 4px; border-radius: 3px; display: flex; align-items: center; gap: 2px;
-  margin-left: 2px; box-shadow: 0 0 5px rgba(255, 0, 204, 0.5);
+  box-shadow: 0 0 5px rgba(255, 0, 204, 0.5);
 }
 
-/* --- CENTER --- */
+/* --- CENTER SECTION: LOGO --- */
 .nav-center { display: flex; justify-content: center; }
 .brand-logo {
   font-size: 40px; font-weight: 500; color: var(--text-main); text-decoration: none;
@@ -85,115 +91,68 @@ body { padding-top: 80px; font-family: var(--font-main); background-color: var(-
 }
 [data-theme="dark"] .brand-logo { color: var(--white); }
 
-/* --- RIGHT SECTION: SEARCH & ICONS --- */
+/* --- RIGHT SECTION: ICONS & SEARCH --- */
 .nav-right { display: flex; justify-content: flex-end; align-items: center; gap: 15px; }
 
-/* =============================================
-   SEARCH MODULE (The Requirement)
-   ============================================= 
-*/
-
-.desktop-search {
-  position: relative; /* Anchor for absolute children */
-  margin-right: 10px;
-  width: 280px; /* Base width */
-  z-index: 2000; /* Ensure search sits above other nav items */
-}
-
-/* 1. INPUT WRAPPER (The Search Bar) */
+/* Desktop Search Module */
+.desktop-search { position: relative; margin-right: 10px; width: 280px; z-index: 2000; }
 .search-input-wrapper {
-  position: relative;
-  width: 100%;
-  height: 40px;
-  background-color: var(--bg-input);
-  border: 1px solid var(--border-color);
-  border-radius: 25px; /* Pill shape */
-  display: flex;
-  align-items: center;
-  transition: all 0.3s ease;
-  box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+  position: relative; width: 100%; height: 40px;
+  background-color: var(--bg-input); border: 1px solid var(--border-color);
+  border-radius: 25px; display: flex; align-items: center;
+  transition: all 0.3s ease; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
 }
-
-/* The Glow Effect when typing */
-.search-input-wrapper.active-glow {
-  border-color: var(--accent-hover);
-  box-shadow: var(--search-glow);
-}
-
+.search-input-wrapper.active-glow { border-color: var(--accent-hover); box-shadow: var(--search-glow); }
 .search-input-wrapper input {
-  width: 100%;
-  border: none;
-  background: transparent;
-  padding: 0 110px 0 16px; /* Space for buttons on right */
-  font-size: 14px;
-  color: var(--text-main);
-  outline: none;
-  height: 100%;
-  border-radius: 25px;
+  width: 100%; border: none; background: transparent; padding: 0 110px 0 16px;
+  font-size: 14px; color: var(--text-main); outline: none; height: 100%;
 }
 
-/* 2. RESULTS CONTAINER (The "Separate" Thing) */
 .search-results-dropdown {
-  position: absolute;
-  top: 120%; /* Pushes it down to create the gap */
-  left: 0;
-  width: 100%;
-  background-color: var(--bg-input);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  padding: 10px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.3); /* Deep shadow */
-  animation: fadeInDrop 0.2s ease-out;
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  z-index: 2100;
+  position: absolute; top: 120%; left: 0; width: 100%;
+  background-color: var(--bg-input); border: 1px solid var(--border-color);
+  border-radius: 12px; padding: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  display: flex; flex-direction: column; gap: 5px; z-index: 2100;
 }
 
-/* Animation for the results appearing */
-@keyframes fadeInDrop {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
+input[type="search"]::-webkit-search-decoration,
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-results-button,
+input[type="search"]::-webkit-search-results-decoration {
+  -webkit-appearance: none;
+  display: none;
+}
+
+.mobile-search-close { 
+  background: none; 
+  border: none; 
+  cursor: pointer; 
+  color: var(--sale-red); 
+  display: flex; 
+  align-items: center; 
+  transition: 0.2s;
+}
+
+.mobile-search-container.active { 
+  display: flex; 
+  z-index: 2000;
+}
+
+.search-divider { 
+  width: 1px; 
+  height: 20px; 
+  background: var(--border-color); /* The vertical line between Mic and X */
 }
 
 .result-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 12px;
-  text-decoration: none;
-  color: var(--text-main);
-  border-radius: 8px;
-  transition: background 0.2s;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 10px 12px; text-decoration: none; color: var(--text-main);
+  border-radius: 8px; transition: 0.2s;
 }
+.result-item:hover { background-color: var(--bg-primary); color: var(--accent-hover); }
 
-.result-item:hover {
-  background-color: var(--bg-primary);
-  color: var(--accent-hover);
-}
-
-.result-info { display: flex; flex-direction: column; }
-.result-name { font-weight: 600; font-size: 14px; }
-.result-category { font-size: 11px; color: var(--text-secondary); text-transform: uppercase; }
-
-.no-results {
-  padding: 15px;
-  text-align: center;
-  color: var(--text-secondary);
-  font-size: 0.9rem;
-}
-.no-results strong { color: var(--text-main); }
-
-/* --- SEARCH BUTTONS (Mic, Clear, Search) --- */
-.search-actions {
-  position: absolute;
-  right: 6px;
-  top: 50%;
-  transform: translateY(-50%);
-  display: flex;
-  align-items: center;
-  gap: 2px;
-}
+/* Search Buttons */
+.search-actions { position: absolute; right: 6px; top: 50%; transform: translateY(-50%); display: flex; gap: 2px; }
 
 .mic-btn, .clear-btn, .search-btn {
   width: 32px; height: 32px;
@@ -223,19 +182,17 @@ body { padding-top: 80px; font-family: var(--font-main); background-color: var(-
   animation: spin-search 0.8s linear infinite;
 }
 @keyframes spin-search { to { transform: rotate(360deg); } }
+@keyframes pulse-mic { 0% { box-shadow: 0 0 0 0 rgba(211, 47, 47, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(211, 47, 47, 0); } 100% { box-shadow: 0 0 0 0 rgba(211, 47, 47, 0); } }
 
-/* --- ICONS & DROPDOWN --- */
+/* --- ICONS & DROPDOWNS --- */
 .nav-icons { display: flex; align-items: center; gap: 20px; }
-.icon-btn {
-  background: none; border: none; cursor: pointer; color: var(--text-main);
-  position: relative; padding: 0; transition: 0.2s;
-}
+.icon-btn { background: none; border: none; cursor: pointer; color: var(--text-main); position: relative; transition: 0.2s; }
 [data-theme="dark"] .icon-btn { color: var(--white); }
 .icon-btn:hover { color: var(--accent-hover); transform: scale(1.05); }
 .icon-btn svg { filter: drop-shadow(var(--nav-glow)); }
 
-/* User Dropdown */
-.user-dropdown-container { position: relative; }
+/* User Dropdown (Hover Logic) */
+.user-dropdown-container { position: relative; height: 100%; display: flex; align-items: center; padding: 0 10px; cursor: pointer; }
 .nav-dropdown-menu {
   position: absolute; top: 55px; right: 0; width: 220px;
   background-color: var(--bg-input); border: 1px solid var(--border-color);
@@ -243,6 +200,22 @@ body { padding-top: 80px; font-family: var(--font-main); background-color: var(-
   padding: 8px; display: flex; flex-direction: column; gap: 4px; z-index: 2000;
   animation: fadeInDrop 0.2s ease-out;
 }
+.nav-dropdown-menu::before { content: " "; position: absolute; top: -20px; left: 0; right: 0; height: 20px; background: transparent;}
+.nav-dropdown-menu::after {
+  content: ''; 
+  position: absolute; 
+  top: -6px; 
+  right: 15px; 
+  width: 12px; 
+  height: 12px;
+  background-color: var(--bg-input); 
+  border-left: 1px solid var(--border-color);
+  border-top: 1px solid var(--border-color); 
+  transform: rotate(45deg);
+  z-index: -1; /* Place behind the invisible bridge */
+}
+@keyframes fadeInDrop { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
 .dropdown-header { padding: 10px 12px; font-size: 13px; font-weight: 700; color: var(--text-secondary); border-bottom: 1px solid var(--border-color); }
 .dropdown-item {
   text-decoration: none; color: var(--text-main); padding: 10px 12px; font-size: 14px;
@@ -250,8 +223,7 @@ body { padding-top: 80px; font-family: var(--font-main); background-color: var(-
   transition: 0.2s; background: none; border: none; cursor: pointer; width: 100%;
 }
 .dropdown-item:hover { background-color: var(--bg-primary); color: var(--accent-hover); }
-.dropdown-item.logout { color: #ef4444; }
-.dropdown-item.logout:hover { background-color: #fee2e2; }
+.dropdown-item.logout { color: var(--sale-red); }
 
 .badge {
   position: absolute; top: -6px; right: -8px; background-color: var(--accent-active);
@@ -260,117 +232,152 @@ body { padding-top: 80px; font-family: var(--font-main); background-color: var(-
   box-shadow: 0 0 5px var(--accent-active);
 }
 
-/* --- MOBILE & RESPONSIVE --- */
+/* --- MOBILE SEARCH --- */
+
 .mobile-search-container {
-  background-color: var(--bg-primary); 
-  height: 70px; /* Slightly taller for better touch area */
-  padding: 10px 15px;
-  position: absolute; 
-  top: 70px; 
-  left: 0; 
-  right: 0;
-  display: none; 
-  align-items: center; 
-  justify-content: center;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.05); 
-  z-index: 900;
+  background-color: var(--bg-primary); height: 70px; padding: 10px 15px;
+  position: absolute; top: 70px; left: 0; right: 0; display: none; 
+  align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); z-index: 900;
 }
-
-.mobile-search-container.active { 
-  display: flex; 
-  animation: fadeInDrop 0.2s ease-out; 
-}
-
-/* FLEXBOX FIX: This container acts as the "Input Box" visual */
+.mobile-search-container.active { display: flex; animation: fadeInDrop 0.2s ease-out; }
 .mobile-search-wrapper { 
-  width: 100%; 
-  display: flex; 
-  align-items: center; /* Vertically centers everything */
-  background-color: var(--bg-input); 
-  border: 1px solid var(--border-color);
-  border-radius: 8px; 
-  padding: 0 12px; /* Padding for the container, not the input */
-  height: 45px;
-  gap: 8px; /* Adds space between icons and text automatically */
+  width: 100%; display: flex; align-items: center; 
+  background-color: var(--bg-input); border: 1px solid var(--border-color);
+  border-radius: 8px; padding: 0 12px; height: 45px; gap: 8px;
+}
+.mobile-search-wrapper input { flex: 1; border: none; background: none; outline: none; color: var(--text-main); font-size: 16px; }
+.mobile-search-actions { display: flex; align-items: center; gap: 12px; }
+.mobile-mic-btn { background: none; border: none; color: var(--text-secondary); display: flex; }
+.mobile-mic-btn.listening { color: var(--sale-red); }
+
+/* --- MOBILE DRAWER (MENU) --- */
+.mobile-drawer-overlay {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,0.6); z-index: 1100; opacity: 0; visibility: hidden; transition: 0.3s;
+  backdrop-filter: blur(2px);
+}
+.mobile-drawer-overlay.open { opacity: 1; visibility: visible; }
+
+.mobile-drawer {
+  position: fixed; top: 0; left: -100%; width: 85%; max-width: 320px; height: 100vh;
+  background-color: var(--bg-primary); z-index: 1200;
+  transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex; flex-direction: column; /* Critical for sticky footer */
+  box-shadow: 4px 0 20px rgba(0,0,0,0.2);
+}
+.mobile-drawer.open { left: 0; }
+
+.drawer-header {
+  background-color: var(--bg-secondary); height: 60px; display: flex;
+  justify-content: space-between; align-items: center; padding: 0 20px;
+  border-bottom: 1px solid var(--border-color); flex-shrink: 0;
+}
+.drawer-close-btn {
+  background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text-main);
+}
+.drawer-content { flex: 1; overflow-y: auto; padding: 20px; }
+
+/* Sticky Drawer Footer */
+.drawer-footer {
+  padding: 20px;
+  border-top: 1px solid var(--border-color);
+  background-color: var(--bg-secondary);
+  margin-top: auto; /* Pushes to bottom */
 }
 
-.search-icon-marker {
-  color: var(--text-secondary);
-  flex-shrink: 0; /* Prevents icon from squishing */
+.drawer-link {
+  display: flex; justify-content: space-between; align-items: center;
+  text-decoration: none; color: var(--text-main); font-size: 16px; font-weight: 600;
+  padding: 16px 0; border-bottom: 1px solid var(--border-color);
+  background: none; border: none; width: 100%; text-align: left;
+}
+.drawer-footer .drawer-link { border: none; padding: 0; }
+
+/* Mobile Cards */
+.mobile-user-card { background-color: var(--bg-input); border: 1px solid var(--border-color); border-radius: 16px; padding: 15px; margin-bottom: 20px; box-shadow: var(--nav-glow); }
+.user-greeting { display: flex; align-items: center; gap: 12px; margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid var(--border-color); }
+.greeting-icon { color: var(--accent-hover); background: rgba(var(--accent-hover-rgb, 0, 188, 212), 0.1); padding: 8px; width: 40px; height: 40px; border-radius: 50%; }
+.greeting-text { display: flex; flex-direction: column; text-align: left;}
+.greeting-text small { font-size: 11px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.8px; line-height: 1.2;}
+.greeting-text strong {font-size: 17px; color: var(--text-main); font-weight: 700; line-height: 1.4; margin-top: 2px;}
+
+.mobile-auth-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.mobile-auth-btn { 
+  display: flex; align-items: center; justify-content: center; gap: 8px; padding: 12px; 
+  border-radius: 8px; font-size: 13px; font-weight: 700; text-decoration: none; border: 1px solid var(--border-color);
+}
+.mobile-auth-btn.account-btn {background-color: var(--accent-active); color: #ffffff; border: none; box-shadow: 0 4px 10px rgba(0, 188, 212, 0.3);}
+.mobile-auth-btn.login {background-color: var(--bg-primary); color: var(--text-main);}
+.mobile-auth-btn.register { background-color: var(--text-main); color: var(--bg-primary); border: none; }
+
+.logout-btn { background-color: rgba(211, 47, 47, 0.08); color: var(--sale-red);border: 1px solid rgba(211, 47, 47, 0.2);}
+.mobile-auth-btn:active { transform: scale(0.96); opacity: 0.9;}
+.mobile-nav-group { display: flex; flex-direction: column; gap: 12px; margin: 20px 0; }
+.nav-card-btn {
+  display: flex; justify-content: left; align-items: center; padding: 10px 12px;
+  background-color: var(--bg-input); border: 1px solid var(--border-color);
+  border-radius: 12px; text-decoration: none; box-shadow: var(--nav-glow);
 }
 
-/* INPUT FIX: It now takes available space, but doesn't cover buttons */
-.mobile-search-wrapper input {
-  flex: 1; /* Magic: takes up all remaining width */
-  background-color: transparent; 
-  border: none; 
-  font-size: 16px; 
-  outline: none; 
+.nav-card-text {
+  font-family: var(--font-main);
+  font-size: 0.9rem;
+  font-weight: 800; /* Bold streetwear look */
   color: var(--text-main);
-  height: 100%;
-  padding: 0; /* Reset padding because wrapper handles it */
-  min-width: 0; /* Prevents flexbox overflow issues */
-}
-
-/* HIDE NATIVE BROWSER X ICON (The 3rd X) */
-.mobile-search-wrapper input::-webkit-search-decoration,
-.mobile-search-wrapper input::-webkit-search-cancel-button,
-.mobile-search-wrapper input::-webkit-search-results-button,
-.mobile-search-wrapper input::-webkit-search-results-decoration {
-  display: none; 
-}
-
-/* ACTIONS FIX: No longer absolute, they sit nicely in the flow */
-.mobile-search-actions { 
-  display: flex; 
-  align-items: center; 
-  gap: 12px;
-  flex-shrink: 0;
-}
-
-.mobile-search-close { 
-  background: none; 
-  border: none; 
-  cursor: pointer; 
-  color: var(--text-secondary); 
+  letter-spacing: 1px;
   display: flex;
   align-items: center;
-  padding: 4px; /* Increases touch target */
+  gap: 12px;
+  text-transform: uppercase;
+  
 }
 
+.no-results {
+  padding: 15px; text-align: center; color: var(--text-secondary);
+  font-size: 0.9rem; width: 100%; overflow: hidden;
+}
+.no-results p {
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; /* Adds ... */
+  width: 100%; display: block;
+}
+
+.settings-overlay {
+  position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+  background-color: rgba(0, 0, 0, 0.6); backdrop-filter: blur(5px);
+  z-index: 5000; display: flex; justify-content: center; align-items: center;
+}
+.settings-modal {
+  width: 95%; max-width: 450px; background-color: var(--bg-input);
+  border-radius: 20px; overflow: hidden; display: flex; flex-direction: column;
+}
+.settings-header { padding: 20px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; background: var(--bg-secondary); }
+.setting-section { padding: 20px; border-bottom: 1px solid var(--border-color); }
+.setting-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; }
+.setting-info { display: flex; align-items: center; gap: 12px; font-weight: 500; }
+
+/* Toggle Switch */
+.toggle-track { width: 44px; height: 24px; background: #cbd5e0; border-radius: 20px; position: relative; transition: 0.3s; cursor: pointer; }
+.toggle-track.active { background: var(--accent-active); }
+.toggle-thumb { width: 20px; height: 20px; background: white; border-radius: 50%; position: absolute; top: 2px; left: 2px; transition: 0.3s; }
+.toggle-track.active .toggle-thumb { transform: translateX(20px); }
+
+/* --- RESPONSIVE BREAKPOINTS --- */
 @media (max-width: 900px) {
   .desktop-only { display: none !important; }
-  .mobile-only { display: flex !important; }
-  .brand-logo { font-size: 32px; }
   .navbar { padding: 0 15px; height: 60px; }
   .nav-container { grid-template-columns: auto 1fr auto; }
+  .brand-logo { font-size: 32px; }
   body { padding-top: 60px; }
   .mobile-search-container { top: 60px; }
-}
-@media (min-width: 901px) {
-  .mobile-only { display: none !important; }
-}
-/* Add this to your Mobile section in CSS */
-.mobile-mic-btn {
-  background: none;
-  border: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 8px; /* Bigger touch target */
-  border-radius: 50%;
-  color: var(--text-secondary);
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent; /* Removes blue tap box on Android */
+  .nav-center { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); }
 }
 
-.mobile-mic-btn:active {
-  background-color: rgba(0, 0, 0, 0.05);
+.mobile-only { 
+  display: none !important; 
 }
-
-/* Reuse your existing listening animation */
-.mobile-mic-btn.listening {
-  color: var(--sale-red);
-  background-color: rgba(211, 47, 47, 0.1);
-  animation: sonar-ripple 1.5s infinite ease-out;
+@media (max-width: 900px) {
+  .mobile-only { 
+    display: flex !important; 
+  }
+  
 }

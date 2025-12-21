@@ -62,9 +62,11 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  
 }
 
 .section-title {
+  display: none;
   font-size: 32px;
   font-weight: 800;
   text-transform: uppercase;
@@ -286,4 +288,22 @@
     left: auto;
     transform: translateX(50%);
   }
+
+  .carousel-track {
+    display: flex;
+    gap: 16px;
+    scroll-snap-type: x mandatory; /* Snap to items */
+  }
+
+  .product-card {
+    min-width: 70%; /* Show partial next card */
+    scroll-snap-align: start; /* Snap alignment */
+  }
+
+  /* 2. Hide Navigation Arrows */
+  .nav-arrow {
+    display: none;
+  }
 }
+
+  
