@@ -3,11 +3,13 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../Context/AuthContext';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Mail, Lock, User, ArrowRight } from 'lucide-react';
+import { useToast} from '../context/ToastContext';
 import '../css/LoginPage.css';
 
 const LoginPage = () => {
   
   const location = useLocation();
+  const { showToast } = useToast();
 
   const [isRegistering, setIsRegistering] = useState(false);
   const [name, setName] = useState('');
@@ -23,17 +25,22 @@ const LoginPage = () => {
   const { login, register } = useAuth();
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    if (isRegistering) {
-      register(name, email, password);
-    } else {
-      login(email, password);
+    try {
+      if (isRegistering) {
+        await register(name, email, password);
+        showToast('Registration successful!', 'success');
+      } else {
+        await login(email, password);
+        showToast("Welcome back! It's good to see you.");
+      }
+      // Redirect to Home after success
+      navigate('/');
     }
-    
-    // Redirect to Home after success
-    navigate('/');
+    catch (error) {
+      showToast("Authentication failed. Please check details.", "error");
+    }
   };
 
   return (

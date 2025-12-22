@@ -1,9 +1,8 @@
-import React, { useState, useMemo, useEffect } from 'react'; // 1. Import useEffect
+import React, { useState, useMemo, useEffect } from 'react';
 import { Heart } from 'lucide-react'; 
 import { useWishlist } from '../Context/WishlistContext'; 
 import '../css/ProductShowcase.css';
 
-// --- ProductCard Component (No changes needed here) ---
 const ProductCard = ({ data }) => {
   const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
   const isLiked = isInWishlist(data.id);
@@ -61,13 +60,9 @@ const ProductCard = ({ data }) => {
   );
 };
 
-// --- Main Showcase Component ---
 const ProductShowcase = ({ title = "Our Collection", products = [], categories = [] }) => {
   const [activeCategory, setActiveCategory] = useState('All');
 
-  // --- THE FIX ---
-  // When the data (products) or available categories change (e.g. switching Men -> Women),
-  // reset the local filter back to 'All'.
   useEffect(() => {
     setActiveCategory('All');
   }, [products, categories]);

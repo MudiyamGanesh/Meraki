@@ -1,0 +1,43 @@
+.toast-notification {
+  position: fixed;
+  top: 20px;
+  right: 20px; /* or left: 50% and transform: translateX(-50%) for center */
+  background-color: white;
+  color: #333;
+  padding: 16px 24px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 10000; /* Ensure it's above everything */
+  animation: slideIn 0.3s ease-out forwards;
+  border-left: 5px solid;
+}
+
+.toast-notification.success {
+  border-left-color: #10b981; /* Green */
+}
+
+.toast-notification.success svg {
+  color: #10b981;
+}
+
+.toast-notification.error {
+  border-left-color: #ef4444; /* Red */
+}
+
+.toast-notification.error svg {
+  color: #ef4444;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
