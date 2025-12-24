@@ -16,10 +16,7 @@ const Navbar = () => {
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [showSettingsModal, setShowSettingsModal] = useState(false); 
   
-  // --- SMART SCROLL STATES ---
   const [isScrolled, setIsScrolled] = useState(false);
-  const [visible, setVisible] = useState(true);
-  const [prevScrollPos, setPrevScrollPos] = useState(window.scrollY);
 
   // --- SEARCH & VOICE STATES ---
   const [searchQuery, setSearchQuery] = useState("");
@@ -58,15 +55,13 @@ const Navbar = () => {
   // --- SMART SCROLL LOGIC ---
   useEffect(() => {
     const handleScroll = () => {
-      const currentScrollPos = window.scrollY;
-      setIsScrolled(currentScrollPos > 20);
-      const isVisible = prevScrollPos > currentScrollPos || currentScrollPos < 10;
-      setVisible(isVisible);
-      setPrevScrollPos(currentScrollPos);
+      // Just check if the user has scrolled more than 20px to trigger the background change
+      setIsScrolled(window.scrollY > 50);
     };
+    
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [prevScrollPos]);
+  }, []);
 
   // --- DEBOUNCED SEARCH LOGIC ---
   useEffect(() => {
@@ -168,7 +163,7 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className={`navbar ${isScrolled ? 'scrolled' : ''} ${visible ? '' : 'nav-hidden'}`} ref={navRef}>
+      <nav className={`navbar ${isScrolled ? 'scrolled' : ''}`} ref={navRef}>
         <div className="nav-container">
            <div className="nav-left">
              <button className="icon-btn mobile-only" onClick={() => setMobileMenuOpen(true)}>

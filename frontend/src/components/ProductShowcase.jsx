@@ -1,9 +1,13 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { Heart } from 'lucide-react'; 
 import { useWishlist } from '../Context/WishlistContext'; 
+import {Link} from 'react-router-dom';
 import '../css/ProductShowcase.css';
 
-const ProductCard = ({ data }) => {
+const ProductCard = ({ data, activeCategory }) => {
+  const cat = activeCategory === 'All' ? data.category : activeCategory;
+  const productPath = `/${data.category.toLowerCase()}/product/${data.id}`;
+
   const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
   const isLiked = isInWishlist(data.id);
 
@@ -19,7 +23,7 @@ const ProductCard = ({ data }) => {
   };
 
   return (
-    <div className="product-card">
+    <Link to={productPath} className="product-card">
       <div className="product-image-wrapper">
         <img 
           src={data.image} 
@@ -56,7 +60,7 @@ const ProductCard = ({ data }) => {
         <p className="product-subtitle">{data.subtitle}</p>
         <span className="product-price">₹ {data.price}</span>
       </div>
-    </div>
+    </Link>
   );
 };
 

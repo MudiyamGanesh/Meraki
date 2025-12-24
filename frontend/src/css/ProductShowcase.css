@@ -1,31 +1,36 @@
 /* --- COMPONENT CONTAINER --- */
 .product-showcase-section {
-  width: 96%; 
-  max-width: 1800px;
-  margin: 0 auto;
+  width: 100%; 
+  margin: 0 ;
   padding-bottom: 40px;
   background-color: var(--bg-primary);
   color: var(--text-main);
   transition: background-color 0.3s ease, color 0.3s ease;
-  /* IMPORTANT: Ensure no parent has overflow: hidden */
 }
 
 /* --- THE STICKY FILTER BAR --- */
 .filter-container {
+  width: 100vw;
   display: flex;
   gap: 12px;
   overflow-x: auto;
-  padding: 15px 4px;
+  padding: 15px 4%;
   margin-bottom: 25px;
-  scrollbar-width: none; /* Firefox */
-
-  /* STICKY LOGIC */
-  position: -webkit-sticky; /* Safari support */
+  scrollbar-width: none; 
+  position: -webkit-sticky;
   position: sticky;
-  top: 0px; /* Adjust this to match your Navbar height exactly */
-  
+  top: 60px; 
   z-index: 100;
-  background-color: var(--bg-primary); /* Prevents cards from bleeding through gaps */
+  background: rgba(252, 252, 245, 0.3); 
+  backdrop-filter: blur(25px); 
+  -webkit-backdrop-filter: blur(25px); 
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);  
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+[data-theme="dark"] .filter-container {
+  background: rgba(26, 32, 44, 0.3); 
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 /* Hide scrollbar for Chrome/Safari/Edge */
@@ -50,6 +55,7 @@
   padding: 8px 24px;
   border-radius: 50px;
   background-color: var(--bg-input); 
+  backdrop-filter: none;
   border: 1px solid var(--border-color);
   color: var(--text-main);
   font-size: 14px;
@@ -72,9 +78,20 @@
 
 /* --- PRODUCT GRID --- */
 .product-grid {
+  width: 96%;
+  max-width: 1800px;
+  margin: 25px auto;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 16px;
+}
+
+.empty-state-message {
+  width: 96%;
+  margin: 0 auto;
+  padding: 40px;
+  text-align: center;
+  color: var(--text-secondary);
 }
 
 /* --- PRODUCT CARD STYLING --- */
@@ -188,23 +205,18 @@
   color: var(--text-main);
 }
 
-/* --- RESPONSIVENESS --- */
-@media (max-width: 1100px) {
-  .product-grid { grid-template-columns: repeat(3, 1fr); }
-}
-
-@media (max-width: 900px) {
-  .filter-container {
-    top: 0px; /* Adjusted for mobile navbar height */
-    padding: 10px 15px;
-  }
-}
-
 @media (max-width: 768px) {
-  .product-showcase-section { width: 94%; }
+  .product-grid { grid-template-columns: repeat(3, 1fr); }
+  .filter-container {
+    top: 60px; /* Adjusted for mobile navbar height */
+    padding: 12px 15px;
+  }
+  .product-showcase-section { width: 100%; }
   .product-grid { 
+    width: 94%;
     grid-template-columns: repeat(2, 1fr); 
     gap: 12px; 
+    margin: 15px auto;
   }
   .product-title { font-size: 14px; }
   .product-subtitle { font-size: 11px; }

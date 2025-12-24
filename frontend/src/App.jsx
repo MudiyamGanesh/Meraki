@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react'; // Added useState
+import { sampleProducts } from './data/products';
+
 // 1. USE HASHROUTER
 import { HashRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { WishlistProvider } from './Context/WishlistContext';
@@ -21,6 +23,7 @@ import WishlistPage from './pages/WishlistPage.jsx';
 import LoginPage from './pages/LoginPage.jsx';
 import CartPage from './pages/CartPage.jsx';
 import AccountPage from './pages/AccountPage.jsx';
+import ProductPage from './pages/ProductPage';
 
 
 // Scroll Helper
@@ -105,22 +108,29 @@ function App() {
             <ScrollToTop />
             <div className="app-container">
               
-              {/* REPLACED <Navbar /> WITH CONDITIONAL COMPONENT */}
               <ConditionalNavbar />
 
               <Routes>
-                {/* REMOVED '/Meraki' FROM ALL PATHS */}
                 <Route path="/" element={<LandingPage />} />
                 
+                {/* Static Shop Routes */}
                 <Route path="/men" element={<ShopLayout category="Men" />} />
                 <Route path="/women" element={<ShopLayout category="Women" />} />
                 <Route path="/sneakers" element={<SneakerLayout />} />
 
+                {/* Other Pages */}
                 <Route path="/wishlist" element={<WishlistPage />} />
                 <Route path="/cart" element={<CartPage />} />
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/account" element={<AccountPage />} />
                 <Route path="/design" element={<DesignStudio />} />
+
+                {/* THE DYNAMIC PRODUCT ROUTE - PLACE THIS LAST */}
+                {/* Ensure sampleProducts is actually defined and imported! */}
+                <Route 
+                  path="/:category/product/:id" 
+                  element={<ProductPage products={sampleProducts} />} 
+                />
               </Routes>
               
               <ConditionalFooter />
