@@ -22,8 +22,8 @@ const ProductPage = ({ products }) => {
   const [activeImg, setActiveImg] = useState(null);
   const [demoImages, setDemoImages] = useState([]);
   const scrollRef = useRef(null);
-
   const isLiked = product ? isInWishlist(product.id) : false;
+  const [selectedVariant, setSelectedVariant] = useState(null);
 
 
   const handleImageNav = (direction) => {
@@ -93,6 +93,26 @@ const ProductPage = ({ products }) => {
   };
 
   useEffect(() => {
+    const foundProduct = products.find((p) => String(p.id) === String(id));
+    if (foundProduct) {
+      setProduct(foundProduct);
+      // Initialize with the first variant if available
+      if (foundProduct.variants) {
+        setSelectedVariant(foundProduct.variants[0]);
+        setActiveImg(foundProduct.variants[0].mainImg);
+      } else {
+        setActiveImg(foundProduct.image);
+      }
+    }
+  }, [id, products]);
+
+  const handleVariantClick = (variant) => {
+    setSelectedVariant(variant);
+    setActiveImg(variant.mainImg);
+    // You could also update the demoImages array here if each color has different angles
+  };
+
+  useEffect(() => {
     window.scrollTo(0, 0);
     const foundProduct = products.find((p) => String(p.id) === String(id));
     
@@ -156,23 +176,27 @@ const ProductPage = ({ products }) => {
             )}
             <img src={activeImg} alt={product.name} />
           </div>
-          
-          <div className="thumbnail-carousel-wrapper">
-            <div className="pdp-thumbs-scroll-container" ref={scrollRef}>
-              {demoImages.map((img, idx) => (
-                <div 
-                  key={idx} 
-                  className={`thumb-box ${activeImg === img ? 'active' : ''}`}
-                  onClick={() => setActiveImg(img)}
-                >
-                  <img src={img} alt={`view ${idx + 1}`} />
-                </div>
-              ))}
-            </div>
-          </div>
         </div>
 
         <div className="pdp-details">
+          {product.variants && (
+            <div className="pdp-selection">
+              <div className="select-label">
+                <span>AVAILABLE COLORS: <strong>{selectedVariant?.color}</strong></span>
+              </div>
+              <div className="variant-grid">
+                {product.variants.map((variant) => (
+                  <div 
+                    key={variant.id}
+                    className={`variant-thumb ${selectedVariant?.id === variant.id ? 'active' : ''}`}
+                    onClick={() => handleVariantClick(variant)}
+                  >
+                    <img src={variant.thumb} alt={variant.color} />
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
           <div className="pdp-header">
             <div className="brand-share-row">
               <span className="pdp-brand">रीति / RITI STREETWEAR</span>
@@ -195,7 +219,7 @@ const ProductPage = ({ products }) => {
             </div>
             <p className="tax-info">inclusive of all taxes</p>
           </div>
-
+          
           <div className="pdp-selection">
             <div className="select-label">
               <span>SELECT SIZE</span>

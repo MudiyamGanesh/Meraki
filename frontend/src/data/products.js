@@ -11,6 +11,11 @@ export const sampleProducts = [
     image3: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBxXhLuIYL9gP6_edx3eWg7uuqu_X_KjqtEQ&s",
     image4 : "https://lovedky.com/cdn/shop/files/copy-of-model-aleesha-pics-4x5-6-6735857623e7b_5370852e-3efa-4310-a32d-fb4d6dfab492.webp?v=1752834163&width=2048",
     image5 : "https://lovedky.com/cdn/shop/files/copy-of-model-aleesha-pics-4x5-6-6735857623e7b_5370852e-3efa-4310-a32d-fb4d6dfab492.webp?v=1752834163&width=2048",
+    variants: [
+      { id: 'v1', color: 'Black', thumb: 'https://m.media-amazon.com/images/I/71chfiWGY0L._AC_UY1100_.jpg', mainImg: 'https://images-static.nykaa.com/media/catalog/product/5/e/5e9140f284749_1.jpg?tr=w-500' },
+      { id: 'v2', color: 'White', thumb: 'https://m.media-amazon.com/images/I/71chfiWGY0L._AC_UY1100_.jpg', mainImg: 'https://images-static.nykaa.com/media/catalog/product/5/e/5e9140f284749_1.jpg?tr=w-500' },
+      { id: 'v3', color: 'Beige', thumb: 'https://m.media-amazon.com/images/I/71chfiWGY0L._AC_UY1100_.jpg', mainImg: 'https://images-static.nykaa.com/media/catalog/product/5/e/5e9140f284749_1.jpg?tr=w-500' }
+    ],
     subtitle: "Premium Oversized Collection",
     description: "Crafted from 240 GSM heavy-duty cotton..."
    },
@@ -23,6 +28,11 @@ export const sampleProducts = [
     image3: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBxXhLuIYL9gP6_edx3eWg7uuqu_X_KjqtEQ&s",
     image4 : "https://lovedky.com/cdn/shop/files/copy-of-model-aleesha-pics-4x5-6-6735857623e7b_5370852e-3efa-4310-a32d-fb4d6dfab492.webp?v=1752834163&width=2048",
     image5 : "https://lovedky.com/cdn/shop/files/copy-of-model-aleesha-pics-4x5-6-6735857623e7b_5370852e-3efa-4310-a32d-fb4d6dfab492.webp?v=1752834163&width=2048",
+    variants: [
+      { id: 'v1', color: 'Black', thumb: 'https://m.media-amazon.com/images/I/71chfiWGY0L._AC_UY1100_.jpg', mainImg: 'https://images-static.nykaa.com/media/catalog/product/5/e/5e9140f284749_1.jpg?tr=w-500' },
+      { id: 'v2', color: 'White', thumb: 'https://m.media-amazon.com/images/I/71chfiWGY0L._AC_UY1100_.jpg', mainImg: 'https://images-static.nykaa.com/media/catalog/product/5/e/5e9140f284749_1.jpg?tr=w-500' },
+      { id: 'v3', color: 'Beige', thumb: 'https://m.media-amazon.com/images/I/71chfiWGY0L._AC_UY1100_.jpg', mainImg: 'https://images-static.nykaa.com/media/catalog/product/5/e/5e9140f284749_1.jpg?tr=w-500' }
+    ],
     subtitle: "Premium Oversized Collection",
     description: "Crafted from 240 GSM heavy-duty cotton..."
    },
@@ -35,6 +45,11 @@ export const sampleProducts = [
     image3: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBxXhLuIYL9gP6_edx3eWg7uuqu_X_KjqtEQ&s",
     image4 : "https://lovedky.com/cdn/shop/files/copy-of-model-aleesha-pics-4x5-6-6735857623e7b_5370852e-3efa-4310-a32d-fb4d6dfab492.webp?v=1752834163&width=2048",
     image5 : "https://lovedky.com/cdn/shop/files/copy-of-model-aleesha-pics-4x5-6-6735857623e7b_5370852e-3efa-4310-a32d-fb4d6dfab492.webp?v=1752834163&width=2048",
+    variants: [
+      { id: 'v1', color: 'Black', thumb: 'https://m.media-amazon.com/images/I/71chfiWGY0L._AC_UY1100_.jpg', mainImg: 'https://images-static.nykaa.com/media/catalog/product/5/e/5e9140f284749_1.jpg?tr=w-500' },
+      { id: 'v2', color: 'White', thumb: 'https://m.media-amazon.com/images/I/71chfiWGY0L._AC_UY1100_.jpg', mainImg: 'https://images-static.nykaa.com/media/catalog/product/5/e/5e9140f284749_1.jpg?tr=w-500' },
+      { id: 'v3', color: 'Beige', thumb: 'https://m.media-amazon.com/images/I/71chfiWGY0L._AC_UY1100_.jpg', mainImg: 'https://images-static.nykaa.com/media/catalog/product/5/e/5e9140f284749_1.jpg?tr=w-500' }
+    ],
     subtitle: "Premium Oversized Collection",
     description: "Crafted from 240 GSM heavy-duty cotton..."
    },
@@ -47,6 +62,11 @@ export const sampleProducts = [
     image3: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBxXhLuIYL9gP6_edx3eWg7uuqu_X_KjqtEQ&s",
     image4 : "https://lovedky.com/cdn/shop/files/copy-of-model-aleesha-pics-4x5-6-6735857623e7b_5370852e-3efa-4310-a32d-fb4d6dfab492.webp?v=1752834163&width=2048",
     image5 : "https://lovedky.com/cdn/shop/files/copy-of-model-aleesha-pics-4x5-6-6735857623e7b_5370852e-3efa-4310-a32d-fb4d6dfab492.webp?v=1752834163&width=2048",
+    variants: [
+      { id: 'v1', color: 'Black', thumb: 'https://m.media-amazon.com/images/I/71chfiWGY0L._AC_UY1100_.jpg', mainImg: 'https://images-static.nykaa.com/media/catalog/product/5/e/5e9140f284749_1.jpg?tr=w-500' },
+      { id: 'v2', color: 'White', thumb: 'https://m.media-amazon.com/images/I/71chfiWGY0L._AC_UY1100_.jpg', mainImg: 'https://images-static.nykaa.com/media/catalog/product/5/e/5e9140f284749_1.jpg?tr=w-500' },
+      { id: 'v3', color: 'Beige', thumb: 'https://m.media-amazon.com/images/I/71chfiWGY0L._AC_UY1100_.jpg', mainImg: 'https://images-static.nykaa.com/media/catalog/product/5/e/5e9140f284749_1.jpg?tr=w-500' }
+    ],
     subtitle: "Premium Oversized Collection",
     description: "Crafted from 240 GSM heavy-duty cotton..."
    },
@@ -59,6 +79,11 @@ export const sampleProducts = [
     image3: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBxXhLuIYL9gP6_edx3eWg7uuqu_X_KjqtEQ&s",
     image4 : "https://lovedky.com/cdn/shop/files/copy-of-model-aleesha-pics-4x5-6-6735857623e7b_5370852e-3efa-4310-a32d-fb4d6dfab492.webp?v=1752834163&width=2048",
     image5 : "https://lovedky.com/cdn/shop/files/copy-of-model-aleesha-pics-4x5-6-6735857623e7b_5370852e-3efa-4310-a32d-fb4d6dfab492.webp?v=1752834163&width=2048",
+    variants: [
+      { id: 'v1', color: 'Black', thumb: 'https://m.media-amazon.com/images/I/71chfiWGY0L._AC_UY1100_.jpg', mainImg: 'https://images-static.nykaa.com/media/catalog/product/5/e/5e9140f284749_1.jpg?tr=w-500' },
+      { id: 'v2', color: 'White', thumb: 'https://m.media-amazon.com/images/I/71chfiWGY0L._AC_UY1100_.jpg', mainImg: 'https://images-static.nykaa.com/media/catalog/product/5/e/5e9140f284749_1.jpg?tr=w-500' },
+      { id: 'v3', color: 'Beige', thumb: 'https://m.media-amazon.com/images/I/71chfiWGY0L._AC_UY1100_.jpg', mainImg: 'https://images-static.nykaa.com/media/catalog/product/5/e/5e9140f284749_1.jpg?tr=w-500' }
+    ],
     subtitle: "Premium Oversized Collection",
     description: "Crafted from 240 GSM heavy-duty cotton..."
    },
@@ -71,6 +96,11 @@ export const sampleProducts = [
     image3: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBxXhLuIYL9gP6_edx3eWg7uuqu_X_KjqtEQ&s",
     image4 : "https://lovedky.com/cdn/shop/files/copy-of-model-aleesha-pics-4x5-6-6735857623e7b_5370852e-3efa-4310-a32d-fb4d6dfab492.webp?v=1752834163&width=2048",
     image5 : "https://lovedky.com/cdn/shop/files/copy-of-model-aleesha-pics-4x5-6-6735857623e7b_5370852e-3efa-4310-a32d-fb4d6dfab492.webp?v=1752834163&width=2048",
+    variants: [
+      { id: 'v1', color: 'Black', thumb: 'https://m.media-amazon.com/images/I/71chfiWGY0L._AC_UY1100_.jpg', mainImg: 'https://images-static.nykaa.com/media/catalog/product/5/e/5e9140f284749_1.jpg?tr=w-500' },
+      { id: 'v2', color: 'White', thumb: 'https://m.media-amazon.com/images/I/71chfiWGY0L._AC_UY1100_.jpg', mainImg: 'https://images-static.nykaa.com/media/catalog/product/5/e/5e9140f284749_1.jpg?tr=w-500' },
+      { id: 'v3', color: 'Beige', thumb: 'https://m.media-amazon.com/images/I/71chfiWGY0L._AC_UY1100_.jpg', mainImg: 'https://images-static.nykaa.com/media/catalog/product/5/e/5e9140f284749_1.jpg?tr=w-500' }
+    ],
     subtitle: "Premium Oversized Collection",
     description: "Crafted from 240 GSM heavy-duty cotton..."
    },
@@ -83,6 +113,11 @@ export const sampleProducts = [
     image3: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBxXhLuIYL9gP6_edx3eWg7uuqu_X_KjqtEQ&s",
     image4 : "https://lovedky.com/cdn/shop/files/copy-of-model-aleesha-pics-4x5-6-6735857623e7b_5370852e-3efa-4310-a32d-fb4d6dfab492.webp?v=1752834163&width=2048",
     image5 : "https://lovedky.com/cdn/shop/files/copy-of-model-aleesha-pics-4x5-6-6735857623e7b_5370852e-3efa-4310-a32d-fb4d6dfab492.webp?v=1752834163&width=2048",
+    variants: [
+      { id: 'v1', color: 'Black', thumb: 'https://m.media-amazon.com/images/I/71chfiWGY0L._AC_UY1100_.jpg', mainImg: 'https://images-static.nykaa.com/media/catalog/product/5/e/5e9140f284749_1.jpg?tr=w-500' },
+      { id: 'v2', color: 'White', thumb: 'https://m.media-amazon.com/images/I/71chfiWGY0L._AC_UY1100_.jpg', mainImg: 'https://images-static.nykaa.com/media/catalog/product/5/e/5e9140f284749_1.jpg?tr=w-500' },
+      { id: 'v3', color: 'Beige', thumb: 'https://m.media-amazon.com/images/I/71chfiWGY0L._AC_UY1100_.jpg', mainImg: 'https://images-static.nykaa.com/media/catalog/product/5/e/5e9140f284749_1.jpg?tr=w-500' }
+    ],
     subtitle: "Premium Oversized Collection",
     description: "Crafted from 240 GSM heavy-duty cotton..."
    },
@@ -95,6 +130,11 @@ export const sampleProducts = [
     image3: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBxXhLuIYL9gP6_edx3eWg7uuqu_X_KjqtEQ&s",
     image4 : "https://lovedky.com/cdn/shop/files/copy-of-model-aleesha-pics-4x5-6-6735857623e7b_5370852e-3efa-4310-a32d-fb4d6dfab492.webp?v=1752834163&width=2048",
     image5 : "https://lovedky.com/cdn/shop/files/copy-of-model-aleesha-pics-4x5-6-6735857623e7b_5370852e-3efa-4310-a32d-fb4d6dfab492.webp?v=1752834163&width=2048",
+    variants: [
+      { id: 'v1', color: 'Black', thumb: 'https://m.media-amazon.com/images/I/71chfiWGY0L._AC_UY1100_.jpg', mainImg: 'https://images-static.nykaa.com/media/catalog/product/5/e/5e9140f284749_1.jpg?tr=w-500' },
+      { id: 'v2', color: 'White', thumb: 'https://m.media-amazon.com/images/I/71chfiWGY0L._AC_UY1100_.jpg', mainImg: 'https://images-static.nykaa.com/media/catalog/product/5/e/5e9140f284749_1.jpg?tr=w-500' },
+      { id: 'v3', color: 'Beige', thumb: 'https://m.media-amazon.com/images/I/71chfiWGY0L._AC_UY1100_.jpg', mainImg: 'https://images-static.nykaa.com/media/catalog/product/5/e/5e9140f284749_1.jpg?tr=w-500' }
+    ],
     subtitle: "Premium Oversized Collection",
     description: "Crafted from 240 GSM heavy-duty cotton..."
    },
@@ -107,6 +147,11 @@ export const sampleProducts = [
     image3: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBxXhLuIYL9gP6_edx3eWg7uuqu_X_KjqtEQ&s",
     image4 : "https://lovedky.com/cdn/shop/files/copy-of-model-aleesha-pics-4x5-6-6735857623e7b_5370852e-3efa-4310-a32d-fb4d6dfab492.webp?v=1752834163&width=2048",
     image5 : "https://lovedky.com/cdn/shop/files/copy-of-model-aleesha-pics-4x5-6-6735857623e7b_5370852e-3efa-4310-a32d-fb4d6dfab492.webp?v=1752834163&width=2048",
+    variants: [
+      { id: 'v1', color: 'Black', thumb: 'https://m.media-amazon.com/images/I/71chfiWGY0L._AC_UY1100_.jpg', mainImg: 'https://images-static.nykaa.com/media/catalog/product/5/e/5e9140f284749_1.jpg?tr=w-500' },
+      { id: 'v2', color: 'White', thumb: 'https://m.media-amazon.com/images/I/71chfiWGY0L._AC_UY1100_.jpg', mainImg: 'https://images-static.nykaa.com/media/catalog/product/5/e/5e9140f284749_1.jpg?tr=w-500' },
+      { id: 'v3', color: 'Beige', thumb: 'https://m.media-amazon.com/images/I/71chfiWGY0L._AC_UY1100_.jpg', mainImg: 'https://images-static.nykaa.com/media/catalog/product/5/e/5e9140f284749_1.jpg?tr=w-500' }
+    ],
     subtitle: "Premium Oversized Collection",
     description: "Crafted from 240 GSM heavy-duty cotton..."
    },
@@ -119,6 +164,11 @@ export const sampleProducts = [
     image3: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBxXhLuIYL9gP6_edx3eWg7uuqu_X_KjqtEQ&s",
     image4 : "https://lovedky.com/cdn/shop/files/copy-of-model-aleesha-pics-4x5-6-6735857623e7b_5370852e-3efa-4310-a32d-fb4d6dfab492.webp?v=1752834163&width=2048",
     image5 : "https://lovedky.com/cdn/shop/files/copy-of-model-aleesha-pics-4x5-6-6735857623e7b_5370852e-3efa-4310-a32d-fb4d6dfab492.webp?v=1752834163&width=2048",
+    variants: [
+      { id: 'v1', color: 'Black', thumb: 'https://m.media-amazon.com/images/I/71chfiWGY0L._AC_UY1100_.jpg', mainImg: 'https://images-static.nykaa.com/media/catalog/product/5/e/5e9140f284749_1.jpg?tr=w-500' },
+      { id: 'v2', color: 'White', thumb: 'https://m.media-amazon.com/images/I/71chfiWGY0L._AC_UY1100_.jpg', mainImg: 'https://images-static.nykaa.com/media/catalog/product/5/e/5e9140f284749_1.jpg?tr=w-500' },
+      { id: 'v3', color: 'Beige', thumb: 'https://m.media-amazon.com/images/I/71chfiWGY0L._AC_UY1100_.jpg', mainImg: 'https://images-static.nykaa.com/media/catalog/product/5/e/5e9140f284749_1.jpg?tr=w-500' }
+    ],
     subtitle: "Premium Oversized Collection",
     description: "Crafted from 240 GSM heavy-duty cotton..."
    },
@@ -131,6 +181,11 @@ export const sampleProducts = [
     image3: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBxXhLuIYL9gP6_edx3eWg7uuqu_X_KjqtEQ&s",
     image4 : "https://lovedky.com/cdn/shop/files/copy-of-model-aleesha-pics-4x5-6-6735857623e7b_5370852e-3efa-4310-a32d-fb4d6dfab492.webp?v=1752834163&width=2048",
     image5 : "https://lovedky.com/cdn/shop/files/copy-of-model-aleesha-pics-4x5-6-6735857623e7b_5370852e-3efa-4310-a32d-fb4d6dfab492.webp?v=1752834163&width=2048",
+    variants: [
+      { id: 'v1', color: 'Black', thumb: 'https://m.media-amazon.com/images/I/71chfiWGY0L._AC_UY1100_.jpg', mainImg: 'https://images-static.nykaa.com/media/catalog/product/5/e/5e9140f284749_1.jpg?tr=w-500' },
+      { id: 'v2', color: 'White', thumb: 'https://m.media-amazon.com/images/I/71chfiWGY0L._AC_UY1100_.jpg', mainImg: 'https://images-static.nykaa.com/media/catalog/product/5/e/5e9140f284749_1.jpg?tr=w-500' },
+      { id: 'v3', color: 'Beige', thumb: 'https://m.media-amazon.com/images/I/71chfiWGY0L._AC_UY1100_.jpg', mainImg: 'https://images-static.nykaa.com/media/catalog/product/5/e/5e9140f284749_1.jpg?tr=w-500' }
+    ],
     subtitle: "Premium Oversized Collection",
     description: "Crafted from 240 GSM heavy-duty cotton..."
    },
@@ -143,6 +198,11 @@ export const sampleProducts = [
     image3: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBxXhLuIYL9gP6_edx3eWg7uuqu_X_KjqtEQ&s",
     image4 : "https://lovedky.com/cdn/shop/files/copy-of-model-aleesha-pics-4x5-6-6735857623e7b_5370852e-3efa-4310-a32d-fb4d6dfab492.webp?v=1752834163&width=2048",
     image5 : "https://lovedky.com/cdn/shop/files/copy-of-model-aleesha-pics-4x5-6-6735857623e7b_5370852e-3efa-4310-a32d-fb4d6dfab492.webp?v=1752834163&width=2048",
+    variants: [
+      { id: 'v1', color: 'Black', thumb: 'https://m.media-amazon.com/images/I/71chfiWGY0L._AC_UY1100_.jpg', mainImg: 'https://images-static.nykaa.com/media/catalog/product/5/e/5e9140f284749_1.jpg?tr=w-500' },
+      { id: 'v2', color: 'White', thumb: 'https://m.media-amazon.com/images/I/71chfiWGY0L._AC_UY1100_.jpg', mainImg: 'https://images-static.nykaa.com/media/catalog/product/5/e/5e9140f284749_1.jpg?tr=w-500' },
+      { id: 'v3', color: 'Beige', thumb: 'https://m.media-amazon.com/images/I/71chfiWGY0L._AC_UY1100_.jpg', mainImg: 'https://images-static.nykaa.com/media/catalog/product/5/e/5e9140f284749_1.jpg?tr=w-500' }
+    ],
     subtitle: "Premium Oversized Collection",
     description: "Crafted from 240 GSM heavy-duty cotton..."
    },
@@ -155,6 +215,11 @@ export const sampleProducts = [
     image3: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBxXhLuIYL9gP6_edx3eWg7uuqu_X_KjqtEQ&s",
     image4 : "https://lovedky.com/cdn/shop/files/copy-of-model-aleesha-pics-4x5-6-6735857623e7b_5370852e-3efa-4310-a32d-fb4d6dfab492.webp?v=1752834163&width=2048",
     image5 : "https://lovedky.com/cdn/shop/files/copy-of-model-aleesha-pics-4x5-6-6735857623e7b_5370852e-3efa-4310-a32d-fb4d6dfab492.webp?v=1752834163&width=2048",
+    variants: [
+      { id: 'v1', color: 'Black', thumb: 'https://m.media-amazon.com/images/I/71chfiWGY0L._AC_UY1100_.jpg', mainImg: 'https://images-static.nykaa.com/media/catalog/product/5/e/5e9140f284749_1.jpg?tr=w-500' },
+      { id: 'v2', color: 'White', thumb: 'https://m.media-amazon.com/images/I/71chfiWGY0L._AC_UY1100_.jpg', mainImg: 'https://images-static.nykaa.com/media/catalog/product/5/e/5e9140f284749_1.jpg?tr=w-500' },
+      { id: 'v3', color: 'Beige', thumb: 'https://m.media-amazon.com/images/I/71chfiWGY0L._AC_UY1100_.jpg', mainImg: 'https://images-static.nykaa.com/media/catalog/product/5/e/5e9140f284749_1.jpg?tr=w-500' }
+    ],
     subtitle: "Premium Oversized Collection",
     description: "Crafted from 240 GSM heavy-duty cotton..."
    },
@@ -167,6 +232,11 @@ export const sampleProducts = [
     image3: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBxXhLuIYL9gP6_edx3eWg7uuqu_X_KjqtEQ&s",
     image4 : "https://lovedky.com/cdn/shop/files/copy-of-model-aleesha-pics-4x5-6-6735857623e7b_5370852e-3efa-4310-a32d-fb4d6dfab492.webp?v=1752834163&width=2048",
     image5 : "https://lovedky.com/cdn/shop/files/copy-of-model-aleesha-pics-4x5-6-6735857623e7b_5370852e-3efa-4310-a32d-fb4d6dfab492.webp?v=1752834163&width=2048",
+    variants: [
+      { id: 'v1', color: 'Black', thumb: 'https://m.media-amazon.com/images/I/71chfiWGY0L._AC_UY1100_.jpg', mainImg: 'https://images-static.nykaa.com/media/catalog/product/5/e/5e9140f284749_1.jpg?tr=w-500' },
+      { id: 'v2', color: 'White', thumb: 'https://m.media-amazon.com/images/I/71chfiWGY0L._AC_UY1100_.jpg', mainImg: 'https://images-static.nykaa.com/media/catalog/product/5/e/5e9140f284749_1.jpg?tr=w-500' },
+      { id: 'v3', color: 'Beige', thumb: 'https://m.media-amazon.com/images/I/71chfiWGY0L._AC_UY1100_.jpg', mainImg: 'https://images-static.nykaa.com/media/catalog/product/5/e/5e9140f284749_1.jpg?tr=w-500' }
+    ],
     subtitle: "Premium Oversized Collection",
     description: "Crafted from 240 GSM heavy-duty cotton..."
    },
@@ -179,6 +249,11 @@ export const sampleProducts = [
     image3: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBxXhLuIYL9gP6_edx3eWg7uuqu_X_KjqtEQ&s",
     image4 : "https://lovedky.com/cdn/shop/files/copy-of-model-aleesha-pics-4x5-6-6735857623e7b_5370852e-3efa-4310-a32d-fb4d6dfab492.webp?v=1752834163&width=2048",
     image5 : "https://lovedky.com/cdn/shop/files/copy-of-model-aleesha-pics-4x5-6-6735857623e7b_5370852e-3efa-4310-a32d-fb4d6dfab492.webp?v=1752834163&width=2048",
+    variants: [
+      { id: 'v1', color: 'Black', thumb: 'https://m.media-amazon.com/images/I/71chfiWGY0L._AC_UY1100_.jpg', mainImg: 'https://images-static.nykaa.com/media/catalog/product/5/e/5e9140f284749_1.jpg?tr=w-500' },
+      { id: 'v2', color: 'White', thumb: 'https://m.media-amazon.com/images/I/71chfiWGY0L._AC_UY1100_.jpg', mainImg: 'https://images-static.nykaa.com/media/catalog/product/5/e/5e9140f284749_1.jpg?tr=w-500' },
+      { id: 'v3', color: 'Beige', thumb: 'https://m.media-amazon.com/images/I/71chfiWGY0L._AC_UY1100_.jpg', mainImg: 'https://images-static.nykaa.com/media/catalog/product/5/e/5e9140f284749_1.jpg?tr=w-500' }
+    ],
     subtitle: "Premium Oversized Collection",
     description: "Crafted from 240 GSM heavy-duty cotton..."
    },
@@ -191,6 +266,11 @@ export const sampleProducts = [
     image3: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBxXhLuIYL9gP6_edx3eWg7uuqu_X_KjqtEQ&s",
     image4 : "https://lovedky.com/cdn/shop/files/copy-of-model-aleesha-pics-4x5-6-6735857623e7b_5370852e-3efa-4310-a32d-fb4d6dfab492.webp?v=1752834163&width=2048",
     image5 : "https://lovedky.com/cdn/shop/files/copy-of-model-aleesha-pics-4x5-6-6735857623e7b_5370852e-3efa-4310-a32d-fb4d6dfab492.webp?v=1752834163&width=2048",
+    variants: [
+      { id: 'v1', color: 'Black', thumb: 'https://m.media-amazon.com/images/I/71chfiWGY0L._AC_UY1100_.jpg', mainImg: 'https://images-static.nykaa.com/media/catalog/product/5/e/5e9140f284749_1.jpg?tr=w-500' },
+      { id: 'v2', color: 'White', thumb: 'https://m.media-amazon.com/images/I/71chfiWGY0L._AC_UY1100_.jpg', mainImg: 'https://images-static.nykaa.com/media/catalog/product/5/e/5e9140f284749_1.jpg?tr=w-500' },
+      { id: 'v3', color: 'Beige', thumb: 'https://m.media-amazon.com/images/I/71chfiWGY0L._AC_UY1100_.jpg', mainImg: 'https://images-static.nykaa.com/media/catalog/product/5/e/5e9140f284749_1.jpg?tr=w-500' }
+    ],
     subtitle: "Premium Oversized Collection",
     description: "Crafted from 240 GSM heavy-duty cotton..."
    },
@@ -203,6 +283,11 @@ export const sampleProducts = [
     image3: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBxXhLuIYL9gP6_edx3eWg7uuqu_X_KjqtEQ&s",
     image4 : "https://lovedky.com/cdn/shop/files/copy-of-model-aleesha-pics-4x5-6-6735857623e7b_5370852e-3efa-4310-a32d-fb4d6dfab492.webp?v=1752834163&width=2048",
     image5 : "https://lovedky.com/cdn/shop/files/copy-of-model-aleesha-pics-4x5-6-6735857623e7b_5370852e-3efa-4310-a32d-fb4d6dfab492.webp?v=1752834163&width=2048",
+    variants: [
+      { id: 'v1', color: 'Black', thumb: 'https://m.media-amazon.com/images/I/71chfiWGY0L._AC_UY1100_.jpg', mainImg: 'https://images-static.nykaa.com/media/catalog/product/5/e/5e9140f284749_1.jpg?tr=w-500' },
+      { id: 'v2', color: 'White', thumb: 'https://m.media-amazon.com/images/I/71chfiWGY0L._AC_UY1100_.jpg', mainImg: 'https://images-static.nykaa.com/media/catalog/product/5/e/5e9140f284749_1.jpg?tr=w-500' },
+      { id: 'v3', color: 'Beige', thumb: 'https://m.media-amazon.com/images/I/71chfiWGY0L._AC_UY1100_.jpg', mainImg: 'https://images-static.nykaa.com/media/catalog/product/5/e/5e9140f284749_1.jpg?tr=w-500' }
+    ],
     subtitle: "Premium Oversized Collection",
     description: "Crafted from 240 GSM heavy-duty cotton..."
    },
@@ -215,6 +300,11 @@ export const sampleProducts = [
     image3: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBxXhLuIYL9gP6_edx3eWg7uuqu_X_KjqtEQ&s",
     image4 : "https://lovedky.com/cdn/shop/files/copy-of-model-aleesha-pics-4x5-6-6735857623e7b_5370852e-3efa-4310-a32d-fb4d6dfab492.webp?v=1752834163&width=2048",
     image5 : "https://lovedky.com/cdn/shop/files/copy-of-model-aleesha-pics-4x5-6-6735857623e7b_5370852e-3efa-4310-a32d-fb4d6dfab492.webp?v=1752834163&width=2048",
+    variants: [
+      { id: 'v1', color: 'Black', thumb: 'https://m.media-amazon.com/images/I/71chfiWGY0L._AC_UY1100_.jpg', mainImg: 'https://images-static.nykaa.com/media/catalog/product/5/e/5e9140f284749_1.jpg?tr=w-500' },
+      { id: 'v2', color: 'White', thumb: 'https://m.media-amazon.com/images/I/71chfiWGY0L._AC_UY1100_.jpg', mainImg: 'https://images-static.nykaa.com/media/catalog/product/5/e/5e9140f284749_1.jpg?tr=w-500' },
+      { id: 'v3', color: 'Beige', thumb: 'https://m.media-amazon.com/images/I/71chfiWGY0L._AC_UY1100_.jpg', mainImg: 'https://images-static.nykaa.com/media/catalog/product/5/e/5e9140f284749_1.jpg?tr=w-500' }
+    ],
     subtitle: "Premium Oversized Collection",
     description: "Crafted from 240 GSM heavy-duty cotton..."
    },
@@ -227,6 +317,11 @@ export const sampleProducts = [
     image3: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBxXhLuIYL9gP6_edx3eWg7uuqu_X_KjqtEQ&s",
     image4 : "https://lovedky.com/cdn/shop/files/copy-of-model-aleesha-pics-4x5-6-6735857623e7b_5370852e-3efa-4310-a32d-fb4d6dfab492.webp?v=1752834163&width=2048",
     image5 : "https://lovedky.com/cdn/shop/files/copy-of-model-aleesha-pics-4x5-6-6735857623e7b_5370852e-3efa-4310-a32d-fb4d6dfab492.webp?v=1752834163&width=2048",
+    variants: [
+      { id: 'v1', color: 'Black', thumb: 'https://m.media-amazon.com/images/I/71chfiWGY0L._AC_UY1100_.jpg', mainImg: 'https://images-static.nykaa.com/media/catalog/product/5/e/5e9140f284749_1.jpg?tr=w-500' },
+      { id: 'v2', color: 'White', thumb: 'https://m.media-amazon.com/images/I/71chfiWGY0L._AC_UY1100_.jpg', mainImg: 'https://images-static.nykaa.com/media/catalog/product/5/e/5e9140f284749_1.jpg?tr=w-500' },
+      { id: 'v3', color: 'Beige', thumb: 'https://m.media-amazon.com/images/I/71chfiWGY0L._AC_UY1100_.jpg', mainImg: 'https://images-static.nykaa.com/media/catalog/product/5/e/5e9140f284749_1.jpg?tr=w-500' }
+    ],
     subtitle: "Premium Oversized Collection",
     description: "Crafted from 240 GSM heavy-duty cotton..."
    },
@@ -239,6 +334,11 @@ export const sampleProducts = [
     image3: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBxXhLuIYL9gP6_edx3eWg7uuqu_X_KjqtEQ&s",
     image4 : "https://lovedky.com/cdn/shop/files/copy-of-model-aleesha-pics-4x5-6-6735857623e7b_5370852e-3efa-4310-a32d-fb4d6dfab492.webp?v=1752834163&width=2048",
     image5 : "https://lovedky.com/cdn/shop/files/copy-of-model-aleesha-pics-4x5-6-6735857623e7b_5370852e-3efa-4310-a32d-fb4d6dfab492.webp?v=1752834163&width=2048",
+    variants: [
+      { id: 'v1', color: 'Black', thumb: 'https://m.media-amazon.com/images/I/71chfiWGY0L._AC_UY1100_.jpg', mainImg: 'https://images-static.nykaa.com/media/catalog/product/5/e/5e9140f284749_1.jpg?tr=w-500' },
+      { id: 'v2', color: 'White', thumb: 'https://m.media-amazon.com/images/I/71chfiWGY0L._AC_UY1100_.jpg', mainImg: 'https://images-static.nykaa.com/media/catalog/product/5/e/5e9140f284749_1.jpg?tr=w-500' },
+      { id: 'v3', color: 'Beige', thumb: 'https://m.media-amazon.com/images/I/71chfiWGY0L._AC_UY1100_.jpg', mainImg: 'https://images-static.nykaa.com/media/catalog/product/5/e/5e9140f284749_1.jpg?tr=w-500' }
+    ],
     subtitle: "Premium Oversized Collection",
     description: "Crafted from 240 GSM heavy-duty cotton..."
    },
@@ -251,6 +351,11 @@ export const sampleProducts = [
     image3: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBxXhLuIYL9gP6_edx3eWg7uuqu_X_KjqtEQ&s",
     image4 : "https://lovedky.com/cdn/shop/files/copy-of-model-aleesha-pics-4x5-6-6735857623e7b_5370852e-3efa-4310-a32d-fb4d6dfab492.webp?v=1752834163&width=2048",
     image5 : "https://lovedky.com/cdn/shop/files/copy-of-model-aleesha-pics-4x5-6-6735857623e7b_5370852e-3efa-4310-a32d-fb4d6dfab492.webp?v=1752834163&width=2048",
+    variants: [
+      { id: 'v1', color: 'Black', thumb: 'https://m.media-amazon.com/images/I/71chfiWGY0L._AC_UY1100_.jpg', mainImg: 'https://images-static.nykaa.com/media/catalog/product/5/e/5e9140f284749_1.jpg?tr=w-500' },
+      { id: 'v2', color: 'White', thumb: 'https://m.media-amazon.com/images/I/71chfiWGY0L._AC_UY1100_.jpg', mainImg: 'https://images-static.nykaa.com/media/catalog/product/5/e/5e9140f284749_1.jpg?tr=w-500' },
+      { id: 'v3', color: 'Beige', thumb: 'https://m.media-amazon.com/images/I/71chfiWGY0L._AC_UY1100_.jpg', mainImg: 'https://images-static.nykaa.com/media/catalog/product/5/e/5e9140f284749_1.jpg?tr=w-500' }
+    ],
     subtitle: "Premium Oversized Collection",
     description: "Crafted from 240 GSM heavy-duty cotton..."
    },
@@ -263,8 +368,12 @@ export const sampleProducts = [
     image3: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBxXhLuIYL9gP6_edx3eWg7uuqu_X_KjqtEQ&s",
     image4 : "https://lovedky.com/cdn/shop/files/copy-of-model-aleesha-pics-4x5-6-6735857623e7b_5370852e-3efa-4310-a32d-fb4d6dfab492.webp?v=1752834163&width=2048",
     image5 : "https://lovedky.com/cdn/shop/files/copy-of-model-aleesha-pics-4x5-6-6735857623e7b_5370852e-3efa-4310-a32d-fb4d6dfab492.webp?v=1752834163&width=2048",
+    variants: [
+      { id: 'v1', color: 'Black', thumb: 'https://m.media-amazon.com/images/I/71chfiWGY0L._AC_UY1100_.jpg', mainImg: 'https://images-static.nykaa.com/media/catalog/product/5/e/5e9140f284749_1.jpg?tr=w-500' },
+      { id: 'v2', color: 'White', thumb: 'https://m.media-amazon.com/images/I/71chfiWGY0L._AC_UY1100_.jpg', mainImg: 'https://images-static.nykaa.com/media/catalog/product/5/e/5e9140f284749_1.jpg?tr=w-500' },
+      { id: 'v3', color: 'Beige', thumb: 'https://m.media-amazon.com/images/I/71chfiWGY0L._AC_UY1100_.jpg', mainImg: 'https://images-static.nykaa.com/media/catalog/product/5/e/5e9140f284749_1.jpg?tr=w-500' }
+    ],
     subtitle: "Premium Oversized Collection",
     description: "Crafted from 240 GSM heavy-duty cotton..."
    },
-
 ];
