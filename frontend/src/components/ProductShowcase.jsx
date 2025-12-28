@@ -1,13 +1,13 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { Heart } from 'lucide-react'; 
 import { useWishlist } from '../Context/WishlistContext'; 
-import {Link} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import '../css/ProductShowcase.css';
 
 const ProductCard = ({ data, activeCategory }) => {
-  const cat = activeCategory === 'All' ? data.category : activeCategory;
-  const productPath = `/${data.category.toLowerCase()}/product/${data.id}`;
+  // Path logic removed since ProductPage is deleted
 
+  const navigate = useNavigate();
   const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
   const isLiked = isInWishlist(data.id);
 
@@ -21,9 +21,13 @@ const ProductCard = ({ data, activeCategory }) => {
       addToWishlist(data);
     }
   };
+  const handleCardClick = () => {
+    navigate(`/product/${data.id}`, { state: { product: data } });
+  };
 
+  // Changed form <Link> to <div> since navigation is removed
   return (
-    <Link to={productPath} className="product-card">
+    <div className="product-card" onClick={handleCardClick} style={{cursor: 'pointer'}}>
       <div className="product-image-wrapper">
         <img 
           src={data.image} 
@@ -60,7 +64,7 @@ const ProductCard = ({ data, activeCategory }) => {
         <p className="product-subtitle">{data.subtitle}</p>
         <span className="product-price">₹ {data.price}</span>
       </div>
-    </Link>
+    </div>
   );
 };
 
