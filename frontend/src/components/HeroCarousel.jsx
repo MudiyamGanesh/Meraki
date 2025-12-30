@@ -1,80 +1,51 @@
-import React, { useState, useRef, useEffect, useLayoutEffect } from "react";
+import React, { useState, useRef, useEffect, useLayoutEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import "../css/HeroCarousel.css";
 
-// --- DATA SETS ---
-const menSlides = [
-  {
-    id: 1,
-    title: "Summer Linen",
-    price: "From ₹999",
-    features: ["Breathable Fabric", "Relaxed Fit", "Eco-Friendly"],
-    image: "https://images.unsplash.com/photo-1523381210434-271e8be1f52b?auto=format&fit=crop&w=800&q=80",
-  },
-  {
-    id: 2,
-    title: "Casual Denim",
-    price: "From ₹1,499",
-    features: ["Durable Stitch", "Vintage Wash", "All Sizes"],
-    image: "https://www.urbanofashion.com/cdn/shop/files/shirtden2pc-iceblue-1.jpg?v=1736093532",
-  },
-  {
-    id: 3,
-    title: "Urban Street",
-    price: "From ₹2,499",
-    features: ["Heavy Cotton", "Oversized", "Graphic Prints"],
-    image: "https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?auto=format&fit=crop&w=800&q=80",
-  }
-];
+// Note: No data import here! We receive data via props now.
 
-const womenSlides = [
-  {
-    id: 101,
-    title: "Boho Chic",
-    price: "From ₹1,299",
-    features: ["Flowy Silhouette", "Floral Patterns", "Lightweight"],
-    image: "https://images.unsplash.com/photo-1496747611176-843222e1e57c?auto=format&fit=crop&w=800&q=80",
-  },
-  {
-    id: 102,
-    title: "Power Suits",
-    price: "From ₹3,999",
-    features: ["Tailored Fit", "Premium Blend", "Office Ready"],
-    image: "https://si.wsj.net/public/resources/images/BN-VB698_SUITS0_M_20170912112340.jpg",
-  },
-  {
-    id: 103,
-    title: "Evening Elegance",
-    price: "From ₹2,499",
-    features: ["Silk Satin", "Maxi Length", "Bold Colors"],
-    image: "https://images.unsplash.com/photo-1566174053879-31528523f8ae?auto=format&fit=crop&w=800&q=80",
-  }
-];
-
-// Receive activeTab prop
-const HeroCarousel = ({ activeTab = 'Men' }) => {
-  const categories = activeTab === 'Women' ? womenSlides : menSlides;
+const HeroCarousel = ({ activeTab, products = [] }) => {
   
+  // --- 1. PREPARE SLIDES ---
+  // Transform the raw product list into carousel slides based on the Active Tab
+  const slides = useMemo(() => {
+    return products
+      .filter((product) => product.gender === activeTab) // Filter by current tab
+      .slice(0, 5) // Limit to top 5
+      .map((product) => ({
+        id: product.id,
+        title: product.name,
+        price: `From ₹${product.price}`,
+        // Create features from raw data attributes
+        features: [
+          product.subCategory || "Premium Collection",
+          product.fit || "Regular Fit",
+          product.fabric || "100% Cotton"
+        ],
+        image: product.image, 
+      }));
+  }, [activeTab, products]);
+
   const [currentIndex, setCurrentIndex] = useState(0); 
   const [mobileActiveIndex, setMobileActiveIndex] = useState(0);
   const [hoveredIndex, setHoveredIndex] = useState(null);
   
   const scrollRef = useRef(null);
   const cardRefs = useRef([]);
-  const length = categories.length;
+  const length = slides.length;
 
-  // --- 1. FORCE SCROLL RESET ON MOUNT & TAB CHANGE ---
+  // --- 2. FORCE SCROLL RESET ON MOUNT & TAB CHANGE ---
   useLayoutEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollLeft = 0; 
     }
     setCurrentIndex(0);
     setMobileActiveIndex(0);
-  }, [activeTab, categories]);
+  }, [activeTab, slides]);
 
 
-  // --- 2. MOBILE SCROLL OBSERVER ---
+  // --- 3. MOBILE SCROLL OBSERVER ---
   useEffect(() => {
     const observerCallback = (entries) => {
       entries.forEach((entry) => {
@@ -102,7 +73,7 @@ const HeroCarousel = ({ activeTab = 'Men' }) => {
       observer.disconnect();
       clearTimeout(timeoutId);
     };
-  }, [categories]); 
+  }, [slides]); 
 
 
   // --- DESKTOP NAVIGATION ---
@@ -113,6 +84,9 @@ const HeroCarousel = ({ activeTab = 'Men' }) => {
     setCurrentIndex((prev) => (prev === 0 ? length - 1 : prev - 1));
   };
 
+  // If no slides, return null or a loader to prevent crash
+  if (slides.length === 0) return null;
+
   return (
     <div className="carousel-section">
       <div className="carousel-track-container" ref={scrollRef}>
@@ -121,7 +95,7 @@ const HeroCarousel = ({ activeTab = 'Men' }) => {
         </button>
 
         <div className="cards-wrapper">
-          {categories.map((item, index) => {
+          {slides.map((item, index) => {
             const position = (index === currentIndex) ? "center" : 
                              (index === (currentIndex - 1 + length) % length) ? "left" : 
                              (index === (currentIndex + 1) % length) ? "right" : "hidden";

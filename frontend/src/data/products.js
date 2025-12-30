@@ -1,112 +1,194 @@
 // ==========================================
-// 1. DATA POOLS (The raw materials)
+// 1. THE HELPER FUNCTION
 // ==========================================
-
-const imageSets = [
-  // Set A: Black Tee (Your original)
-  [
-    "https://prod-img.thesouledstore.com/public/theSoul/uploads/catalog/product/1692793157_4788883.jpg?w=480&dpr=2",
-    "https://prod-img.thesouledstore.com/public/theSoul/uploads/catalog/product/1692793157_3493128.jpg?w=480&dpr=2",
-    "https://prod-img.thesouledstore.com/public/theSoul/uploads/catalog/product/1692793157_6004455.jpg?w=480&dpr=2",
-    "https://prod-img.thesouledstore.com/public/theSoul/uploads/catalog/product/1711950406_1673107.jpg?w=480&dpr=2"
-  ],
-  // Set B: White/Light Variant
-  [
-    "https://prod-img.thesouledstore.com/public/theSoul/uploads/catalog/product/1692793157_4788883.jpg?w=480&dpr=2",
-    "https://prod-img.thesouledstore.com/public/theSoul/uploads/catalog/product/1692793157_3493128.jpg?w=480&dpr=2",
-    "https://prod-img.thesouledstore.com/public/theSoul/uploads/catalog/product/1692793157_6004455.jpg?w=480&dpr=2",
-    "https://prod-img.thesouledstore.com/public/theSoul/uploads/catalog/product/1711950406_1673107.jpg?w=480&dpr=2"
-  ],
-  // Set C: Blue/Dark Variant
-  [
-    "https://prod-img.thesouledstore.com/public/theSoul/uploads/catalog/product/1692793157_4788883.jpg?w=480&dpr=2",
-    "https://prod-img.thesouledstore.com/public/theSoul/uploads/catalog/product/1692793157_3493128.jpg?w=480&dpr=2",
-    "https://prod-img.thesouledstore.com/public/theSoul/uploads/catalog/product/1692793157_6004455.jpg?w=480&dpr=2",
-    "https://prod-img.thesouledstore.com/public/theSoul/uploads/catalog/product/1711950406_1673107.jpg?w=480&dpr=2"
-  ]
-];
-
-const genders = ['Men', 'Women', 'Unisex'];
-const articleTypes = ['T-Shirt', 'Oversized Tee', 'Hoodie', 'Sweatshirt'];
-const fits = ['Oversized', 'Regular', 'Slim', 'Boxy'];
-const themes = ['Anime', 'Marvel', 'Streetwear', 'Minimalist', 'Pop Culture'];
-const fabrics = ['100% Cotton', 'Cotton Blend', 'Heavy Duty Cotton'];
-const offerTags = ["Buy 2 Get 1", "Flat 20% Off", "New Arrival", null];
-const basePrices = [799, 999, 1299, 1499];
-
-// ==========================================
-// 2. THE GENERATOR
-// ==========================================
-
-const createProduct = (index) => {
-  const getCyclicValue = (array, i) => array[i % array.length];
-  const seed = index * 1337; 
-  const getRandomInRange = (min, max) => (seed % (max - min + 1)) + min;
-
-  // Select attributes
-  const selectedImages = getCyclicValue(imageSets, index);
-  const gender = getCyclicValue(genders, index);
-  const fit = getCyclicValue(fits, index);
-  const theme = getCyclicValue(themes, index);
-  const articleType = getCyclicValue(articleTypes, index);
+const createProduct = (id, name, gender, price, mrp, images, meta = {}) => {
+  // 1. Auto-Calculate Discount
+  const discountVal = Math.round(((mrp - price) / mrp) * 100);
   
-  // Math for price
-  const price = getCyclicValue(basePrices, index);
-  const mrp = Math.round(price * 1.4);
-  const discountPercent = Math.round(((mrp - price) / mrp) * 100);
-
   return {
-    id: index + 1,
+    id, 
+    name, 
+    gender, 
+    price, 
+    mrp, 
+    discountDisplay: `${discountVal}% OFF`,
     
-    // --- YOUR REQUESTED IMAGE STRUCTURE ---
-    // Flattened directly onto the object
-    image: selectedImages[0],
-    image2: selectedImages[1],
-    image3: selectedImages[2] || selectedImages[0], // Fallback if image 3 doesn't exist
-    image4: selectedImages[3] || selectedImages[1],
+    // 2. Image Logic (Expects 4 images, handles fallbacks)
+    image: images[0],                 // Main Card Image
+    hoverImage: images[1],
+    image1: images[0],
+    image2: images[1],
+    image3: images[2],
+    image4: images[3],
+    gallery: images,                  // Full Gallery (4 Images)
 
-    // --- YOUR REQUESTED VARIANTS STRUCTURE ---
-    variants: [
-        { 
-            id: `v${index}-1`, 
-            color: 'Black', 
-            thumb: selectedImages[0], 
-            mainImg: selectedImages[1] 
-        },
-        { 
-            id: `v${index}-2`, 
-            color: 'White', 
-            thumb: selectedImages[0], // In a real app, these would change URL
-            mainImg: selectedImages[1] 
-        },
-        { 
-            id: `v${index}-3`, 
-            color: 'Beige', 
-            thumb: selectedImages[0], 
-            mainImg: selectedImages[1] 
-        }
-    ],
-
-    // --- CORE DETAILS (For Filtering) ---
-    name: `${fit} ${theme} ${articleType}`,
-    category: gender, // Matches your original "Men"
-    price: price,
+    // 3. Meta Data & Categories
+    subCategory: meta.subCategory || "Topwear",
+    articleType: meta.articleType || "T-Shirt",
+    fit:         meta.fit         || "Regular Fit",
+    fabric:      meta.fabric      || "100% Cotton",
+    collection:  meta.collection  || "General",
+    theme:       meta.theme       || "Modern",
+    offerTag:    meta.offerTag    || null, 
     
-    // --- EXTRA METADATA (For Advanced Filtering) ---
-    subtitle: `Premium ${fit} Collection`,
-    description: `Crafted from ${getCyclicValue(fabrics, index)}...`,
-    
-    mrp: mrp,
-    discountDisplay: `${discountPercent}% OFF`,
-    offerTag: getCyclicValue(offerTags, index),
-    
-    fit: fit,
-    theme: theme,
-    fabric: getCyclicValue(fabrics, index),
-    
-    rating: (getRandomInRange(35, 50) / 10).toFixed(1),
-    reviewCount: getRandomInRange(50, 500)
+    // Legacy support
+    variants: meta.variants || [
+        { id: `v${id}`, color: 'Default', thumb: images[0], mainImg: images[0] }
+    ]
   };
 };
 
-export const sampleProducts = Array.from({ length: 100 }, (_, i) => createProduct(i));
+// ==========================================
+// 2. YOUR CENTRAL DATA STORE
+// ==========================================
+export const sampleProducts = [
+
+  // ==========================================
+  // MEN'S CATEGORY
+  // ==========================================
+
+  // --- Men: Topwear ---
+  createProduct(1, "Cyberpunk Oversized Tee", "Men", 899, 1499, 
+    [
+      "https://prod-img.thesouledstore.com/public/theSoul/uploads/catalog/product/1761303563_1292253.jpg?w=300&dpr=1", // Front
+      "https://prod-img.thesouledstore.com/public/theSoul/uploads/catalog/product/1761303563_1292253.jpg?w=300&dpr=1", // Back
+      "https://prod-img.thesouledstore.com/public/theSoul/uploads/catalog/product/1761303563_1292253.jpg?w=300&dpr=1", // Detail
+      "https://prod-img.thesouledstore.com/public/theSoul/uploads/catalog/product/1761303563_1292253.jpg?w=300&dpr=1"  // Lifestyle
+    ], 
+    { subCategory: "Topwear", articleType: "Oversized T-Shirt", theme: "Streetwear", offerTag: "Trending" }
+  ),
+  createProduct(2, "Classic Polo Navy", "Men", 1299, 2999, 
+    [
+      "https://assets.ajio.com/medias/sys_master/root/20230802/tmkK/64ca72dceebac147fca19c8a/-473Wx593H-469519486-greymarl-MODEL.jpg",
+      "https://assets.ajio.com/medias/sys_master/root/20230802/tmkK/64ca72dceebac147fca19c8a/-473Wx593H-469519486-greymarl-MODEL.jpg",
+      "https://assets.ajio.com/medias/sys_master/root/20230802/tmkK/64ca72dceebac147fca19c8a/-473Wx593H-469519486-greymarl-MODEL.jpg",
+      "https://assets.ajio.com/medias/sys_master/root/20230802/tmkK/64ca72dceebac147fca19c8a/-473Wx593H-469519486-greymarl-MODEL.jpg"
+    ], 
+    { subCategory: "Topwear", articleType: "Polo T-Shirt", fit: "Slim Fit" }
+  ),
+  createProduct(3, "Varsity Bomber Jacket", "Men", 2499, 4999, 
+    [
+      "https://m.media-amazon.com/images/I/71pp0HTPCwL._AC_UY1100_.jpg",
+      "https://m.media-amazon.com/images/I/71pp0HTPCwL._AC_UY1100_.jpg",
+      "https://m.media-amazon.com/images/I/71pp0HTPCwL._AC_UY1100_.jpg",
+      "https://m.media-amazon.com/images/I/71pp0HTPCwL._AC_UY1100_.jpg"
+    ], 
+    { subCategory: "Winterwear", articleType: "Jacket", offerTag: "Winter Essential" }
+  ),
+
+  // --- Men: Bottomwear ---
+  createProduct(4, "Tactical Cargo Pants", "Men", 1899, 3299, 
+    [
+      "https://m.media-amazon.com/images/I/71pp0HTPCwL._AC_UY1100_.jpg", 
+      "https://m.media-amazon.com/images/I/71pp0HTPCwL._AC_UY1100_.jpg",
+      "https://m.media-amazon.com/images/I/71pp0HTPCwL._AC_UY1100_.jpg",
+      "https://m.media-amazon.com/images/I/71pp0HTPCwL._AC_UY1100_.jpg"
+    ], 
+    { subCategory: "Bottomwear", articleType: "Cargo Pants", fit: "Relaxed Fit" }
+  ),
+  createProduct(5, "Urban Distressed Jeans", "Men", 2199, 3499, 
+    [
+      "https://m.media-amazon.com/images/I/71pp0HTPCwL._AC_UY1100_.jpg",
+      "https://m.media-amazon.com/images/I/71pp0HTPCwL._AC_UY1100_.jpg",
+      "https://m.media-amazon.com/images/I/71pp0HTPCwL._AC_UY1100_.jpg",
+      "https://m.media-amazon.com/images/I/71pp0HTPCwL._AC_UY1100_.jpg"
+    ], 
+    { subCategory: "Bottomwear", articleType: "Jeans", fit: "Skinny Fit" }
+  ),
+
+  // --- Men: Footwear ---
+  createProduct(6, "Retro High Sneakers", "Men", 3499, 6999, 
+    [
+      "https://assets.myntassets.com/w_412,q_30,dpr_3,fl_progressive,f_webp/assets/images/2024/JULY/29/6xDjrKNT_1c000df180b841b690cd7ac98984e554.jpg",
+      "https://assets.myntassets.com/w_412,q_30,dpr_3,fl_progressive,f_webp/assets/images/2024/JULY/29/6xDjrKNT_1c000df180b841b690cd7ac98984e554.jpg",
+      "https://assets.myntassets.com/w_412,q_30,dpr_3,fl_progressive,f_webp/assets/images/2024/JULY/29/6xDjrKNT_1c000df180b841b690cd7ac98984e554.jpg",
+      "https://assets.myntassets.com/w_412,q_30,dpr_3,fl_progressive,f_webp/assets/images/2024/JULY/29/6xDjrKNT_1c000df180b841b690cd7ac98984e554.jpg"
+    ], 
+    { subCategory: "Footwear", articleType: "Sneakers", theme: "Streetwear" }
+  ),
+
+  // ==========================================
+  // WOMEN'S CATEGORY
+  // ==========================================
+
+  // --- Women: Topwear ---
+  createProduct(7, "Lavender Crop Hoodie", "Women", 1299, 2199, 
+    [
+      "https://www.bigw.com.au/medias/sys_master/images/images/hf4/h18/99180837109790.jpg",
+      "https://www.bigw.com.au/medias/sys_master/images/images/hf4/h18/99180837109790.jpg",
+      "https://www.bigw.com.au/medias/sys_master/images/images/hf4/h18/99180837109790.jpg",
+      "https://www.bigw.com.au/medias/sys_master/images/images/hf4/h18/99180837109790.jpg"
+    ], 
+    { subCategory: "Topwear", articleType: "Sweatshirt", offerTag: "Bestseller" }
+  ),
+  createProduct(8, "Floral Summer Dress", "Women", 1899, 3299, 
+    [
+      "https://assets.ajio.com/medias/sys_master/root/20230802/tmkK/64ca72dceebac147fca19c8a/-473Wx593H-469519486-greymarl-MODEL.jpg",
+      "https://assets.ajio.com/medias/sys_master/root/20230802/tmkK/64ca72dceebac147fca19c8a/-473Wx593H-469519486-greymarl-MODEL.jpg",
+      "https://assets.ajio.com/medias/sys_master/root/20230802/tmkK/64ca72dceebac147fca19c8a/-473Wx593H-469519486-greymarl-MODEL.jpg",
+      "https://assets.ajio.com/medias/sys_master/root/20230802/tmkK/64ca72dceebac147fca19c8a/-473Wx593H-469519486-greymarl-MODEL.jpg"
+    ], 
+    { subCategory: "Topwear", articleType: "Dress", theme: "Summer Collection" }
+  ),
+  createProduct(9, "Graphic Boyfriend Tee", "Women", 799, 1299, 
+    [
+      "https://www.bigw.com.au/medias/sys_master/images/images/hf4/h18/99180837109790.jpg",
+      "https://www.bigw.com.au/medias/sys_master/images/images/hf4/h18/99180837109790.jpg",
+      "https://www.bigw.com.au/medias/sys_master/images/images/hf4/h18/99180837109790.jpg",
+      "https://www.bigw.com.au/medias/sys_master/images/images/hf4/h18/99180837109790.jpg"
+    ], 
+    { subCategory: "Topwear", articleType: "T-Shirt", fit: "Oversized" }
+  ),
+
+  // --- Women: Bottomwear ---
+  createProduct(10, "Wide Leg Denim", "Women", 2199, 3999, 
+    [
+      "https://m.media-amazon.com/images/I/71chfiWGY0L._AC_UY1100_.jpg",
+      "https://m.media-amazon.com/images/I/71chfiWGY0L._AC_UY1100_.jpg",
+      "https://m.media-amazon.com/images/I/71chfiWGY0L._AC_UY1100_.jpg",
+      "https://m.media-amazon.com/images/I/71chfiWGY0L._AC_UY1100_.jpg"
+    ], 
+    { subCategory: "Bottomwear", articleType: "Jeans", fit: "Wide Leg" }
+  ),
+  createProduct(11, "Pleated Formal Trousers", "Women", 1599, 2499, 
+    [
+      "https://m.media-amazon.com/images/I/71chfiWGY0L._AC_UY1100_.jpg",
+      "https://m.media-amazon.com/images/I/71chfiWGY0L._AC_UY1100_.jpg",
+      "https://m.media-amazon.com/images/I/71chfiWGY0L._AC_UY1100_.jpg",
+      "https://m.media-amazon.com/images/I/71chfiWGY0L._AC_UY1100_.jpg"
+    ], 
+    { subCategory: "Bottomwear", articleType: "Trousers", fit: "Regular Fit" }
+  ),
+
+  // --- Women: Accessories ---
+  createProduct(12, "Chunky Platform Clogs", "Women", 1299, 2999, 
+    [
+      "https://assets.myntassets.com/w_412,q_30,dpr_3,fl_progressive,f_webp/assets/images/2024/JULY/29/6xDjrKNT_1c000df180b841b690cd7ac98984e554.jpg",
+      "https://assets.myntassets.com/w_412,q_30,dpr_3,fl_progressive,f_webp/assets/images/2024/JULY/29/6xDjrKNT_1c000df180b841b690cd7ac98984e554.jpg",
+      "https://assets.myntassets.com/w_412,q_30,dpr_3,fl_progressive,f_webp/assets/images/2024/JULY/29/6xDjrKNT_1c000df180b841b690cd7ac98984e554.jpg",
+      "https://assets.myntassets.com/w_412,q_30,dpr_3,fl_progressive,f_webp/assets/images/2024/JULY/29/6xDjrKNT_1c000df180b841b690cd7ac98984e554.jpg"
+    ], 
+    { subCategory: "Footwear", articleType: "Clogs", offerTag: "New Arrival" }
+  ),
+  
+  // --- Stranger Things Special ---
+  createProduct(13, "Hawkins High Tee", "Women", 1199, 1799, 
+    [
+      "https://assets.ajio.com/medias/sys_master/root/20230802/tmkK/64ca72dceebac147fca19c8a/-473Wx593H-469519486-greymarl-MODEL.jpg",
+      "https://assets.ajio.com/medias/sys_master/root/20230802/tmkK/64ca72dceebac147fca19c8a/-473Wx593H-469519486-greymarl-MODEL.jpg",
+      "https://assets.ajio.com/medias/sys_master/root/20230802/tmkK/64ca72dceebac147fca19c8a/-473Wx593H-469519486-greymarl-MODEL.jpg",
+      "https://assets.ajio.com/medias/sys_master/root/20230802/tmkK/64ca72dceebac147fca19c8a/-473Wx593H-469519486-greymarl-MODEL.jpg"
+    ], 
+    { subCategory: "Topwear", articleType: "Oversized T-Shirt", theme: "Stranger Things", offerTag: "Selling Fast" }
+  ),
+  createProduct(14, "Mind Flayer Full Sleeve", "Men", 1299, 2199, 
+    [
+      "https://prod-img.thesouledstore.com/public/theSoul/uploads/catalog/product/1761303563_1292253.jpg?w=300&dpr=1",
+      "https://prod-img.thesouledstore.com/public/theSoul/uploads/catalog/product/1761303563_1292253.jpg?w=300&dpr=1",
+      "https://prod-img.thesouledstore.com/public/theSoul/uploads/catalog/product/1761303563_1292253.jpg?w=300&dpr=1",
+      "https://prod-img.thesouledstore.com/public/theSoul/uploads/catalog/product/1761303563_1292253.jpg?w=300&dpr=1"
+    ], 
+    { subCategory: "Topwear", articleType: "Full Sleeve", theme: "Stranger Things" }
+  )
+
+];

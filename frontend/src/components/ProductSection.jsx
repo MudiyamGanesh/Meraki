@@ -1,29 +1,26 @@
-import React, { useState, useEffect } from 'react'; // 1. Import useEffect
-import { ChevronLeft, ChevronRight } from 'lucide-react'; // I added icons back for consistency
+import React, { useState, useEffect } from 'react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import '../css/ProductSection.css';
 
 const ProductSection = ({ title, subtitle, products }) => {
   const [startIndex, setStartIndex] = useState(0);
   const itemsPerPage = 4;
 
-  // --- THE FIX ---
-  // whenever 'products' (or 'title') changes, reset the index to 0
+  // Reset to start when the product category/list changes
   useEffect(() => {
     setStartIndex(0);
-  }, [products, title]); 
+  }, [products, title]);
 
-  // Slice the data to show only 4 items at a time
+  // Slice the data
   const visibleProducts = products.slice(startIndex, startIndex + itemsPerPage);
 
   const handleNext = () => {
-    // Only go next if there are more products to show
     if (startIndex + itemsPerPage < products.length) {
       setStartIndex(startIndex + itemsPerPage);
     }
   };
 
   const handlePrev = () => {
-    // Only go prev if we are not at the start
     if (startIndex - itemsPerPage >= 0) {
       setStartIndex(startIndex - itemsPerPage);
     }
@@ -37,7 +34,7 @@ const ProductSection = ({ title, subtitle, products }) => {
       </div>
 
       <div className="carousel-container">
-        {/* Left Arrow Button */}
+        {/* Left Arrow */}
         <button 
           className="nav-btn prev-btn" 
           onClick={handlePrev}
@@ -51,23 +48,56 @@ const ProductSection = ({ title, subtitle, products }) => {
         <div className="product-grid">
           {visibleProducts.map((product) => (
             <div key={product.id} className="product-card">
+              
+              {/* Image & Badge Wrapper */}
               <div className="image-wrapper">
-                {product.badge && (
-                  <span className="product-badge">{product.badge}</span>
+                {/* 1. Map 'offerTag' from data to the badge */}
+                {product.offerTag && (
+                  <span className="product-badge">{product.offerTag}</span>
                 )}
-                <img src={product.image} alt={product.name} className="product-image" />
+                
+                <img 
+                  src={product.image} 
+                  alt={product.name} 
+                  className="product-image" 
+                  // Optional: Add hover effect if you want to use the 2nd image
+                  // onMouseOver={e => e.currentTarget.src = product.hoverImage || product.image}
+                  // onMouseOut={e => e.currentTarget.src = product.image}
+                />
               </div>
               
               <div className="product-details">
                 <h3 className="product-name">{product.name}</h3>
-                <p className="product-category">{product.category}</p>
-                <p className="product-price">₹ {product.price}</p>
+                
+                {/* 2. Use specific category details like 'T-Shirt' or 'Topwear' */}
+                <p className="product-category">
+                  {product.gender} • {product.articleType || product.subCategory}
+                </p>
+                
+                {/* 3. New Pricing Structure */}
+                <div className="price-container" style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '5px' }}>
+                  <span className="product-price">₹{product.price}</span>
+                  
+                  {/* Show MRP (Strikethrough) if it exists and is higher */}
+                  {product.mrp && product.mrp > product.price && (
+                    <span className="product-mrp" style={{ textDecoration: 'line-through', color: '#999', fontSize: '0.9em' }}>
+                      ₹{product.mrp}
+                    </span>
+                  )}
+
+                  {/* Show Discount Percentage */}
+                  {product.discountDisplay && (
+                    <span className="product-discount" style={{ color: '#e53935', fontSize: '0.85em', fontWeight: 'bold' }}>
+                      ({product.discountDisplay})
+                    </span>
+                  )}
+                </div>
               </div>
             </div>
           ))}
         </div>
 
-        {/* Right Arrow Button */}
+        {/* Right Arrow */}
         <button 
           className="nav-btn next-btn" 
           onClick={handleNext}

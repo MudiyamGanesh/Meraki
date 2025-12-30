@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams, Link} from 'react-router-dom';
 import { 
   Heart, ShoppingBag, ArrowLeft, 
   Maximize2, Minimize2, Share2, Check,
@@ -10,45 +10,46 @@ import { useToast } from '../context/ToastContext';
 import { sampleProducts } from '../data/products'; 
 import '../css/ProductPage.css';
 
-// --- INTERNAL COMPONENT: Recommendation Card (Unchanged) ---
+// --- INTERNAL COMPONENT: Recommendation Card (Updated with Link) ---
 const ProductCard = ({ data }) => {
-  const navigate = useNavigate();
+  // We no longer need navigate for the main card click
   const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
   const isLiked = isInWishlist(data.id);
 
   const handleWishlistClick = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
+    e.preventDefault();    // Prevents the Link from opening when clicking the heart
+    e.stopPropagation();   // Stops event bubbling
     if (isLiked) removeFromWishlist(data.id);
     else addToWishlist(data);
   };
 
-  const handleCardClick = () => {
-    navigate(`/product/${data.id}`);
-    window.scrollTo(0, 0); 
-  };
-
   return (
-    <div className="recommendation-card" onClick={handleCardClick}>
-      <div className="rec-image-wrapper">
-        <img src={data.image} alt={data.name} className="rec-img-main" />
-        {data.hoverImage && (
-          <img src={data.hoverImage} alt={data.name} className="rec-img-hover" />
-        )}
-        <button className="rec-wishlist-btn" onClick={handleWishlistClick}>
-          <Heart 
-            size={16}
-            fill={isLiked ? "#dc2626" : "transparent"} 
-            color={isLiked ? "#dc2626" : "#4A5568"} 
-          />
-        </button>
+    <Link 
+      to={`/product/${data.id}`} 
+      className="recommendation-card-link"
+      style={{ textDecoration: 'none', color: 'inherit', display: 'block' }} // Inline style to reset link defaults
+    >
+      <div className="recommendation-card">
+        <div className="rec-image-wrapper">
+          <img src={data.image} alt={data.name} className="rec-img-main" />
+          {data.hoverImage && (
+            <img src={data.hoverImage} alt={data.name} className="rec-img-hover" />
+          )}
+          <button className="rec-wishlist-btn" onClick={handleWishlistClick}>
+            <Heart 
+              size={16}
+              fill={isLiked ? "#dc2626" : "transparent"} 
+              color={isLiked ? "#dc2626" : "#4A5568"} 
+            />
+          </button>
+        </div>
+        <div className="rec-details">
+          <h3 className="rec-title">{data.name}</h3>
+          <p className="rec-subtitle">{data.category}</p>
+          <span className="rec-price">₹{data.price}</span>
+        </div>
       </div>
-      <div className="rec-details">
-        <h3 className="rec-title">{data.name}</h3>
-        <p className="rec-subtitle">{data.category}</p>
-        <span className="rec-price">₹{data.price}</span>
-      </div>
-    </div>
+    </Link>
   );
 };
 
@@ -295,8 +296,8 @@ const ProductPage = () => {
            <h2>Product Details</h2>
            <div className="details-price-row">
               <span className="d-price">₹{product.price}</span>
-              <span className="d-original">₹{parseInt(product.price) * 1.4}</span>
-              <span className="d-discount">40% OFF</span>
+              <span className="d-original">₹{product.mrp}</span>
+              <span className="d-discount">{product.discountDisplay}</span>
            </div>
            <p className="tax-note">inclusive of all taxes</p>
         </div>
@@ -372,8 +373,8 @@ const ProductPage = () => {
           <div className="rating-row"><span className="stars">★ 4.8</span><span className="reviews">| 120 Reviews</span></div>
           <div className="desktop-price-block">
             <span className="current-price">₹{product.price}</span>
-            <span className="original-price">₹{parseInt(product.price) * 1.4}</span>
-            <span className="discount-tag">(40% OFF)</span>
+            <span className="original-price">₹{product.mrp}</span>
+            <span className="discount-tag">{product.discountDisplay}</span>
             <p className="tax-note">inclusive of all taxes</p>
           </div>
           <div className="desktop-description">

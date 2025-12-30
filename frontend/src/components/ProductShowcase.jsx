@@ -1,17 +1,16 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { Heart } from 'lucide-react'; 
 import { useWishlist } from '../Context/WishlistContext'; 
-import { useNavigate } from 'react-router-dom';
+// Updated import: Added Link, removed useNavigate (not needed here anymore)
+import { Link } from 'react-router-dom';
 import '../css/ProductShowcase.css';
 
 const ProductCard = ({ data, activeCategory }) => {
-  // Path logic removed since ProductPage is deleted
-
-  const navigate = useNavigate();
   const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
   const isLiked = isInWishlist(data.id);
 
   const handleWishlistClick = (e) => {
+    // These two lines prevent the Link navigation when clicking the heart
     e.preventDefault();
     e.stopPropagation();
     
@@ -21,50 +20,54 @@ const ProductCard = ({ data, activeCategory }) => {
       addToWishlist(data);
     }
   };
-  const handleCardClick = () => {
-    navigate(`/product/${data.id}`, { state: { product: data } });
-  };
 
-  // Changed form <Link> to <div> since navigation is removed
+  // Logic changed: Wrapped in Link instead of using div onClick
   return (
-    <div className="product-card" onClick={handleCardClick} style={{cursor: 'pointer'}}>
-      <div className="product-image-wrapper">
-        <img 
-          src={data.image} 
-          alt={data.name} 
-          className="product-img-main"
-        />
-        {data.hoverImage && (
+    <Link 
+      to={`/product/${data.id}`} 
+      state={{ product: data }} // Preserves the state passing you had before
+      className="product-card-link"
+      style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}
+    >
+      <div className="product-card">
+        <div className="product-image-wrapper">
           <img 
-            src={data.hoverImage} 
+            src={data.image} 
             alt={data.name} 
-            className="product-img-hover"
+            className="product-img-main"
           />
-        )}
-        {data.overlayText && (
-          <div className="image-overlay">
-            {data.overlayText}
-          </div>
-        )}
-        <button 
-          className="wishlist-btn" 
-          onClick={handleWishlistClick}
-        >
-          <Heart 
-            size={20}
-            fill={isLiked ? "#dc2626" : "transparent"} 
-            color={isLiked ? "#dc2626" : "#4A5568"} 
-            strokeWidth={2}
-          />
-        </button>
+          {data.hoverImage && (
+            <img 
+              src={data.hoverImage} 
+              alt={data.name} 
+              className="product-img-hover"
+            />
+          )}
+          {data.overlayText && (
+            <div className="image-overlay">
+              {data.overlayText}
+            </div>
+          )}
+          <button 
+            className="wishlist-btn" 
+            onClick={handleWishlistClick}
+          >
+            <Heart 
+              size={20}
+              fill={isLiked ? "#dc2626" : "transparent"} 
+              color={isLiked ? "#dc2626" : "#4A5568"} 
+              strokeWidth={2}
+            />
+          </button>
+        </div>
+        
+        <div className="product-details">
+          <h3 className="product-title">{data.name}</h3>
+          <p className="product-subtitle">{data.subtitle}</p>
+          <span className="product-price">₹ {data.price}</span>
+        </div>
       </div>
-      
-      <div className="product-details">
-        <h3 className="product-title">{data.name}</h3>
-        <p className="product-subtitle">{data.subtitle}</p>
-        <span className="product-price">₹ {data.price}</span>
-      </div>
-    </div>
+    </Link>
   );
 };
 
