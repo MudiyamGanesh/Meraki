@@ -14,7 +14,7 @@
   --white: #ffffff;
 
   /* --- NEW: CUSTOM VARIABLES FOR PRODUCT SECTION --- */
-  --accent-gold: #fbbf24;      
+  --accent-gold: #fbbf24;       
   --accent-gold-hover: #d97706; 
   
   /* LIGHT MODE HOVER: Gold border is fine here */
@@ -35,13 +35,8 @@
   --accent-active: #68D391;
 
   /* --- DARK MODE ADJUSTMENTS --- */
-  
-  /* DARK MODE HOVER: Gold border is too harsh. Use a lighter grey/white mix. */
   --card-border-hover: rgba(255, 255, 255, 0.3); 
-
   --card-shadow: 0 4px 12px rgba(0,0,0,0.3);
-  
-  /* GOLD GLOW: We move the gold into the shadow for a premium backlight effect */
   --card-shadow-hover: 0 20px 40px rgba(251, 191, 36, 0.15);
 }
 
@@ -62,11 +57,10 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  
 }
 
 .section-title {
-  display: none;
+  display: block; /* Fixed from none to block */
   font-size: 32px;
   font-weight: 800;
   text-transform: uppercase;
@@ -129,7 +123,6 @@
 
 .product-card:hover {
   transform: translateY(-8px);
-  /* Uses the new variables logic for Dark vs Light mode */
   box-shadow: var(--card-shadow-hover);
   border-color: var(--card-border-hover); 
 }
@@ -267,9 +260,13 @@
     padding-bottom: 60px; 
   }
 
+  /* FIX: Ensure grid stays contained */
   .product-grid {
+    width: 100%;
     grid-template-columns: repeat(2, 1fr);
     gap: 12px; 
+    margin: 0;
+    overflow-x: visible; 
   }
 
   .nav-btn {
@@ -288,22 +285,11 @@
     left: auto;
     transform: translateX(50%);
   }
-
-  .carousel-track {
-    display: flex;
-    gap: 16px;
-    scroll-snap-type: x mandatory; /* Snap to items */
-  }
-
+  
+  /* FIX: REMOVED min-width: 70%. Use standard width: 100% */
   .product-card {
-    min-width: 70%; /* Show partial next card */
-    scroll-snap-align: start; /* Snap alignment */
-  }
-
-  /* 2. Hide Navigation Arrows */
-  .nav-arrow {
-    display: none;
+    min-width: 0;
+    width: 100%;
+    transform: none;
   }
 }
-
-  

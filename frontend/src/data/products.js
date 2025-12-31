@@ -121,14 +121,14 @@ export const sampleProducts = [
     ], 
     { subCategory: "Topwear", articleType: "Sweatshirt", offerTag: "Bestseller" }
   ),
-  createProduct(8, "Floral Summer Dress", "Women", 1899, 3299, 
+  createProduct(8, "Floral Summer Dress", "Men", 1899, 3299, 
     [
       "https://assets.ajio.com/medias/sys_master/root/20230802/tmkK/64ca72dceebac147fca19c8a/-473Wx593H-469519486-greymarl-MODEL.jpg",
       "https://assets.ajio.com/medias/sys_master/root/20230802/tmkK/64ca72dceebac147fca19c8a/-473Wx593H-469519486-greymarl-MODEL.jpg",
       "https://assets.ajio.com/medias/sys_master/root/20230802/tmkK/64ca72dceebac147fca19c8a/-473Wx593H-469519486-greymarl-MODEL.jpg",
       "https://assets.ajio.com/medias/sys_master/root/20230802/tmkK/64ca72dceebac147fca19c8a/-473Wx593H-469519486-greymarl-MODEL.jpg"
     ], 
-    { subCategory: "Topwear", articleType: "Dress", theme: "Summer Collection" }
+    { subCategory: "Topwear", articleType: "Dress", theme: "Stranger Things" }
   ),
   createProduct(9, "Graphic Boyfriend Tee", "Women", 799, 1299, 
     [
@@ -137,7 +137,7 @@ export const sampleProducts = [
       "https://www.bigw.com.au/medias/sys_master/images/images/hf4/h18/99180837109790.jpg",
       "https://www.bigw.com.au/medias/sys_master/images/images/hf4/h18/99180837109790.jpg"
     ], 
-    { subCategory: "Topwear", articleType: "T-Shirt", fit: "Oversized" }
+    { subCategory: "Topwear", articleType: "T-Shirt", fit: "Oversized", theme: "Stranger Things" }
   ),
 
   // --- Women: Bottomwear ---

@@ -10,12 +10,13 @@
 
 /* --- THE STICKY FILTER BAR --- */
 .filter-container {
-  width: 100vw;
+  width: 100%;
   display: flex;
   gap: 12px;
   overflow-x: auto;
   padding: 15px 4%;
   margin-bottom: 25px;
+  box-sizing: border-box;
   scrollbar-width: none; 
   position: -webkit-sticky;
   position: sticky;
@@ -33,12 +34,10 @@
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-/* Hide scrollbar for Chrome/Safari/Edge */
 .filter-container::-webkit-scrollbar { 
   display: none; 
 }
 
-/* Subtle visual line when the bar sticks */
 .filter-container::after {
   content: '';
   position: absolute;
@@ -76,8 +75,8 @@
   border-color: var(--text-main);
 }
 
-/* --- PRODUCT GRID --- */
-.product-grid {
+/* --- SHOWCASE GRID --- */
+.showcase-grid {
   width: 96%;
   max-width: 1800px;
   margin: 25px auto;
@@ -94,8 +93,8 @@
   color: var(--text-secondary);
 }
 
-/* --- PRODUCT CARD STYLING --- */
-.product-card {
+/* --- SHOWCASE CARD STYLING --- */
+.showcase-card {
   display: flex;
   flex-direction: column;
   text-decoration: none;
@@ -105,12 +104,12 @@
   transition: transform 0.3s ease;
 }
 
-.product-card:hover {
+.showcase-card:hover {
   transform: translateY(-5px);
 }
 
-/* Image Wrapper with 3/4.2 Aspect Ratio */
-.product-image-wrapper {
+/* --- IMAGE WRAPPER --- */
+.showcase-image-wrapper {
   position: relative;
   width: 100%;
   aspect-ratio: 3/4.2; 
@@ -121,8 +120,7 @@
   isolation: isolate;
 }
 
-/* Image Transitions (Cross-Dissolve) */
-.product-image-wrapper img {
+.showcase-image-wrapper img {
   position: absolute;
   top: 0;
   left: 0;
@@ -136,15 +134,15 @@
 .product-img-main { z-index: 1; opacity: 1; }
 .product-img-hover { z-index: 2; opacity: 0; }
 
-.product-card:hover .product-img-hover { opacity: 1; }
-.product-card:hover .product-img-main { opacity: 0; }
-.product-card:hover .product-image-wrapper img { transform: scale(1.05); }
+.showcase-card:hover .product-img-hover { opacity: 1; }
+.showcase-card:hover .product-img-main { opacity: 0; }
+.showcase-card:hover .showcase-image-wrapper img { transform: scale(1.05); }
 
 /* --- WISHLIST BUTTON --- */
 .wishlist-btn {
   position: absolute;
   top: 12px;
-  right: 12px;  
+  right: 12px;   
   z-index: 10; 
   width: 36px;
   height: 36px;
@@ -178,12 +176,12 @@
   z-index: 5;
 }
 
-/* --- PRODUCT DETAILS --- */
-.product-details {
+/* --- PRODUCT DETAILS (Renamed) --- */
+.showcase-details {
   padding-top: 12px;
 }
 
-.product-title {
+.showcase-title {
   font-size: 16px;
   font-weight: 700;
   color: var(--text-main);
@@ -193,32 +191,35 @@
   text-overflow: ellipsis;
 }
 
-.product-subtitle {
+.showcase-subtitle {
   font-size: 13px;
   color: var(--text-secondary);
   margin: 0 0 6px 0;
 }
 
-.product-price {
+.showcase-price {
   font-size: 15px;
   font-weight: 700;
   color: var(--text-main);
 }
 
+/* --- MEDIA QUERIES --- */
 @media (max-width: 768px) {
-  .product-grid { grid-template-columns: repeat(3, 1fr); }
+  .showcase-grid { grid-template-columns: repeat(3, 1fr); }
   .filter-container {
-    top: 60px; /* Adjusted for mobile navbar height */
+    top: 60px; 
     padding: 12px 15px;
   }
   .product-showcase-section { width: 100%; }
-  .product-grid { 
+  
+  .showcase-grid { 
     width: 94%;
     grid-template-columns: repeat(2, 1fr); 
     gap: 12px; 
     margin: 15px auto;
   }
-  .product-title { font-size: 14px; }
-  .product-subtitle { font-size: 11px; }
+  
+  .showcase-title { font-size: 14px; }
+  .showcase-subtitle { font-size: 11px; }
   .filter-chip { padding: 6px 16px; font-size: 12px; }
 }

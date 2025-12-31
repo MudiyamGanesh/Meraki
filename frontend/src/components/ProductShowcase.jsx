@@ -1,19 +1,16 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { Heart } from 'lucide-react'; 
 import { useWishlist } from '../Context/WishlistContext'; 
-// Updated import: Added Link, removed useNavigate (not needed here anymore)
 import { Link } from 'react-router-dom';
 import '../css/ProductShowcase.css';
 
-const ProductCard = ({ data, activeCategory }) => {
+const ProductCard = ({ data }) => {
   const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
   const isLiked = isInWishlist(data.id);
 
   const handleWishlistClick = (e) => {
-    // These two lines prevent the Link navigation when clicking the heart
     e.preventDefault();
     e.stopPropagation();
-    
     if (isLiked) {
       removeFromWishlist(data.id);
     } else {
@@ -21,16 +18,15 @@ const ProductCard = ({ data, activeCategory }) => {
     }
   };
 
-  // Logic changed: Wrapped in Link instead of using div onClick
   return (
     <Link 
       to={`/product/${data.id}`} 
-      state={{ product: data }} // Preserves the state passing you had before
-      className="product-card-link"
+      state={{ product: data }} 
+      className="showcase-card-link"
       style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}
     >
-      <div className="product-card">
-        <div className="product-image-wrapper">
+      <div className="showcase-card">
+        <div className="showcase-image-wrapper">
           <img 
             src={data.image} 
             alt={data.name} 
@@ -61,10 +57,11 @@ const ProductCard = ({ data, activeCategory }) => {
           </button>
         </div>
         
-        <div className="product-details">
-          <h3 className="product-title">{data.name}</h3>
-          <p className="product-subtitle">{data.subtitle}</p>
-          <span className="product-price">₹ {data.price}</span>
+        {/* UPDATED CLASSES HERE */}
+        <div className="showcase-details">
+          <h3 className="showcase-title">{data.name}</h3>
+          <p className="showcase-subtitle">{data.subtitle}</p>
+          <span className="showcase-price">₹ {data.price}</span>
         </div>
       </div>
     </Link>
@@ -85,7 +82,6 @@ const ProductShowcase = ({ title = "Our Collection", products = [], categories =
 
   return (
     <div className="product-showcase-section">
-      {/* Category Filter Buttons */}
       {categories.length > 0 && (
         <div className="filter-container">
           <button 
@@ -106,14 +102,12 @@ const ProductShowcase = ({ title = "Our Collection", products = [], categories =
         </div>
       )}
 
-      {/* Grid */}
-      <div className="product-grid">
+      <div className="showcase-grid">
         {filteredProducts.map((product) => (
           <ProductCard key={product.id} data={product} />
         ))}
       </div>
       
-      {/* Empty State */}
       {filteredProducts.length === 0 && (
         <div style={{ padding: '40px', textAlign: 'center', color: 'var(--text-secondary)' }}>
           No products found in this category.
