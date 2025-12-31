@@ -6,7 +6,7 @@ import {
   ChevronLeft, ChevronRight, ChevronDown, X 
 } from 'lucide-react';
 
-// --- FIXED IMPORTS (Lowercase 'c' for context folder) ---
+// --- IMPORTS ---
 import { useWishlist } from '../Context/WishlistContext';
 import { useToast } from '../context/ToastContext'; 
 import { useCart } from '../context/CartContext'; 
@@ -82,6 +82,9 @@ const ProductPage = () => {
   const touchStartX = useRef(null);
   const touchStartY = useRef(null);
   const desktopOthersScrollRef = useRef(null);
+  
+  // 1. NEW REF FOR MOBILE CONTAINER
+  const mobileContainerRef = useRef(null);
 
   // --- EFFECT: Handle Window Resize ---
   useEffect(() => {
@@ -90,9 +93,18 @@ const ProductPage = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // --- EFFECT: Load Data ---
+  // --- EFFECT: Load Data & SCROLL FIX ---
   useEffect(() => {
+    // 2. SCROLL TO TOP LOGIC
+    
+    // For Desktop (Window scroll)
     window.scrollTo(0, 0); 
+    
+    // For Mobile (Container scroll)
+    if (mobileContainerRef.current) {
+        mobileContainerRef.current.scrollTop = 0;
+    }
+
     setCurrentImgIndex(0);
     setQuantity(1);
     setSelectedSize(''); 
@@ -136,11 +148,7 @@ const ProductPage = () => {
       setShowSizeGuide(true);
       return;
     }
-    
-    // Add to Cart
     addToCart(product, selectedSize, quantity);
-    
-    // Feedback
     if(showToast) {
         showToast(`Added ${product.name} to bag`);
     } else {
@@ -148,7 +156,6 @@ const ProductPage = () => {
     }
   };
 
-  // Simplified: Just goes to cart page, doesn't try to checkout
   const handleBuyNow = (e) => {
     e.stopPropagation();
     navigate('/cart');
@@ -248,7 +255,8 @@ const ProductPage = () => {
 
   // --- RENDER MOBILE ---
   const renderMobile = () => (
-    <div className="mobile-product-container" onScroll={handleScroll}>
+    // 3. ATTACH THE REF TO THE CONTAINER
+    <div className="mobile-product-container" ref={mobileContainerRef} onScroll={handleScroll}>
       <div className="mobile-hero-wrapper" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
         <div className="mobile-bg-image">
           <img 
@@ -344,11 +352,9 @@ const ProductPage = () => {
             </div>
         </div>
         <div className="mobile-actions-grid">
-           {/* BUTTON CONNECTED */}
            <button className="d-add-bag-btn mobile-btn" onClick={handleAddToBag}>
              <ShoppingBag size={20} /> ADD TO BAG
            </button>
-           {/* SIMPLE NAVIGATION ONLY */}
            <button className="d-buy-now-btn mobile-btn" onClick={handleBuyNow}>VIEW CART</button>
         </div>
         <div className="shipping-note">
@@ -426,11 +432,9 @@ const ProductPage = () => {
             </div>
           </div>
           <div className="desktop-actions">
-            {/* BUTTON CONNECTED */}
             <button className="d-add-bag-btn" onClick={handleAddToBag}>
                <ShoppingBag size={20} /> ADD TO BAG
             </button>
-             {/* SIMPLE NAVIGATION ONLY */}
             <button className="d-buy-now-btn" onClick={handleBuyNow}>VIEW CART</button>
           </div>
           <button className="d-wishlist-btn" onClick={handleWishlist}>
