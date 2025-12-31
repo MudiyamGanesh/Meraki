@@ -1,24 +1,27 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
-import { useLocation, useNavigate, useParams, Link} from 'react-router-dom';
+import { useLocation, useNavigate, useParams, Link } from 'react-router-dom';
 import { 
   Heart, ShoppingBag, ArrowLeft, 
   Maximize2, Minimize2, Share2, Check,
   ChevronLeft, ChevronRight, ChevronDown, X 
 } from 'lucide-react';
+
+// --- FIXED IMPORTS (Lowercase 'c' for context folder) ---
 import { useWishlist } from '../Context/WishlistContext';
 import { useToast } from '../context/ToastContext'; 
+import { useCart } from '../context/CartContext'; 
 import { sampleProducts } from '../data/products'; 
 import '../css/ProductPage.css';
 
-// --- INTERNAL COMPONENT: Recommendation Card (Updated with Link) ---
+// --- INTERNAL COMPONENT: Recommendation Card ---
 const ProductCard = ({ data }) => {
-  // We no longer need navigate for the main card click
   const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
+  const { addToCart } = useCart(); 
   const isLiked = isInWishlist(data.id);
 
   const handleWishlistClick = (e) => {
-    e.preventDefault();    // Prevents the Link from opening when clicking the heart
-    e.stopPropagation();   // Stops event bubbling
+    e.preventDefault();
+    e.stopPropagation();
     if (isLiked) removeFromWishlist(data.id);
     else addToWishlist(data);
   };
@@ -27,7 +30,7 @@ const ProductCard = ({ data }) => {
     <Link 
       to={`/product/${data.id}`} 
       className="recommendation-card-link"
-      style={{ textDecoration: 'none', color: 'inherit', display: 'block' }} // Inline style to reset link defaults
+      style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}
     >
       <div className="recommendation-card">
         <div className="rec-image-wrapper">
@@ -56,8 +59,14 @@ const ProductCard = ({ data }) => {
 const ProductPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  
+  // Hooks
   const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
-  const { showToast } = useToast ? useToast() : { showToast: (msg) => alert(msg) };
+  const { addToCart } = useCart(); 
+  
+  // Safe Toast handling
+  const toastContext = useToast ? useToast() : null;
+  const showToast = toastContext ? toastContext.showToast : (msg) => {};
 
   // --- STATE ---
   const [product, setProduct] = useState(null);
@@ -72,7 +81,6 @@ const ProductPage = () => {
   // --- REFS ---
   const touchStartX = useRef(null);
   const touchStartY = useRef(null);
-  // NEW: Ref for Desktop Recommendations Scroll
   const desktopOthersScrollRef = useRef(null);
 
   // --- EFFECT: Handle Window Resize ---
@@ -103,12 +111,10 @@ const ProductPage = () => {
     return images.length > 0 ? images : ["https://dummyimage.com/600x800/e0e0e0/000000&text=No+Image"];
   }, [product]);
 
-  // Used 8 items here to ensure scrolling is necessary for testing
   const recommendations = useMemo(() => {
     if (!product) return [];
     const otherProducts = sampleProducts.filter(p => p.id !== product.id);
     const shuffled = [...otherProducts].sort(() => 0.5 - Math.random());
-    // Increased to 8 so scrolling is obvious on desktop
     return shuffled.slice(0, 8); 
   }, [product]);
 
@@ -124,6 +130,25 @@ const ProductPage = () => {
     else addToWishlist(product);
   };
 
+  const handleAddToBag = () => {
+    if (!selectedSize) {
+      alert("Please select a size first!");
+      setShowSizeGuide(true);
+      return;
+    }
+    
+    // Add to Cart
+    addToCart(product, selectedSize, quantity);
+    
+    // Feedback
+    if(showToast) {
+        showToast(`Added ${product.name} to bag`);
+    } else {
+        alert("Added to bag!");
+    }
+  };
+
+  // Simplified: Just goes to cart page, doesn't try to checkout
   const handleBuyNow = (e) => {
     e.stopPropagation();
     navigate('/cart');
@@ -135,7 +160,7 @@ const ProductPage = () => {
       try { await navigator.share({ title: product.name, text: 'Check this out!', url: window.location.href }); } catch (err) {}
     } else {
       navigator.clipboard.writeText(window.location.href);
-      showToast ? showToast("Link copied!") : alert("Link copied!");
+      if(showToast) showToast("Link copied!");
     }
   };
 
@@ -148,7 +173,7 @@ const ProductPage = () => {
     }
   };
 
-  // --- MAIN GALLERY NAVIGATION & SWIPE ---
+  // --- GALLERY NAVIGATION ---
   const nextImage = (e) => {
     if(e) e.stopPropagation();
     if (galleryImages.length > 0) setCurrentImgIndex((prev) => (prev === galleryImages.length - 1 ? 0 : prev + 1));
@@ -182,23 +207,19 @@ const ProductPage = () => {
     touchStartY.current = null;
   };
 
-  // --- NEW: DESKTOP RECOMMENDATION SCROLL HANDLERS ---
   const scrollDesktopOthersLeft = () => {
     if (desktopOthersScrollRef.current) {
-      // Scroll left by roughly 2 card widths (240px + 20px gap) * 2 = 520
       desktopOthersScrollRef.current.scrollBy({ left: -520, behavior: 'smooth' });
     }
   };
 
   const scrollDesktopOthersRight = () => {
     if (desktopOthersScrollRef.current) {
-       // Scroll right by roughly 2 card widths
       desktopOthersScrollRef.current.scrollBy({ left: 520, behavior: 'smooth' });
     }
   };
 
-
-  // --- SIZE GUIDE MODAL COMPONENT (Unchanged) ---
+  // --- SIZE GUIDE MODAL ---
   const SizeGuideModal = () => (
     <div className="size-guide-overlay" onClick={() => setShowSizeGuide(false)}>
       <div className="size-guide-content" onClick={(e) => e.stopPropagation()}>
@@ -209,12 +230,7 @@ const ProductPage = () => {
         <div className="sg-body">
           <table className="sg-table">
             <thead>
-              <tr>
-                <th>Size</th>
-                <th>Chest</th>
-                <th>Length</th>
-                <th>Shoulder</th>
-              </tr>
+              <tr><th>Size</th><th>Chest</th><th>Length</th><th>Shoulder</th></tr>
             </thead>
             <tbody>
               <tr><td>S</td><td>40</td><td>27</td><td>18</td></tr>
@@ -230,7 +246,7 @@ const ProductPage = () => {
     </div>
   );
 
-  // --- RENDER: MOBILE (Unchanged) ---
+  // --- RENDER MOBILE ---
   const renderMobile = () => (
     <div className="mobile-product-container" onScroll={handleScroll}>
       <div className="mobile-hero-wrapper" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
@@ -328,8 +344,12 @@ const ProductPage = () => {
             </div>
         </div>
         <div className="mobile-actions-grid">
-           <button className="d-add-bag-btn mobile-btn"><ShoppingBag size={20} /> ADD TO BAG</button>
-           <button className="d-buy-now-btn mobile-btn" onClick={handleBuyNow}>BUY NOW</button>
+           {/* BUTTON CONNECTED */}
+           <button className="d-add-bag-btn mobile-btn" onClick={handleAddToBag}>
+             <ShoppingBag size={20} /> ADD TO BAG
+           </button>
+           {/* SIMPLE NAVIGATION ONLY */}
+           <button className="d-buy-now-btn mobile-btn" onClick={handleBuyNow}>VIEW CART</button>
         </div>
         <div className="shipping-note">
            <Check size={16} color="var(--sale-green)" />
@@ -347,7 +367,7 @@ const ProductPage = () => {
     </div>
   );
 
-  // --- RENDER: DESKTOP (UPDATED WITH ARROWS) ---
+  // --- RENDER DESKTOP ---
   const renderDesktop = () => (
     <div className="desktop-product-container">
       <div className="desktop-breadcrumb">Home / {product.category} / {product.name}</div>
@@ -406,39 +426,37 @@ const ProductPage = () => {
             </div>
           </div>
           <div className="desktop-actions">
-            <button className="d-add-bag-btn"><ShoppingBag size={20} /> ADD TO BAG</button>
-            <button className="d-buy-now-btn" onClick={handleBuyNow}>BUY NOW</button>
+            {/* BUTTON CONNECTED */}
+            <button className="d-add-bag-btn" onClick={handleAddToBag}>
+               <ShoppingBag size={20} /> ADD TO BAG
+            </button>
+             {/* SIMPLE NAVIGATION ONLY */}
+            <button className="d-buy-now-btn" onClick={handleBuyNow}>VIEW CART</button>
           </div>
           <button className="d-wishlist-btn" onClick={handleWishlist}>
             <Heart size={20} fill={isLiked ? "#dc2626" : "transparent"} color={isLiked ? "#dc2626" : "currentColor"} /> 
             {isLiked ? 'WISHLISTED' : 'ADD TO WISHLIST'}
           </button>
           <div className="delivery-info">
-             <div className="delivery-item"><Check size={16} /> Fast delivery within 3-5 days</div>
+              <div className="delivery-item"><Check size={16} /> Fast delivery within 3-5 days</div>
           </div>
         </div>
       </div>
       
-      {/* --- OTHERS ALSO BOUGHT (DESKTOP - UPDATED) --- */}
       <div className="desktop-others-section">
         <h3>Others Also Bought</h3>
-        {/* New Wrapper for Relative Positioning of Arrows */}
         <div className="desktop-others-wrapper">
             <button className="d-others-arrow left" onClick={scrollDesktopOthersLeft}>
                 <ChevronLeft size={24} />
             </button>
-            
-            {/* Attached Ref here */}
             <div className="others-grid desktop" ref={desktopOthersScrollRef}>
               {recommendations.map(item => (<ProductCard key={item.id} data={item} />))}
             </div>
-
             <button className="d-others-arrow right" onClick={scrollDesktopOthersRight}>
                 <ChevronRight size={24} />
             </button>
         </div>
       </div>
-      
       {showSizeGuide && <SizeGuideModal />}
     </div>
   );

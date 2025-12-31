@@ -6,6 +6,7 @@ import {
 } from 'lucide-react'; 
 import { Link, useNavigate, useLocation } from 'react-router-dom'; 
 import { useWishlist } from '../Context/WishlistContext';
+import { useCart } from '../context/CartContext';
 import { useAuth } from '../Context/AuthContext';
 import '../css/Navbar.css';
 
@@ -26,6 +27,7 @@ const Navbar = () => {
 
   // Hooks & Context
   const { wishlist } = useWishlist();
+  const { cartCount } = useCart();
   const { user, logout } = useAuth();
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'dark');
   const navigate = useNavigate();
@@ -231,7 +233,10 @@ const Navbar = () => {
                  <Heart size={26} fill={wishlist.length > 0 ? "#d32f2f" : "none"} color={wishlist.length > 0 ? "#d32f2f" : "currentColor"}/>
                  {wishlist.length > 0 && <span className="badge">{wishlist.length}</span>}
                </Link>
-               <Link to="/cart" className="icon-btn cart-btn"><ShoppingCart size={26} /></Link>
+               <Link to="/cart" className="icon-btn cart-btn">
+                <ShoppingCart size={26} />
+                {cartCount > 0 && <span className="badge">{cartCount}</span>} 
+               </Link>
              </div>
            </div>
          </div>

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { HashRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { WishlistProvider } from './Context/WishlistContext';
 import { AuthProvider } from './Context/AuthContext';
+import { CartProvider } from './context/CartContext';
 import { ToastProvider } from './context/ToastContext.jsx';
 // Data
 import { sampleProducts } from './data/products';
@@ -85,36 +86,38 @@ function App() {
   return (
     <AuthProvider>
       <WishlistProvider>
-        <ToastProvider>
-          <Router>
-            <ScrollToTop />
-            <div className="app-container">
-              
-              <ConditionalNavbar />
-
-              <Routes>
-                <Route path="/" element={<LandingPage />} />
+        <CartProvider>
+          <ToastProvider>
+            <Router>
+              <ScrollToTop />
+              <div className="app-container">
                 
-                {/* Shop Routes */}
-                <Route path="/men" element={<ShopLayout category="Men" />} />
-                <Route path="/women" element={<ShopLayout category="Women" />} />
-                <Route path="/sneakers" element={<SneakerLayout />} />
+                <ConditionalNavbar />
 
-                {/* Pages */}
-                <Route path="/wishlist" element={<WishlistPage />} />
-                <Route path="/cart" element={<CartPage />} />
-                <Route path="/login" element={<LoginPage />} />
-                <Route path="/account" element={<AccountPage />} />
-                <Route path="/design" element={<DesignStudio />} />
-                <Route path="/product/:id" element={<ProductPage />} />
-                {/* Duplicate /men route removed here */}
-              </Routes>
-              
-              <ConditionalFooter />
-              
-            </div>
-          </Router>
-        </ToastProvider>
+                <Routes>
+                  <Route path="/" element={<LandingPage />} />
+                  
+                  {/* Shop Routes */}
+                  <Route path="/men" element={<ShopLayout category="Men" />} />
+                  <Route path="/women" element={<ShopLayout category="Women" />} />
+                  <Route path="/sneakers" element={<SneakerLayout />} />
+
+                  {/* Pages */}
+                  <Route path="/wishlist" element={<WishlistPage />} />
+                  <Route path="/cart" element={<CartPage />} />
+                  <Route path="/login" element={<LoginPage />} />
+                  <Route path="/account" element={<AccountPage />} />
+                  <Route path="/design" element={<DesignStudio />} />
+                  <Route path="/product/:id" element={<ProductPage />} />
+                  <Route path="/cart" element={<CartPage />} />
+                </Routes>
+                
+                <ConditionalFooter />
+                
+              </div>
+            </Router>
+          </ToastProvider>
+        </CartProvider>
       </WishlistProvider>
     </AuthProvider>
   );

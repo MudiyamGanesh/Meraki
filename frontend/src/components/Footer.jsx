@@ -11,7 +11,6 @@ import {
 import '../css/Footer.css';
 
 const Footer = () => {
-  // State to toggle the footer expansion
   const [isExpanded, setIsExpanded] = useState(false);
 
   const toggleFooter = () => {

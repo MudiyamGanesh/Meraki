@@ -180,7 +180,7 @@
   
   /* 1. Scrolling Container */
   .carousel-track-container {
-    display: block; /* Remove flex centering */
+    display: block; 
     width: 100%;
     padding: 20px 0;
     
@@ -191,18 +191,26 @@
     
     /* Snap Logic */
     scroll-snap-type: x mandatory;
-    scroll-padding-left: 50%; /* Center the snap point */
+    /* REMOVED: scroll-padding-left: 50%; (This was pushing alignment off-center) */
   }
+
   .carousel-track-container::-webkit-scrollbar { display: none; }
 
   /* 2. Wrapper */
   .cards-wrapper {
-    display: inline-flex;
-    width: auto;
-    height: auto;
-    padding: 0 50vw; /* Padding to allow first/last items to center */
-    margin-left: -150px; /* Offset to align first item to center (half card width) */
+    display: flex;
     gap: 20px;
+    
+    /* --- THE FIX --- */
+    /* Ensure wrapper grows to fit content so end-padding isn't cut off */
+    width: max-content; 
+    
+    /* Center Logic: 50% of screen minus 50% of card (150px) */
+    /* This ensures the first and last cards can be scrolled exactly to center */
+    padding: 0 calc(50vw - 150px);
+    
+    /* REMOVED: margin-left: -150px; */
+    margin: 0; 
     justify-content: flex-start;
   }
 
@@ -221,15 +229,14 @@
     transform: none !important;
     box-shadow: 0 10px 30px rgba(0,0,0,0.2) !important;
     
-    /* Default Opacity for inactive cards */
     opacity: 1 !important; 
-    transition: opacity 0.3s ease;
+    transition: opacity 0.3s ease, transform 0.3s ease;
   }
   
-  /* Dim inactive cards on mobile */
+  /* Dim inactive cards */
   .card.inactive {
-    opacity: 0.5 !important; /* Dim the side cards */
-    transform: scale(0.95) !important; /* Scale down slightly */
+    opacity: 0.5 !important;
+    transform: scale(0.95) !important; 
   }
   
   /* Highlight active card */
@@ -240,6 +247,5 @@
   }
   
   .active-border, .play-icon-overlay { display: none; }
-
   .nav-arrow { display: none; }
 }

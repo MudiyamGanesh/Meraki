@@ -84,7 +84,22 @@ const HeroCarousel = ({ activeTab, products = [] }) => {
     setCurrentIndex((prev) => (prev === 0 ? length - 1 : prev - 1));
   };
 
-  // If no slides, return null or a loader to prevent crash
+  // --- 4. DRAG HANDLER (New) ---
+  const onDragEnd = (event, info) => {
+    const offset = info.offset.x;
+    const velocity = info.velocity.x;
+
+    // Swipe Left (Go Next)
+    if (offset < -50 || velocity < -500) {
+      nextSlide();
+    } 
+    // Swipe Right (Go Prev)
+    else if (offset > 50 || velocity > 500) {
+      prevSlide();
+    }
+  };
+
+  // If no slides, return null
   if (slides.length === 0) return null;
 
   return (
