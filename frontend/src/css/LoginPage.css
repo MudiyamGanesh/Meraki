@@ -1,158 +1,321 @@
-/* LoginPage.css */
-.auth-container {
-  min-height: 80vh;
+/* src/css/LoginPage.css */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Playfair+Display:wght@700&display=swap');
+
+:root {
+  /* Dark Slate/Navy background matching your screenshot */
+  --bg-dark: #12151c; 
+  --card-bg: #1a1f2b;
+  --text-main: #ffffff;
+  --text-muted: #94a3b8;
+  --border: rgba(255, 255, 255, 0.08);
+  
+  /* The "Drop" gradient (Pink/Purple) */
+  --brand-gradient: linear-gradient(135deg, #d946ef 0%, #8b5cf6 100%);
+  --brand-glow: rgba(217, 70, 239, 0.4);
+  
+  --error: #ef4444;
+}
+
+/* =========================================
+   1. Container & Background
+   ========================================= */
+.aurora-container {
+  /* Subtract the 60px Navbar height so it fits without scrolling */
+  min-height: calc(100vh - 60px); 
   display: flex;
-  align-items: center;
   justify-content: center;
-  padding: 40px 20px;
-  background-color: var(--bg-primary);
-}
-
-.auth-card {
-  display: grid;
-  grid-template-columns: 1fr 1fr; /* Split 50/50 */
-  width: 100%;
-  max-width: 900px;
-  min-height: 550px;
-  background-color: var(--bg-input);
-  border-radius: 20px;
-  overflow: hidden;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-  border: 1px solid var(--border-color);
-}
-
-/* --- IMAGE SIDE --- */
-.auth-image-side {
+  align-items: center;
+  background-color: var(--bg-dark);
+  font-family: 'Outfit', sans-serif;
   position: relative;
   overflow: hidden;
+  color: var(--text-main);
+  padding: 20px 0; /* Minimal padding for mobile safety */
 }
 
-.auth-image-side img {
+/* Background Blobs - Subtle Atmosphere */
+.aurora-blob {
+  position: absolute;
+  filter: blur(100px);
+  opacity: 0.25; 
+  border-radius: 50%;
+  animation: floatBlobs 15s infinite alternate ease-in-out;
+}
+.blob-1 { width: 500px; height: 500px; background: #4c1d95; top: -10%; left: 20%; }
+.blob-2 { width: 400px; height: 400px; background: #be185d; bottom: -10%; right: 10%; }
+
+@keyframes floatBlobs {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(20px, -20px) scale(1.05); }
+}
+
+/* =========================================
+   2. Flip Mechanics & Card Size
+   ========================================= */
+.flip-wrapper {
+  perspective: 1000px;
+  width: 400px; /* Compact width */
+  height: 550px; /* Reduced height to fit comfortably */
+  z-index: 10;
+}
+
+.flip-card-inner {
+  position: relative;
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  transition: transform 0.5s ease;
+  text-align: center;
+  transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+  transform-style: preserve-3d;
 }
 
-.auth-overlay {
+.flip-card-inner.flipped {
+  transform: rotateY(180deg);
+}
+
+/* =========================================
+   3. Card Styling (Front & Back)
+   ========================================= */
+.flip-card-front, .flip-card-back {
   position: absolute;
-  bottom: 0;
-  left: 0;
   width: 100%;
-  padding: 40px;
-  background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
-  color: white;
-  z-index: 2;
+  height: 100%;
+  backface-visibility: hidden;
+  border-radius: 24px; /* Soft rounded corners like product cards */
+  background: rgba(26, 31, 43, 0.9); /* Dark Slate Glass */
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 35px; /* Tighter padding */
+  box-sizing: border-box;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
 }
 
-.auth-overlay h1 {
-  font-size: 2.5rem;
-  line-height: 1.1;
+.flip-card-back {
+  transform: rotateY(180deg);
+}
+
+/* Spotlight Effect (Hover Glow) */
+.spotlight-card::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  border-radius: 24px;
+  padding: 1px;
+  background: radial-gradient(
+    600px circle at var(--mouse-x) var(--mouse-y), 
+    rgba(255,255,255,0.15),
+    transparent 40%
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+/* =========================================
+   4. Typography (Streetwear Style)
+   ========================================= */
+.brand-logo {
   margin-bottom: 10px;
 }
 
-/* --- FORM SIDE --- */
-.auth-form-side {
-  padding: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+/* The Hindi Logo Style */
+.brand-logo h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 3rem;
+  font-weight: 700;
+  margin: 0;
+  line-height: 1;
+  background: linear-gradient(to bottom, #ffffff, #cbd5e1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
-.form-wrapper {
-  width: 100%;
-  max-width: 350px;
+/* Headings like "MEMBER LOGIN" */
+h2 { 
+  margin: 0; 
+  font-size: 1.5rem; 
+  font-weight: 800; 
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
-.form-wrapper h2 {
-  font-size: 2rem;
-  color: var(--text-main);
-  margin-bottom: 5px;
+.subtitle { 
+  margin: 5px 0 25px; 
+  font-size: 0.9rem; 
+  color: var(--text-muted); 
+  font-weight: 300;
+  letter-spacing: 0.5px;
 }
 
-.subtitle {
-  color: var(--text-secondary);
-  margin-bottom: 30px;
-  font-size: 0.9rem;
-}
-
-/* Inputs */
-.input-group {
+/* =========================================
+   5. Form Inputs
+   ========================================= */
+.input-box {
   position: relative;
-  margin-bottom: 20px;
+  margin-bottom: 15px; /* Tighter spacing */
 }
 
-.input-icon {
+.input-box .icon {
   position: absolute;
-  left: 15px;
+  left: 16px;
   top: 50%;
   transform: translateY(-50%);
-  color: var(--text-secondary);
+  color: var(--text-muted);
+  transition: color 0.3s;
 }
 
-.input-group input {
+.input-box input {
   width: 100%;
-  padding: 12px 12px 12px 45px; /* Space for icon */
-  border-radius: 8px;
-  border: 1px solid var(--border-color);
-  background-color: var(--bg-primary);
-  color: var(--text-main);
-  font-size: 1rem;
+  padding: 14px 14px 14px 45px;
+  background: rgba(0, 0, 0, 0.2); 
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  color: white;
+  font-size: 0.9rem;
+  font-weight: 500;
   outline: none;
-  transition: border-color 0.3s;
+  transition: all 0.3s ease;
 }
 
-.input-group input:focus {
-  border-color: var(--accent-hover);
+.input-box input::placeholder {
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  letter-spacing: 0.5px;
+  color: rgba(255, 255, 255, 0.3);
 }
 
-/* Button */
-.auth-btn {
-  width: 100%;
-  padding: 12px;
-  background-color: var(--text-main);
-  color: var(--bg-primary);
+.input-box input:focus {
+  border-color: #d946ef;
+  background: rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0 0 4px rgba(217, 70, 239, 0.1);
+}
+
+.input-box input:focus + .icon { color: #d946ef; }
+
+/* Password Eye Button */
+.eye-btn {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
   border: none;
-  border-radius: 8px;
-  font-size: 1rem;
-  font-weight: bold;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  transition: color 0.3s;
+}
+.eye-btn:hover { color: white; }
+
+/* =========================================
+   6. Buttons (Pill / Drop Style)
+   ========================================= */
+.brand-btn {
+  width: 100%;
+  padding: 14px;
+  background: var(--brand-gradient);
+  color: white;
+  border: none;
+  border-radius: 50px; /* Pill shape */
+  font-weight: 700;
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
   margin-top: 10px;
-  transition: opacity 0.2s;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(217, 70, 239, 0.2);
 }
 
-.auth-btn:hover {
-  opacity: 0.9;
+.brand-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(217, 70, 239, 0.4);
 }
 
-/* Footer Switcher */
-.auth-footer {
-  margin-top: 25px;
-  text-align: center;
-  font-size: 0.9rem;
-  color: var(--text-secondary);
+.brand-btn:disabled {
+  opacity: 0.6;
+  transform: none;
+  cursor: not-allowed;
 }
 
-.toggle-link {
+/* Spinner */
+.spinner {
+  animation: spin 1s linear infinite;
+  width: 20px;
+  height: 20px;
+}
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+/* =========================================
+   7. Switch Text & Errors
+   ========================================= */
+.switch-text {
+  margin-top: 20px;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.text-btn {
   background: none;
   border: none;
-  color: var(--accent-hover);
-  font-weight: bold;
+  color: white;
+  font-weight: 600;
   cursor: pointer;
-  margin-left: 5px;
-  text-decoration: underline;
+  margin-left: 8px;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(255,255,255,0.3);
+  padding-bottom: 2px;
+  transition: all 0.2s;
+}
+.text-btn:hover { 
+  border-color: #d946ef;
+  color: #d946ef;
 }
 
-/* --- MOBILE --- */
-@media (max-width: 768px) {
-  .auth-card {
-    grid-template-columns: 1fr; /* Stack vertically */
+/* Error States */
+.input-error {
+  border-color: var(--error) !important;
+  background: rgba(239, 68, 68, 0.1) !important;
+}
+.error-text {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--error);
+  margin-top: 4px;
+  text-align: left;
+  margin-left: 10px;
+}
+.error-banner {
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #fca5a5;
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* =========================================
+   8. Mobile Responsiveness
+   ========================================= */
+@media (max-width: 480px) {
+  .flip-wrapper {
+    width: 90%;
+    height: 580px; /* A bit taller on mobile for touch targets */
   }
-  .auth-image-side {
-    display: none; /* Hide image on mobile for cleaner look */
-  }
+  .flip-card-front, .flip-card-back { padding: 25px; }
+  .brand-logo h1 { font-size: 2.5rem; }
 }

@@ -42,6 +42,10 @@ const ConditionalNavbar = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  if (location.pathname === '/') {
+    return null;
+  }
+
   return <Navbar />;
 };
 
@@ -59,6 +63,10 @@ const ConditionalFooter = () => {
 
   // FIX: Check if the current path is in the exclusion list
   if (noFooterPaths.includes(location.pathname)) {
+    return null;
+  }
+
+  if (location.pathname === '/') {
     return null;
   }
 

@@ -1,187 +1,132 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowRight, Star, Truck, ShieldCheck, Zap, MoveRight, Plus } from 'lucide-react';
-import { useNavigate } from 'react-router-dom'; // Import Navigation
+import { ArrowRight } from 'lucide-react';
 import '../css/LandingPage.css';
 
-// Mock Data
-const curatedPicks = [
-  { id: 1, name: "Essentials Oversized Hoodie", category: "Streetwear", price: "₹3,499", image: "https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=600&q=80", badge: "HOT" },
-  { id: 2, name: "Air Jordan 1 High", category: "Sneakers", price: "₹16,999", image: "https://images.unsplash.com/photo-1552346154-21d32810aba3?auto=format&fit=crop&w=600&q=80", badge: "GRAIL" },
-  { id: 3, name: "Summer Linen Set", category: "Women", price: "₹2,899", image: "https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?auto=format&fit=crop&w=600&q=80", badge: "NEW" },
-  { id: 4, name: "Varsity Bomber Jacket", category: "Men", price: "₹4,599", image: "https://images.unsplash.com/photo-1559551409-dadc959f76b8?auto=format&fit=crop&w=600&q=80", badge: "" }
-];
-
-const LandingPage = () => {
-  const navigate = useNavigate(); // Hook for navigation
-
-  const fadeInUp = {
-    hidden: { opacity: 0, y: 40 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } }
-  };
+const SplitSection = ({ side, title, image, route, onClick, isHovered, isDimmed, isActive, hasClicked, onHover, onLeave }) => {
+  
+  // LOGIC: If a click happened (hasClicked), and this is NOT the active side,
+  // we must kill it instantly.
+  const isLoser = hasClicked && !isActive;
 
   return (
-    <div className="landing-page">
+    <motion.div 
+      className={`split-pane ${side} ${isHovered ? 'hover-active' : ''} ${isDimmed ? 'dimmed' : ''} ${isActive ? 'clicked-active' : ''}`}
+      onClick={() => !hasClicked && onClick(route, side)} // Prevent double clicks
+      onMouseEnter={onHover}
+      onMouseLeave={onLeave}
       
-      {/* HERO */}
-      <section className="hero-fullscreen">
-        <div className="hero-overlay"></div>
-        <div className="hero-video-bg">
-          <img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1920&q=80" alt="Hero" />
-        </div>
-        
+      // FRAMER MOTION LOGIC FIX
+      animate={{ 
+        // 1. If I am the loser: Go to 0 width (or flex 0) and 0 opacity
+        // 2. If I am the winner: Grow huge (flex 10)
+        // 3. Normal hover: flex 2
+        flex: isLoser ? 0.01 : (isActive || isHovered ? 2 : 1), 
+        opacity: isLoser ? 0 : (isDimmed ? 0.4 : 1) 
+      }}
+      
+      transition={{ 
+        // If I am the loser, die FAST (0.3s). 
+        // If I am the winner/hovering, move LUXURIOUSLY (0.8s).
+        duration: isLoser ? 0.3 : 0.8, 
+        ease: [0.33, 1, 0.68, 1] 
+      }}
+    >
+      <motion.div 
+        className="bg-image" 
+        style={{ backgroundImage: `url(${image})` }}
+        animate={{ 
+            scale: isHovered || isActive ? 1.15 : 1,
+            filter: isDimmed ? 'grayscale(100%) brightness(0.4)' : 'grayscale(0%) brightness(0.9)'
+        }}
+        transition={{ duration: 0.8 }}
+      />
+      
+      <div className="content">
         <motion.div 
-          className="hero-content"
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          variants={fadeInUp}
+            className="label-card"
+            initial={{ y: 50, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
         >
-          <span className="hero-tag">EST. 2025 • PREMIUM WEAR</span>
-          <h1>Wear Your<br /><span className="outline-text">Vibe.</span></h1>
-          <p>Curated fashion that speaks before you do.</p>
-          
-          <div className="cta-group">
-            <button onClick={() => navigate('/men')} className="btn-primary-glow">
-              Shop Collection
-            </button>
-            <button onClick={() => navigate('/sneakers')} className="btn-text-only">
-              View Drops <MoveRight size={20} />
-            </button>
-          </div>
+            <div className="overflow-hidden">
+                <motion.h2>
+                    {title}
+                </motion.h2>
+            </div>
+            
+            <div className="cta-link">
+                <span className="cta-text">View Collection</span>
+                <ArrowRight size={16} />
+            </div>
         </motion.div>
-      </section>
-
-      {/* MARQUEE */}
-      <div className="marquee-container">
-        <div className="marquee-content">
-          <span>NEW DROPS EVERY FRIDAY • FREE SHIPPING ON ORDERS ABOVE ₹2000 • AUTHENTICITY GUARANTEED •</span>
-          <span>NEW DROPS EVERY FRIDAY • FREE SHIPPING ON ORDERS ABOVE ₹2000 • AUTHENTICITY GUARANTEED •</span>
-        </div>
       </div>
-
-      {/* BENTO GRID */}
-      <section className="bento-section">
-        <div className="section-header center">
-          <h2>Shop By Category</h2>
-          <div className="header-underline"></div>
-        </div>
-
-        <div className="bento-grid">
-          {/* Sneakers */}
-          <motion.div 
-            className="bento-item item-large"
-            onClick={() => navigate('/sneakers')}
-            whileHover={{ scale: 0.98 }}
-            transition={{ duration: 0.3 }}
-          >
-            <img src="https://adn-static1.nykaa.com/nykdesignstudio-images/pub/media/catalog/product/e/5/e5d8daf214854_1.jpg?rnd=20200526195200&tr=w-512" alt="Sneakers" />
-            <div className="bento-overlay">
-              <h3>Sneaker Lab</h3>
-              <p>Limited Editions & Hype Drops</p>
-              <span className="btn-circle"><ArrowRight size={20}/></span>
-            </div>
-          </motion.div>
-
-          {/* Men */}
-          <motion.div 
-            className="bento-item item-medium"
-            onClick={() => navigate('/men')}
-            whileHover={{ scale: 0.98 }}
-          >
-            <img src="https://adn-static1.nykaa.com/nykdesignstudio-images/pub/media/catalog/product/a/a/aadb9f5248141A_1.jpg?tr=w-512" alt="Men" />
-            <div className="bento-overlay">
-              <h3>Men's Edit</h3>
-              <p>Street & Formal</p>
-            </div>
-          </motion.div>
-
-          {/* Women */}
-          <motion.div 
-            className="bento-item item-medium"
-            onClick={() => navigate('/women')}
-            whileHover={{ scale: 0.98 }}
-          >
-            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80" alt="Women" />
-            <div className="bento-overlay">
-              <h3>Women's Edit</h3>
-              <p>Chic & Timeless</p>
-            </div>
-          </motion.div>
-          
-           {/* Design Studio */}
-           <motion.div 
-            className="bento-item item-wide"
-            onClick={() => navigate('/design')}
-            whileHover={{ scale: 0.98 }}
-          >
-            <div className="design-studio-bg">
-                <h3>Design Studio <span>BETA</span></h3>
-                <p>Customize your own fit.</p>
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* TRUST BADGES */}
-      <div className="trust-strip">
-        <div className="trust-item">
-          <Truck size={24} strokeWidth={1.5} />
-          <div><h4>Fast Shipping</h4><p>Within 3-5 Days</p></div>
-        </div>
-        <div className="trust-item">
-          <ShieldCheck size={24} strokeWidth={1.5} />
-          <div><h4>100% Authentic</h4><p>Verified Products</p></div>
-        </div>
-        <div className="trust-item">
-          <Zap size={24} strokeWidth={1.5} />
-          <div><h4>Member Exclusives</h4><p>Early Access Drops</p></div>
-        </div>
-      </div>
-
-      {/* CURATED COLLECTION */}
-      <section className="curated-section">
-        <div className="section-header">
-          <h2>Trending Now</h2>
-          <button className="view-all-btn">View All</button>
-        </div>
-
-        <div className="curated-grid">
-          {curatedPicks.map((item) => (
-            <div key={item.id} className="curated-card">
-              <div className="curated-img-box">
-                {item.badge && <span className="badge-overlay">{item.badge}</span>}
-                <img src={item.image} alt={item.name} />
-                <button className="quick-add-btn">
-                  <Plus size={18} />
-                </button>
-              </div>
-              <div className="curated-info">
-                <span>{item.category}</span>
-                <h3>{item.name}</h3>
-                <div className="price-row">
-                  <span className="price">{item.price}</span>
-                  <div className="rating"><Star size={12} fill="currentColor" /> 4.9</div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* NEWSLETTER */}
-      <section className="vibe-section">
-        <div className="vibe-content">
-          <h2>Don't Miss The Drop.</h2>
-          <p>Join the community. Get exclusive access to limited sneakers and sales.</p>
-          <div className="input-group">
-            <input type="email" placeholder="Enter your email" />
-            <button>JOIN US</button>
-          </div>
-        </div>
-      </section>
-    </div>
+    </motion.div>
   );
 };
 
-export default LandingPage;
+export default function LandingPage() {
+  const navigate = useNavigate();
+  const [hoveredSide, setHoveredSide] = useState(null);
+  const [clickedSide, setClickedSide] = useState(null); 
+
+  useEffect(() => {
+    // 1. Lock scroll when this component mounts
+    document.body.style.overflow = 'hidden';
+    
+    // 2. Unlock scroll when this component unmounts (leaving the page)
+    return () => {
+        document.body.style.overflow = 'auto';
+        document.body.style.overflowX = 'hidden'; // Keep horizontal scroll hidden
+    };
+  }, []);
+
+  const handleNavigate = (path, side) => {
+    setClickedSide(side);
+    // Navigation happens after 1 second, giving animation time to finish
+    setTimeout(() => navigate(path), 1000);
+  };
+
+  return (
+    <div className={`landing-gateway ${clickedSide ? 'navigating' : ''}`}>
+        <div className="texture-overlay"></div>
+
+      {/* MEN */}
+      <SplitSection 
+        side="left"
+        title="MEN"
+        image="https://images.bewakoof.com/t1080/men-s-taupe-brown-take-home-graphic-printed-oversized-t-shirt-681698-1751960002-1.jpg"
+        route="/men"
+        onClick={handleNavigate}
+        isHovered={hoveredSide === 'left'}
+        isDimmed={hoveredSide === 'right'}
+        isActive={clickedSide === 'left'}
+        hasClicked={clickedSide !== null} // Pass the global click state
+        onHover={() => setHoveredSide('left')}
+        onLeave={() => setHoveredSide(null)}
+      />
+
+      {/* WOMEN */}
+      <SplitSection 
+        side="right"
+        title="WOMEN"
+        image="https://images.bewakoof.com/t1080/534839_2025-12-26t11-49-12_1.jpg"
+        route="/women"
+        onClick={handleNavigate}
+        isHovered={hoveredSide === 'right'}
+        isDimmed={hoveredSide === 'left'}
+        isActive={clickedSide === 'right'}
+        hasClicked={clickedSide !== null} // Pass the global click state
+        onHover={() => setHoveredSide('right')}
+        onLeave={() => setHoveredSide(null)}
+      />
+      
+      {/* BRANDING */}
+      <motion.div className="brand-center">
+        <h1 className="sanskrit-logo">रीती</h1>
+        <p className="brand-subtitle">TIMELESS TRADITION</p>
+      </motion.div>
+    </div>
+  );
+}

@@ -35,7 +35,12 @@ const Navbar = () => {
   const navRef = useRef(null);
   const mobileSearchInputRef = useRef(null);
 
-  const isActive = (path) => location.pathname === path;
+  const isActive = (path) => {
+    // exact match for home
+    if (path === '/') return location.pathname === '/';
+    // startsWith allows "/men/details" to keep "/men" active
+    return location.pathname.startsWith(path);
+  };
 
   // Mock Search Data
   const sampleProducts = [

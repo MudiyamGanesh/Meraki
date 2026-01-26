@@ -693,6 +693,13 @@ body {
 }
 [data-theme="dark"] .desktop-links a { color: var(--white); }
 .desktop-links a:hover { color: rgb(217, 89, 89); text-shadow: none; }
+.desktop-links li.active-nav-item a {
+  color: rgb(217, 89, 89);
+  text-shadow: none;
+}
+.desktop-links li.active-nav-item a .nav-badge {
+  opacity: 1; 
+}
 
 .nav-badge {
   font-size: 8px; background: linear-gradient(45deg, #ff00cc, #333399); color: white;

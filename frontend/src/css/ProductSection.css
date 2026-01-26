@@ -234,85 +234,128 @@
 }
 
 /* --- RESPONSIVE: TABLET (Under 1024px) --- */
+/* --- RESPONSIVE: TABLET & MOBILE (Under 768px) --- */
 @media (max-width: 768px) {
   .product-section {
     padding: 40px 15px;
     overflow-x: hidden; /* Prevent horizontal scroll */
   }
 
+  /* --- HEADER FIX --- */
   .section-header {
-    margin-bottom: 25px;
-    padding: 0 10px; /* Add some padding so text doesn't touch edges */
+    margin-bottom: 30px;
+    padding: 0 10px;
     width: 100%;
+    /* Ensure flex column centers everything */
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    justify-content: center;
   }
 
   .section-title {
-    font-size: 22px; /* Slightly smaller to fit better */
-    line-height: 1.3; /* Better line height for wrapped text */
-    word-wrap: break-word; /* Ensure long words break if needed */
+    /* 1. Reduce size slightly to ensure "STRANGER THINGS" fits on most screens */
+    font-size: 20px; 
+    
+    /* 2. FORCE WRAPPING: This is likely the missing piece */
+    white-space: normal !important; 
+    overflow-wrap: break-word;
+    word-wrap: break-word; 
+    
+    /* 3. Center Alignment */
+    text-align: center;
+    width: 100%;
     max-width: 100%;
+    
+    /* 4. Line height and Spacing */
+    line-height: 1.4;
+    letter-spacing: 1px;
+    margin: 0 auto 10px auto; /* Centered margin */
+    
+    /* 5. Padding ensures it doesn't touch the screen edges */
+    padding: 0 10px;
+    box-sizing: border-box;
   }
-  
-  /* Adjust the decorative underline for mobile */
+
+  /* Fix the underline to stay centered below the wrapped text */
   .section-title::after {
-    margin-top: 12px; /* A bit more space if text wraps */
-    width: 50px;      /* Slightly smaller line */
+    margin: 8px auto 0 auto;
+    width: 50px;
   }
   
   .section-subtitle {
     font-size: 11px;
-    margin-top: 5px;
-    line-height: 1.4;
+    margin-top: 8px;
+    line-height: 1.5;
+    text-align: center; /* Explicitly center subtitle */
+    max-width: 90%;     /* Prevent it from hitting the very edges */
   }
 
+  /* --- GRID & CAROUSEL FIXES --- */
   .carousel-container {
     padding-bottom: 60px; 
+    width: 100%; /* Ensure container doesn't overflow */
   }
 
   .product-grid {
+    display: grid;
     width: 100%;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px; 
+    grid-template-columns: repeat(2, 1fr); /* 2 Columns */
+    gap: 12px; /* Slightly larger gap for breathing room */
     margin: 0;
+    padding: 0;
   }
 
+  /* --- MOBILE NAVIGATION --- */
   .nav-btn {
     top: auto;
     bottom: 0;
     transform: none;
     width: 40px;
     height: 40px;
+    /* Reset left/right for absolute positioning calculation */
+    left: auto; 
+    right: auto; 
   }
   
   .prev-btn {
-    left: calc(50% - 30px); /* Center align relative to middle */
-    transform: translateX(-100%);
+    /* Center - Gap */
+    left: calc(50% - 30px); 
+    transform: translateX(-50%);
   }
   
   .next-btn {
-    right: auto;
-    left: calc(50% + 30px); /* Center align relative to middle */
-    transform: translateX(0);
+    /* Center + Gap */
+    left: calc(50% + 30px); 
+    transform: translateX(-50%);
   }
   
+  /* --- CARD COMPACTING --- */
   .product-card {
-    min-width: 0;
+    min-width: 0; /* Flexbox safety */
     width: 100%;
   }
   
   .image-wrapper {
-      aspect-ratio: 3/4.2; /* Slightly taller for mobile */
+      aspect-ratio: 3/4; /* Standard ratio */
   }
   
   .product-details {
-      padding: 10px; /* Reduce padding on mobile cards */
+      padding: 12px; 
   }
   
   .product-name {
       font-size: 13px;
+      white-space: normal; /* Allow name to wrap to 2 lines if needed */
+      display: -webkit-box;
+      -webkit-line-clamp: 2; /* Limit to 2 lines */
+      line-clamp: 2; /* Standard property for compatibility */
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      line-height: 1.3;
   }
   
   .product-price {
-      font-size: 13px;
+      font-size: 14px;
   }
 }
