@@ -1,322 +1,279 @@
 /* =============================================================================
-   BRUTALIST E-COMMERCE LANDING - GLOBAL STYLES
+   CINEMATIC SLIDER - GLOBAL STYLES
    ============================================================================= */
 
-/* 1. Typography Imports */
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Montserrat:wght@300;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Montserrat:wght@300;400;500;600&display=swap');
 
-/* 3. The Texture Overlay (Film Grain) */
-.texture-overlay {
+.cine-container {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 50;
-    opacity: 0.04;
-    background-image: url("https://grainy-gradients.vercel.app/noise.svg");
-    filter: contrast(150%);
-}
-
-.landing-gateway {
-    display: flex;
     width: 100vw;
     height: 100vh;
-    
-    /* THE FIX: Break out of the container flow */
-    position: fixed; 
-    top: 0;
-    left: 0;
-    z-index: 999; /* Ensure it sits on top of everything */
-    
-    background: #000;
+    background-color: #050505;
     overflow: hidden;
+    color: #fff;
+    font-family: 'Montserrat', sans-serif;
 }
 
-/* =============================================================================
-   DESKTOP LAYOUT (Default Flex Behavior)
-   ============================================================================= */
-.split-pane {
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    overflow: hidden;
-    height: 100%;
-    /* Transition handled by Framer Motion, but border stays here */
-}
-
-.split-pane.left { 
-    border-right: 1px solid rgba(255,255,255,0.15); 
-}
-
-.bg-image {
+/* 1. BACKGROUND & VISIBILITY FIXES */
+.cine-background {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     background-size: cover;
-    background-position: center;
-    /* Framer Motion handles scale/filter */
+    background-position: center top;
+    z-index: 1;
 }
 
-/* Note: Old .overlay removed to allow Glass Cards to pop */
-
-.content {
-    z-index: 10;
-    pointer-events: none; /* Clicks pass through to the image pane */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 100%;
-}
-
-/* =============================================================================
-   THE FROSTED MONOLITH (Text Cards)
-   ============================================================================= */
-.label-card {
-    background: rgba(0, 0, 0, 0.25); /* Dark but transparent */
-    backdrop-filter: blur(12px);     /* High-end blur */
-    -webkit-backdrop-filter: blur(12px);
-    
-    border: 1px solid rgba(255, 255, 255, 0.2); /* Clinical edge */
-    padding: 2.5rem 4rem;
-    
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    
-    border-radius: 0px; /* Sharp corners = Brutal */
-    
-    transition: all 0.4s ease;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-}
-
-/* Hover Effect: The Card wakes up */
-.split-pane:hover .label-card {
-    background: rgba(0, 0, 0, 0.5); 
-    border-color: rgba(255, 255, 255, 0.6);
-    transform: scale(1.02);
-    box-shadow: 0 30px 60px rgba(0,0,0,0.5);
-}
-
-.overflow-hidden {
-    overflow: hidden;
-}
-
-.content h2 {
-    font-family: 'Playfair Display', serif;
-    font-size: 3.5rem; /* Desktop size */
-    letter-spacing: -1px;
-    font-weight: 500;
-    margin: 0;
-    line-height: 1.1;
-    color: #ffffff;
-    text-shadow: 0 2px 10px rgba(0,0,0,0.5);
-    margin-bottom: 1rem;
-}
-
-.cta-link {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    font-family: 'Montserrat', sans-serif;
-    font-size: 0.85rem;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    font-weight: 500;
-    color: rgba(255, 255, 255, 0.9);
-}
-
-.cta-text {
-    border-bottom: 1px solid transparent;
-    transition: border-color 0.3s;
-}
-
-.split-pane:hover .cta-text {
-    border-color: rgba(255,255,255,0.6);
-}
-
-/* =============================================================================
-   BRANDING (Centered Logo)
-   ============================================================================= */
-.brand-center {
+/* THE FIX: A stronger "Scrim" gradient.
+   It creates a dark tint overall (20%), but gets much darker (80%) 
+   at the top (for logo) and bottom (for text).
+*/
+.cine-background::after {
+    content: '';
     position: absolute;
-    top: 30px; /* Pinned to top with breathing room */
-    left: 50%;
-    transform: translateX(-50%); /* Horizontally centered only */
-    z-index: 20;
-    text-align: center;
-    pointer-events: none;
-    
-    /* We keep exclusion mode so it changes color based on the sky/ceiling of the images */
-    mix-blend-mode: exclusion; 
-    width: 100%; /* Ensure it spans if needed */
+    inset: 0;
+    background: linear-gradient(
+        to bottom, 
+        rgba(0,0,0,0.6) 0%,   /* Darker top for Logo visibility */
+        rgba(0,0,0,0.2) 30%,  /* Clearer middle for the image */
+        rgba(0,0,0,0.3) 60%, 
+        rgba(0,0,0,0.9) 100%  /* Very dark bottom for Text visibility */
+    );
 }
 
-.sanskrit-logo {
+.cine-overlay {
+    position: absolute;
+    inset: 0;
+    background-image: url("https://grainy-gradients.vercel.app/noise.svg");
+    opacity: 0.05;
+    pointer-events: none;
+    z-index: 2;
+}
+
+/* 2. HEADER */
+.cine-header {
+    position: absolute;
+    top: 30px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    z-index: 10;
+    pointer-events: none; 
+}
+
+/* --- RENAMED CLASS: eclipse-brand-logo --- */
+.eclipse-brand-logo {
     font-family: 'Cinzel', serif;
-    font-size: 4.5rem; /* Make it slightly larger for impact */
-    font-weight: 800;
+    font-size: 4rem; 
     margin: 0;
-    line-height: 1;    
-    /* THE GHOST EFFECT */
-    color: transparent; /* No fill */
-    
-    /* A sharp, clinical white outline */
-    -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.9);
-    
-    /* A dark shadow behind the stroke to ensure it pops on white images */
-    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.8));
-    
+    line-height: 1;
+    color: #050505; 
+    -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.95);
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+    filter: drop-shadow(0 10px 20px rgba(0,0,0,0.8));
     transition: all 0.5s ease;
 }
 
-brand-center:hover .sanskrit-logo {
+.eclipse-brand-logo:hover {
     color: #fff;
     -webkit-text-stroke: 0px transparent;
-    text-shadow: 0 0 20px rgba(255,255,255,0.6);
+    text-shadow: 0 0 30px rgba(255,255,255,0.8);
 }
 
-.brand-subtitle {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 0.65rem;
+/* 3. MAIN CONTENT */
+.cine-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 5;
+    text-align: center;
+    padding: 20px;
+    
+    /* ADDED: This pushes the center text slightly upwards to make room for the lifted tabs */
+    padding-bottom: 10vh; 
+}
+
+.text-wrapper {
+    max-width: 800px;
+    margin-top: 40px; 
+}
+
+/* Added text-shadow to ensure readability on white shirts/backgrounds */
+.cine-subtitle {
+    font-size: 0.9rem;
     letter-spacing: 6px;
-    margin-top: 5px;
-    color: rgba(255,255,255,0.8);
     text-transform: uppercase;
-    font-weight: 600;
+    margin-bottom: 1rem;
+    font-weight: 600; /* Increased weight */
+    color: rgba(255,255,255,0.95);
+    text-shadow: 0 2px 4px rgba(0,0,0,0.8); /* Hard shadow */
 }
 
-/* =============================================================================
-   MOBILE REVOLUTION: THE DIAGONAL SLASH 
-   ============================================================================= */
+.cine-title {
+    font-family: 'Cinzel', serif;
+    font-size: 5rem;
+    line-height: 1;
+    margin: 0 0 2.5rem 0;
+    color: #fff;
+    /* Strong shadow to separate title from background */
+    text-shadow: 0 4px 20px rgba(0,0,0,0.9); 
+}
+
+/* EXPLORE BUTTON */
+.explore-btn {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    padding: 1rem 2.5rem;
+    font-size: 0.9rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.3s ease;
+    /* Box shadow for button visibility */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+}
+
+.explore-btn:hover {
+    background: white;
+    color: black;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+}
+
+/* 4. DOCK */
+.cine-dock-wrapper {
+    position: absolute;
+    /* CHANGED: Lifted from 50px to 15% of viewport height */
+    bottom: 15vh; 
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    z-index: 10;
+}
+
+.cine-dock {
+    display: flex;
+    background: rgba(0, 0, 0, 0.6); /* Made background slightly darker */
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    padding: 5px;
+    border-radius: 100px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5); /* Lift off the background */
+}
+
+.dock-item {
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.7);
+    padding: 12px 32px;
+    border-radius: 100px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.dock-item:hover {
+    color: white;
+}
+
+.dock-item.active {
+    background: white;
+    color: black;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* 5. CURTAIN */
+.transition-curtain {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #fff;
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+}
+
+.curtain-text {
+    color: #000;
+    font-family: 'Cinzel', serif;
+    font-size: 4rem;
+    opacity: 0;
+    animation: fadeText 0.8s ease forwards;
+}
+
+@keyframes fadeText {
+    0% { opacity: 0; transform: translateY(20px); }
+    50% { opacity: 1; transform: translateY(0); }
+    100% { opacity: 1; }
+}
+
+/* MOBILE RESPONSIVENESS */
 @media (max-width: 768px) {
-    .landing-gateway {
-        display: block; /* No flex on mobile */
-        position: fixed !important;
-    }
-
-    /* 1. RESET PANES TO ABSOLUTE OVERLAY */
-    .split-pane {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100% !important;
-        height: 100% !important;
-        flex: none !important;
-        transition: clip-path 0.8s cubic-bezier(0.77, 0, 0.175, 1), z-index 0s linear 0.8s;
-    }
-
-    /* 2. CREATE THE DIAGONAL GEOMETRY */
-    
-    /* MEN: Top-Left Triangle */
-    .split-pane.left {
-        clip-path: polygon(0 0, 100% 0, 0 100%);
-        z-index: 2;
-    }
-
-    /* WOMEN: Bottom-Right Triangle */
-    .split-pane.right {
-        clip-path: polygon(100% 0, 100% 100%, 0 100%); 
-        z-index: 2;
-    }
-
-    /* 3. INTERACTION: THE EXPANDING SLASH */
-    .split-pane.clicked-active {
-        clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); /* Full Square */
-        z-index: 10;
-    }
-
-    .landing-gateway.navigating .split-pane:not(.clicked-active) {
-        opacity: 0;
-        transform: scale(1.1);
-        pointer-events: none;
-    }
-
-    /* 4. MOBILE CARD ADJUSTMENTS (Positioning inside triangles) */
-    
-    .label-card {
-        padding: 1.5rem 2rem;
-        background: rgba(0, 0, 0, 0.4); /* Darker backdrop for mobile readability */
-        backdrop-filter: blur(8px);
-        border: 1px solid rgba(255, 255, 255, 0.15);
-        box-shadow: none; /* Cleaner look */
-    }
-
-    .content h2 {
-        font-size: 2rem;
-    }
-
-    /* LEFT PANE (MEN) - Align Top/Left */
-    .split-pane.left .content {
-        justify-content: flex-start;
-        align-items: flex-start;
-        padding-top: 15%;
-        padding-left: 5%;
-    }
-
-    .split-pane.left .label-card {
-        align-items: flex-start;
-        border-left: 3px solid #fff; /* Accent Bar */
-        border-right: none; border-top: none; border-bottom: none;
-        background: linear-gradient(90deg, rgba(0,0,0,0.6), transparent);
-    }
-
-    /* RIGHT PANE (WOMEN) - Align Bottom/Right */
-    .split-pane.right .content {
-        justify-content: flex-end;
-        align-items: flex-end;
-        padding-bottom: 15%;
-        padding-right: 5%;
-    }
-
-    .split-pane.right .label-card {
-        align-items: flex-end;
-        border-right: 3px solid #fff; /* Accent Bar */
-        border-left: none; border-top: none; border-bottom: none;
-        background: linear-gradient(-90deg, rgba(0,0,0,0.6), transparent);
+    .eclipse-brand-logo {
+        font-size: 3rem; 
+        -webkit-text-stroke: 1px rgba(255, 255, 255, 0.95);
     }
     
-    /* Reverse CTA arrow flow for the right side */
-    .split-pane.right .cta-link {
-        flex-direction: row-reverse;
+    .cine-header {
+        top: 25px;
     }
 
-    /* 5. BRANDING ADJUSTMENTS */
-    .brand-center {
-        /* Keep it perfectly centered on mobile */
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: auto;
-        /* Disable blend mode on mobile so the black color stays true black */
-        mix-blend-mode: normal; 
-    }
-
-    .sanskrit-logo {
-        font-size: 4rem;        
-        /* THE ECLIPSE STYLE */
-        /* 1. Solid Dark Fill to hide the slash line behind it */
-        color: #050505; 
-        
-        /* 2. White Stroke to define edges against dark images */
-        -webkit-text-stroke: 1px rgba(255, 255, 255, 0.9);
-        
-        /* 3. Heavy Glow to lift it off the screen */
-        text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
-        
-        /* 4. Drop Shadow for depth */
-        filter: drop-shadow(0 10px 20px rgba(0,0,0,0.8));
+    .cine-title {
+        font-size: 2.8rem; 
+        margin-bottom: 2rem;
     }
     
-    .brand-subtitle {
-        display: none;
+    .cine-subtitle {
+        font-size: 0.75rem;
+    }
+
+    .explore-btn {
+        width: 100%; 
+        justify-content: center;
+        padding: 1rem;
+    }
+
+    .cine-dock-wrapper {
+        /* CHANGED: Lifted on mobile (approx 120px from bottom) */
+        bottom: 12vh; 
+        padding: 0 40px; /* Added side padding so it doesn't touch edges */
+    }
+
+    .cine-dock {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .dock-item {
+        flex: 1; 
+        padding: 14px 0;
+        text-align: center;
+    }
+    
+    .cine-background {
+        background-position: center; 
     }
 }
