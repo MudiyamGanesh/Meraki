@@ -1,61 +1,86 @@
 /* src/css/LoginPage.css */
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Playfair+Display:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600;800&family=Cinzel:wght@500;700&display=swap');
 
 :root {
-  /* Dark Slate/Navy background matching your screenshot */
-  --bg-dark: #12151c; 
-  --card-bg: #1a1f2b;
-  --text-main: #ffffff;
-  --text-muted: #94a3b8;
-  --border: rgba(255, 255, 255, 0.08);
+  /* DEEP VELVET PALETTE */
+  --bg-burgundy: #4a0a10;
+  --bg-burgundy-dark: #220305;
   
-  /* The "Drop" gradient (Pink/Purple) */
-  --brand-gradient: linear-gradient(135deg, #d946ef 0%, #8b5cf6 100%);
-  --brand-glow: rgba(217, 70, 239, 0.4);
+  /* MOLTEN GOLD PALETTE */
+  --gold-light: #fbe6a8;
+  --gold-mid: #f1e194;
+  --gold-dark: #c5a059;
   
-  --error: #ef4444;
+  --text-white: #ffffff;
+  --text-muted: rgba(255, 255, 255, 0.6);
+  
+  --glass-border: rgba(241, 225, 148, 0.15);
+  --glass-bg: rgba(20, 5, 8, 0.75); /* Slightly darker for better contrast */
+  
+  --error: #ff8080;
+  
+  /* SHAPES - Adjusted for sleeker look */
+  --radius-card: 24px;
+  --radius-btn: 50px;
+  --radius-input: 12px;
 }
 
 /* =========================================
-   1. Container & Background
+   1. ANIMATED BACKGROUND
    ========================================= */
 .aurora-container {
-  /* Subtract the 60px Navbar height so it fits without scrolling */
-  min-height: calc(100vh - 60px); 
+  min-height: calc(100vh); 
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: var(--bg-dark);
-  font-family: 'Outfit', sans-serif;
+  background-color: var(--bg-burgundy-dark);
+  font-family: 'Manrope', sans-serif;
   position: relative;
   overflow: hidden;
-  color: var(--text-main);
-  padding: 20px 0; /* Minimal padding for mobile safety */
+  color: var(--text-white);
+  padding: 10px 0;
 }
 
-/* Background Blobs - Subtle Atmosphere */
+.aurora-container::before {
+  content: '';
+  position: absolute;
+  top: -50%; left: -50%; width: 200%; height: 200%;
+  background: radial-gradient(circle at 50% 50%, #5B0E14 0%, transparent 60%),
+              radial-gradient(circle at 80% 20%, #3d070b 0%, transparent 40%);
+  animation: rotateBackground 20s linear infinite;
+  opacity: 0.6;
+  z-index: 0;
+}
+
+@keyframes rotateBackground {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 .aurora-blob {
   position: absolute;
-  filter: blur(100px);
-  opacity: 0.25; 
   border-radius: 50%;
-  animation: floatBlobs 15s infinite alternate ease-in-out;
+  filter: blur(80px);
+  z-index: 1;
+  opacity: 0.5;
+  animation: float 10s ease-in-out infinite;
 }
-.blob-1 { width: 500px; height: 500px; background: #4c1d95; top: -10%; left: 20%; }
-.blob-2 { width: 400px; height: 400px; background: #be185d; bottom: -10%; right: 10%; }
+.blob-1 { width: 300px; height: 300px; background: #88141d; top: 10%; left: 20%; animation-delay: 0s; }
+.blob-2 { width: 250px; height: 250px; background: #c5a059; bottom: 15%; right: 15%; opacity: 0.2; animation-delay: -5s; }
 
-@keyframes floatBlobs {
-  0% { transform: translate(0, 0) scale(1); }
-  100% { transform: translate(20px, -20px) scale(1.05); }
+@keyframes float {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(30px, -30px); }
 }
 
 /* =========================================
-   2. Flip Mechanics & Card Size
+   2. FLIPPER LAYOUT (RESIZED)
    ========================================= */
 .flip-wrapper {
-  perspective: 1000px;
-  width: 400px; /* Compact width */
-  height: 550px; /* Reduced height to fit comfortably */
+  perspective: 1500px;
+  /* Reduced Width and Height */
+  width: 380px; 
+  height: 550px; 
   z-index: 10;
 }
 
@@ -64,7 +89,7 @@
   width: 100%;
   height: 100%;
   text-align: center;
-  transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+  transition: transform 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
   transform-style: preserve-3d;
 }
 
@@ -73,109 +98,116 @@
 }
 
 /* =========================================
-   3. Card Styling (Front & Back)
+   3. SOFT GLASS CARD
    ========================================= */
 .flip-card-front, .flip-card-back {
   position: absolute;
   width: 100%;
   height: 100%;
   backface-visibility: hidden;
-  border-radius: 24px; /* Soft rounded corners like product cards */
-  background: rgba(26, 31, 43, 0.9); /* Dark Slate Glass */
-  backdrop-filter: blur(20px);
-  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  background: var(--glass-bg);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  box-shadow: 
+    inset 0 0 0 1px var(--glass-border),
+    0 20px 40px -10px rgba(0, 0, 0, 0.6);
+  
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 35px; /* Tighter padding */
+  /* Reduced Padding */
+  padding: 30px; 
   box-sizing: border-box;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
 }
 
 .flip-card-back {
   transform: rotateY(180deg);
 }
 
-/* Spotlight Effect (Hover Glow) */
-.spotlight-card::before {
+.spotlight-card::after {
   content: "";
   position: absolute;
   top: 0; left: 0; right: 0; bottom: 0;
-  border-radius: 24px;
+  border-radius: var(--radius-card);
   padding: 1px;
   background: radial-gradient(
     600px circle at var(--mouse-x) var(--mouse-y), 
-    rgba(255,255,255,0.15),
+    rgba(241, 225, 148, 0.15),
     transparent 40%
   );
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
   pointer-events: none;
-  opacity: 0.5;
+  z-index: -1;
 }
 
 /* =========================================
-   4. Typography (Streetwear Style)
+   4. TYPOGRAPHY
    ========================================= */
-.brand-logo {
-  margin-bottom: 10px;
-}
+.brand-logo { margin-bottom: 15px; } /* Reduced margin */
 
-/* The Hindi Logo Style */
 .brand-logo h1 {
-  font-family: 'Playfair Display', serif;
-  font-size: 3rem;
-  font-weight: 700;
+  font-family: 'Cinzel', serif;
+  font-size: 3rem; /* Reduced from 3.8rem */
+  font-weight: 500;
   margin: 0;
   line-height: 1;
-  background: linear-gradient(to bottom, #ffffff, #cbd5e1);
+  background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold-dark) 100%);
+  background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 2px 10px rgba(197, 160, 89, 0.3));
 }
 
-/* Headings like "MEMBER LOGIN" */
 h2 { 
-  margin: 0; 
-  font-size: 1.5rem; 
+  font-family: 'Manrope', sans-serif;
+  font-size: 1.4rem; /* Reduced from 1.6rem */
   font-weight: 800; 
-  text-transform: uppercase;
-  letter-spacing: 1px;
+  color: var(--text-white);
+  letter-spacing: -0.5px;
+  margin: 0;
 }
 
 .subtitle { 
   margin: 5px 0 25px; 
-  font-size: 0.9rem; 
+  font-size: 0.85rem; 
   color: var(--text-muted); 
-  font-weight: 300;
-  letter-spacing: 0.5px;
+  font-weight: 400;
 }
 
 /* =========================================
-   5. Form Inputs
+   5. SLEEKER INPUTS
    ========================================= */
 .input-box {
   position: relative;
-  margin-bottom: 15px; /* Tighter spacing */
+  margin-bottom: 14px; /* Reduced spacing */
+  transition: transform 0.2s ease;
+}
+
+.input-box:focus-within {
+  transform: scale(1.02);
 }
 
 .input-box .icon {
   position: absolute;
-  left: 16px;
+  left: 14px;
   top: 50%;
   transform: translateY(-50%);
   color: var(--text-muted);
   transition: color 0.3s;
+  pointer-events: none;
+  width: 18px; /* Ensure icon isn't too big */
+  height: 18px;
 }
 
 .input-box input {
   width: 100%;
-  padding: 14px 14px 14px 45px;
-  background: rgba(0, 0, 0, 0.2); 
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  color: white;
+  /* Sleeker padding: Top/Bottom 12px instead of 16px */
+  padding: 12px 12px 12px 42px; 
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: var(--radius-input);
+  color: var(--text-white);
+  font-family: 'Manrope', sans-serif;
   font-size: 0.9rem;
   font-weight: 500;
   outline: none;
@@ -183,81 +215,90 @@ h2 {
 }
 
 .input-box input::placeholder {
-  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.25);
+  font-weight: 400;
   font-size: 0.8rem;
-  letter-spacing: 0.5px;
-  color: rgba(255, 255, 255, 0.3);
+  letter-spacing: 1px;
+  text-transform: uppercase;
 }
 
 .input-box input:focus {
-  border-color: #d946ef;
-  background: rgba(0, 0, 0, 0.3);
-  box-shadow: 0 0 0 4px rgba(217, 70, 239, 0.1);
+  background: rgba(0, 0, 0, 0.4);
+  border-color: var(--gold-mid);
+  box-shadow: 0 0 15px rgba(241, 225, 148, 0.1);
 }
 
-.input-box input:focus + .icon { color: #d946ef; }
+.input-box input:focus + .icon { color: var(--gold-mid); }
 
-/* Password Eye Button */
 .eye-btn {
   position: absolute;
-  right: 16px;
+  right: 12px;
   top: 50%;
   transform: translateY(-50%);
   background: none;
   border: none;
   color: var(--text-muted);
   cursor: pointer;
-  padding: 0;
+  padding: 4px;
   display: flex;
   transition: color 0.3s;
 }
-.eye-btn:hover { color: white; }
+.eye-btn:hover { color: var(--text-white); }
 
 /* =========================================
-   6. Buttons (Pill / Drop Style)
+   6. COMPACT LIQUID BUTTON
    ========================================= */
 .brand-btn {
+  position: relative;
   width: 100%;
-  padding: 14px;
-  background: var(--brand-gradient);
-  color: white;
+  /* Reduced padding */
+  padding: 14px; 
+  margin-top: 10px;
   border: none;
-  border-radius: 50px; /* Pill shape */
-  font-weight: 700;
-  font-size: 0.95rem;
+  border-radius: var(--radius-btn);
+  cursor: pointer;
+  overflow: hidden;
+  background: linear-gradient(
+    90deg, 
+    var(--gold-dark), 
+    var(--gold-mid), 
+    var(--gold-light), 
+    var(--gold-mid), 
+    var(--gold-dark)
+  );
+  background-size: 300% 100%;
+  animation: shimmerGold 4s infinite linear;
+  color: #3b0509; 
+  font-family: 'Manrope', sans-serif;
+  font-weight: 800;
+  font-size: 0.9rem; /* Slightly smaller text */
   text-transform: uppercase;
   letter-spacing: 1px;
-  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  margin-top: 10px;
+  gap: 8px;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(217, 70, 239, 0.2);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+@keyframes shimmerGold {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
 }
 
 .brand-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(217, 70, 239, 0.4);
+  box-shadow: 0 10px 25px rgba(241, 225, 148, 0.25);
 }
 
-.brand-btn:disabled {
-  opacity: 0.6;
-  transform: none;
-  cursor: not-allowed;
-}
-
-/* Spinner */
 .spinner {
-  animation: spin 1s linear infinite;
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
 }
-@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
 /* =========================================
-   7. Switch Text & Errors
+   7. FOOTER LINKS
    ========================================= */
 .switch-text {
   margin-top: 20px;
@@ -268,54 +309,67 @@ h2 {
 .text-btn {
   background: none;
   border: none;
-  color: white;
-  font-weight: 600;
+  color: var(--gold-mid);
+  font-weight: 700;
   cursor: pointer;
   margin-left: 8px;
+  position: relative;
   text-decoration: none;
-  border-bottom: 1px solid rgba(255,255,255,0.3);
-  padding-bottom: 2px;
-  transition: all 0.2s;
-}
-.text-btn:hover { 
-  border-color: #d946ef;
-  color: #d946ef;
+  padding: 0;
+  font-size: 0.85rem;
 }
 
-/* Error States */
+.text-btn::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 1px;
+  bottom: -2px;
+  left: 0;
+  background-color: var(--gold-mid);
+  transition: width 0.3s ease;
+}
+
+.text-btn:hover::after {
+  width: 100%;
+}
+
+/* ERROR STATES */
 .input-error {
   border-color: var(--error) !important;
-  background: rgba(239, 68, 68, 0.1) !important;
+  background: rgba(255, 128, 128, 0.1) !important;
 }
+
 .error-text {
   display: block;
   font-size: 0.75rem;
   color: var(--error);
   margin-top: 4px;
   text-align: left;
-  margin-left: 10px;
+  margin-left: 5px;
+  font-weight: 600;
 }
+
 .error-banner {
-  background: rgba(239, 68, 68, 0.15);
-  border: 1px solid rgba(239, 68, 68, 0.3);
-  color: #fca5a5;
+  background: rgba(255, 128, 128, 0.15);
+  border: 1px solid rgba(255, 128, 128, 0.3);
+  color: var(--error);
   padding: 10px;
   border-radius: 8px;
   margin-bottom: 15px;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   display: flex;
   align-items: center;
   justify-content: center;
+  font-weight: 600;
 }
 
-/* =========================================
-   8. Mobile Responsiveness
-   ========================================= */
+/* MOBILE RESPONSIVENESS */
 @media (max-width: 480px) {
   .flip-wrapper {
     width: 90%;
-    height: 580px; /* A bit taller on mobile for touch targets */
+    height: 580px; /* Slight extra height for mobile safe area */
   }
   .flip-card-front, .flip-card-back { padding: 25px; }
-  .brand-logo h1 { font-size: 2.5rem; }
+  .brand-logo h1 { font-size: 2.8rem; }
 }

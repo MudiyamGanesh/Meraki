@@ -34,15 +34,14 @@ const ScrollToTop = () => {
 // --- LOGIC TO HIDE NAVBAR ---
 const ConditionalNavbar = () => {
   const location = useLocation();
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
-  useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 768);
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  // Define paths where Navbar should NOT appear
+  const noNavbarPaths = [
+    '/', 
+    '/login'
+  ];
 
-  if (location.pathname === '/') {
+  if (noNavbarPaths.includes(location.pathname)) {
     return null;
   }
 
@@ -54,6 +53,7 @@ const ConditionalFooter = () => {
   const location = useLocation();
   
   const noFooterPaths = [
+    '/',
     '/account', 
     '/cart', 
     '/wishlist', 
@@ -61,16 +61,28 @@ const ConditionalFooter = () => {
     '/login',
   ];
 
-  // FIX: Check if the current path is in the exclusion list
   if (noFooterPaths.includes(location.pathname)) {
     return null;
   }
 
-  if (location.pathname === '/') {
-    return null;
-  }
-
   return <Footer />;
+};
+
+const BodyClassManager = () => {
+  const location = useLocation();
+  
+  useEffect(() => {
+    const noNavbarPaths = ['/', '/login'];
+    const isNavbarHidden = noNavbarPaths.includes(location.pathname);
+
+    if (isNavbarHidden) {
+      document.body.classList.add('no-nav');
+    } else {
+      document.body.classList.remove('no-nav');
+    }
+  }, [location]);
+
+  return null;
 };
 
 // Shop Layout Wrapper
@@ -98,6 +110,7 @@ function App() {
           <ToastProvider>
             <Router>
               <ScrollToTop />
+              <BodyClassManager />
               <div className="app-container">
                 
                 <ConditionalNavbar />

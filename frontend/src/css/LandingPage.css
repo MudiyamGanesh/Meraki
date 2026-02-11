@@ -1,8 +1,19 @@
 /* =============================================================================
-   CINEMATIC SLIDER - GLOBAL STYLES
+   CINEMATIC SLIDER - BURGUNDY & GOLD THEME
    ============================================================================= */
 
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Montserrat:wght@300;400;500;600&display=swap');
+
+:root {
+    /* Theme Palette */
+    --color-burgundy: #5B0E14;
+    --color-burgundy-dark: #2a0508;
+    --color-gold: #F1E194;
+    --color-gold-dim: #d4c57e;
+    
+    /* Text Colors */
+    --text-white: #f5f5f5; /* White Smoke */
+}
 
 .cine-container {
     position: fixed;
@@ -10,9 +21,9 @@
     left: 0;
     width: 100vw;
     height: 100vh;
-    background-color: #050505;
+    background-color: var(--color-burgundy);
     overflow: hidden;
-    color: #fff;
+    color: var(--text-white);
     font-family: 'Montserrat', sans-serif;
 }
 
@@ -28,9 +39,9 @@
     z-index: 1;
 }
 
-/* THE FIX: A stronger "Scrim" gradient.
-   It creates a dark tint overall (20%), but gets much darker (80%) 
-   at the top (for logo) and bottom (for text).
+/* THE FIX: Burgundy Scrim Gradient
+   Maintains the "previous" overlay logic but tints it 
+   Deep Burgundy instead of plain Black for better blending.
 */
 .cine-background::after {
     content: '';
@@ -38,10 +49,10 @@
     inset: 0;
     background: linear-gradient(
         to bottom, 
-        rgba(0,0,0,0.6) 0%,   /* Darker top for Logo visibility */
-        rgba(0,0,0,0.2) 30%,  /* Clearer middle for the image */
-        rgba(0,0,0,0.3) 60%, 
-        rgba(0,0,0,0.9) 100%  /* Very dark bottom for Text visibility */
+        rgba(91, 14, 20, 0.4) 0%,   /* Burgundy tint at top */
+        rgba(91, 14, 20, 0.1) 30%,  /* Clearer middle */
+        rgba(91, 14, 20, 0.6) 60%, 
+        rgba(91, 14, 20, 1) 100%    /* Solid Burgundy at bottom */
     );
 }
 
@@ -52,6 +63,7 @@
     opacity: 0.05;
     pointer-events: none;
     z-index: 2;
+    mix-blend-mode: overlay;
 }
 
 /* 2. HEADER */
@@ -65,23 +77,23 @@
     pointer-events: none; 
 }
 
-/* --- RENAMED CLASS: eclipse-brand-logo --- */
+/* BRAND LOGO - Gold Outline */
 .eclipse-brand-logo {
     font-family: 'Cinzel', serif;
     font-size: 4rem; 
     margin: 0;
     line-height: 1;
-    color: #050505; 
-    -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.95);
-    text-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
-    filter: drop-shadow(0 10px 20px rgba(0,0,0,0.8));
+    color: transparent; 
+    -webkit-text-stroke: 1.5px var(--color-gold); /* Gold Stroke */
+    text-shadow: 0 0 20px rgba(241, 225, 148, 0.1);
+    filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5));
     transition: all 0.5s ease;
 }
 
 .eclipse-brand-logo:hover {
-    color: #fff;
+    color: var(--color-gold);
     -webkit-text-stroke: 0px transparent;
-    text-shadow: 0 0 30px rgba(255,255,255,0.8);
+    text-shadow: 0 0 30px rgba(241, 225, 148, 0.6);
 }
 
 /* 3. MAIN CONTENT */
@@ -97,9 +109,7 @@
     z-index: 5;
     text-align: center;
     padding: 20px;
-    
-    /* ADDED: This pushes the center text slightly upwards to make room for the lifted tabs */
-    padding-bottom: 10vh; 
+    padding-bottom: 12vh; 
 }
 
 .text-wrapper {
@@ -107,33 +117,33 @@
     margin-top: 40px; 
 }
 
-/* Added text-shadow to ensure readability on white shirts/backgrounds */
+/* Subtitle - White Text as requested */
 .cine-subtitle {
     font-size: 0.9rem;
     letter-spacing: 6px;
     text-transform: uppercase;
-    margin-bottom: 1rem;
-    font-weight: 600; /* Increased weight */
-    color: rgba(255,255,255,0.95);
-    text-shadow: 0 2px 4px rgba(0,0,0,0.8); /* Hard shadow */
+    margin-bottom: 1.5rem;
+    font-weight: 600; 
+    color: var(--text-white); 
+    text-shadow: 0 2px 10px rgba(0,0,0,0.5);
 }
 
+/* Title - White Text */
 .cine-title {
     font-family: 'Cinzel', serif;
     font-size: 5rem;
     line-height: 1;
     margin: 0 0 2.5rem 0;
-    color: #fff;
-    /* Strong shadow to separate title from background */
-    text-shadow: 0 4px 20px rgba(0,0,0,0.9); 
+    color: var(--text-white);
+    text-shadow: 0 4px 30px rgba(42, 5, 8, 0.8); 
 }
 
 /* EXPLORE BUTTON */
 .explore-btn {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(91, 14, 20, 0.3); /* Transparent Burgundy */
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    color: white;
+    border: 1px solid var(--color-gold); /* Gold Border */
+    color: var(--text-white); /* White Text */
     padding: 1rem 2.5rem;
     font-size: 0.9rem;
     letter-spacing: 2px;
@@ -142,22 +152,21 @@
     display: inline-flex;
     align-items: center;
     gap: 12px;
-    transition: all 0.3s ease;
-    /* Box shadow for button visibility */
-    box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
 }
 
 .explore-btn:hover {
-    background: white;
-    color: black;
+    background: var(--color-gold);
+    color: var(--color-burgundy); /* Burgundy Text on Hover */
     transform: translateY(-2px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+    box-shadow: 0 0 25px rgba(241, 225, 148, 0.4);
+    font-weight: 600;
 }
 
 /* 4. DOCK */
 .cine-dock-wrapper {
     position: absolute;
-    /* CHANGED: Lifted from 50px to 15% of viewport height */
     bottom: 15vh; 
     left: 0;
     width: 100%;
@@ -168,19 +177,19 @@
 
 .cine-dock {
     display: flex;
-    background: rgba(0, 0, 0, 0.6); /* Made background slightly darker */
+    background: rgba(42, 5, 8, 0.7); /* Dark Burgundy */
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     padding: 5px;
     border-radius: 100px;
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5); /* Lift off the background */
+    border: 1px solid rgba(241, 225, 148, 0.2); /* Faint Gold Border */
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
 }
 
 .dock-item {
     background: transparent;
     border: none;
-    color: rgba(255, 255, 255, 0.7);
+    color: rgba(255, 255, 255, 0.5);
     padding: 12px 32px;
     border-radius: 100px;
     font-family: 'Montserrat', sans-serif;
@@ -188,27 +197,27 @@
     font-weight: 600;
     letter-spacing: 2px;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.4s ease;
 }
 
 .dock-item:hover {
-    color: white;
+    color: var(--color-gold);
 }
 
 .dock-item.active {
-    background: white;
-    color: black;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    background: var(--color-gold);
+    color: var(--color-burgundy);
+    box-shadow: 0 5px 15px rgba(241, 225, 148, 0.2);
 }
 
-/* 5. CURTAIN */
+/* 5. CURTAIN TRANSITION */
 .transition-curtain {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: #fff;
+    background: var(--color-gold);
     z-index: 999;
     display: flex;
     align-items: center;
@@ -217,7 +226,7 @@
 }
 
 .curtain-text {
-    color: #000;
+    color: var(--color-burgundy);
     font-family: 'Cinzel', serif;
     font-size: 4rem;
     opacity: 0;
@@ -234,7 +243,7 @@
 @media (max-width: 768px) {
     .eclipse-brand-logo {
         font-size: 3rem; 
-        -webkit-text-stroke: 1px rgba(255, 255, 255, 0.95);
+        -webkit-text-stroke: 1px var(--color-gold);
     }
     
     .cine-header {
@@ -257,9 +266,8 @@
     }
 
     .cine-dock-wrapper {
-        /* CHANGED: Lifted on mobile (approx 120px from bottom) */
         bottom: 12vh; 
-        padding: 0 40px; /* Added side padding so it doesn't touch edges */
+        padding: 0 40px; 
     }
 
     .cine-dock {
@@ -271,9 +279,5 @@
         flex: 1; 
         padding: 14px 0;
         text-align: center;
-    }
-    
-    .cine-background {
-        background-position: center; 
     }
 }

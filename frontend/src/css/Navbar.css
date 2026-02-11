@@ -643,12 +643,18 @@
 /* --- GLOBAL RESET --- */
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html, body { width: 100%; max-width: 100vw; overflow-x: clip; }
+/* Update your existing body rule */
 body { 
   padding-top: 80px; 
   font-family: var(--font-main); 
   background-color: var(--bg-primary); 
   color: var(--text-main); 
   transition: background-color 0.3s ease; 
+}
+
+/* ADD THIS NEW RULE */
+body.no-nav {
+  padding-top: 0 !important;
 }
 
 /* --- MAIN NAVBAR CONTAINER --- */
@@ -992,6 +998,7 @@ input[type="search"]::-webkit-search-results-decoration {
   .nav-container { grid-template-columns: auto 1fr auto; }
   .brand-logo { font-size: 32px; }
   body { padding-top: 60px; }
+  body.no-nav { padding-top: 0 !important; }
   .mobile-search-container { top: 60px; }
   .nav-center { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); }
 }

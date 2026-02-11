@@ -103,7 +103,7 @@ const LoginPage = () => {
           <div className="flip-card-front spotlight-card" ref={containerRef} onMouseMove={handleMouseMove}>
             <div className="brand-logo">
                 {/* Replaced Icon with Hindi Text to match Header */}
-                <h1>रीति</h1>
+                <h1>PARADOX</h1>
             </div>
             
             <h2>Member Login</h2>
@@ -151,7 +151,7 @@ const LoginPage = () => {
           ============================== */}
           <div className="flip-card-back spotlight-card">
             <div className="brand-logo">
-                <h1>रीति</h1>
+                <h1>PARADOX</h1>
             </div>
             
             <h2>Join the Club</h2>

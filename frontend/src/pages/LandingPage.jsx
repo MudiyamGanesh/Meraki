@@ -28,13 +28,17 @@ export default function LandingPage() {
   const [isNavigating, setIsNavigating] = useState(false);
 
   useEffect(() => {
+    // If we are currently navigating to a new page, don't start the timer
+    if (isNavigating) return;
+
     const interval = setInterval(() => {
-      if (!isNavigating) {
-        setActiveTab(prev => prev === 'women' ? 'men' : 'women');
-      }
+      setActiveTab(prev => prev === 'women' ? 'men' : 'women');
     }, 6000); 
+
+    // This cleanup function runs every time activeTab changes or the component unmounts
+    // It "kills" the old timer so a new 6-second cycle can start fresh
     return () => clearInterval(interval);
-  }, [isNavigating]);
+  }, [activeTab, isNavigating]); // Adding activeTab here is the key fix
 
   const handleNavigate = (path) => {
     setIsNavigating(true);
