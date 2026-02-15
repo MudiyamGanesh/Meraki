@@ -1,29 +1,31 @@
 import React, { useState, useRef, useEffect, useLayoutEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useNavigate } from "react-router-dom"; // <-- 1. IMPORT NAVIGATE
 import "../css/HeroCarousel.css";
 
-// Note: No data import here! We receive data via props now.
-
 const HeroCarousel = ({ activeTab, products = [] }) => {
+  const navigate = useNavigate(); // <-- 2. INITIALIZE HOOK
   
-  // --- 1. PREPARE SLIDES ---
-  // Transform the raw product list into carousel slides based on the Active Tab
+  // --- 1. DATA TRANSFORMATION (The Fix) ---
   const slides = useMemo(() => {
+    if (!products || products.length === 0) return [];
+
     return products
-      .filter((product) => product.gender === activeTab) // Filter by current tab
-      .slice(0, 5) // Limit to top 5
+      .filter((product) => product.gender.toLowerCase() === activeTab.toLowerCase())
+      .slice(0, 5) 
       .map((product) => ({
         id: product.id,
         title: product.name,
-        price: `From ₹${product.price}`,
-        // Create features from raw data attributes
+        price: `From ₹${product.price}`, 
         features: [
-          product.subCategory || "Premium Collection",
+          product.subCategory || "Trending",
           product.fit || "Regular Fit",
-          product.fabric || "100% Cotton"
+          product.fabric || "Premium Cotton"
         ],
-        image: product.image, 
+        image: product.images && product.images.length > 0 
+          ? product.images[0] 
+          : "https://via.placeholder.com/400x600?text=No+Image"
       }));
   }, [activeTab, products]);
 
@@ -35,7 +37,7 @@ const HeroCarousel = ({ activeTab, products = [] }) => {
   const cardRefs = useRef([]);
   const length = slides.length;
 
-  // --- 2. FORCE SCROLL RESET ON MOUNT & TAB CHANGE ---
+  // --- 2. FORCE SCROLL RESET ---
   useLayoutEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollLeft = 0; 
@@ -84,22 +86,6 @@ const HeroCarousel = ({ activeTab, products = [] }) => {
     setCurrentIndex((prev) => (prev === 0 ? length - 1 : prev - 1));
   };
 
-  // --- 4. DRAG HANDLER (New) ---
-  const onDragEnd = (event, info) => {
-    const offset = info.offset.x;
-    const velocity = info.velocity.x;
-
-    // Swipe Left (Go Next)
-    if (offset < -50 || velocity < -500) {
-      nextSlide();
-    } 
-    // Swipe Right (Go Prev)
-    else if (offset > 50 || velocity > 500) {
-      prevSlide();
-    }
-  };
-
-  // If no slides, return null
   if (slides.length === 0) return null;
 
   return (
@@ -128,11 +114,14 @@ const HeroCarousel = ({ activeTab, products = [] }) => {
                 className={`card ${isActive ? "active" : "inactive"} ${position}`}
                 onMouseEnter={() => setHoveredIndex(index)}
                 onMouseLeave={() => setHoveredIndex(null)}
+                // <-- 3. ADD ONCLICK ROUTING HERE
+                onClick={() => navigate(`/product/${item.id}`)}
                 layout
                 style={{ 
                     position: 'relative', 
                     overflow: 'hidden',
-                    minHeight: '400px' 
+                    minHeight: '400px',
+                    cursor: 'pointer' // <-- AND THE POINTER CURSOR HERE
                 }}
                 animate={{ 
                   scale: isActive ? 1.05 : 0.95, 
@@ -140,36 +129,24 @@ const HeroCarousel = ({ activeTab, products = [] }) => {
                 }}
                 transition={{ type: "spring", stiffness: 300, damping: 25 }}
               >
+                {/* IMAGE BOX */}
                 <div className="card-image-box" style={{ 
-                    position: 'absolute', 
-                    top: 0, 
-                    left: 0, 
-                    width: '100%', 
-                    height: '100%', 
-                    zIndex: 0 
+                    position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 0 
                 }}>
                   <motion.img 
                     src={item.image} 
                     alt={item.title} 
-                    style={{ 
-                        width: '100%', 
-                        height: '100%', 
-                        objectFit: 'cover' 
-                    }}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                     animate={{ scale: isActive ? 1.15 : 1 }}
                     transition={{ duration: 0.8 }}
                   />
                 </div>
 
+                {/* CONTENT OVERLAY */}
                 <div className="card-content" style={{
-                    position: 'absolute',
-                    bottom: 0,
-                    left: 0,
-                    width: '100%',
-                    zIndex: 10,
-                    background: 'linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.6) 25%, rgba(0,0,0,0.3) 50%, rgba(0, 0, 0, 0.1) 75%, transparent 100%)',
-                    padding: '20px',
-                    boxSizing: 'border-box'
+                    position: 'absolute', bottom: 0, left: 0, width: '100%', zIndex: 10,
+                    background: 'linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.6) 25%, rgba(0,0,0,0.1) 75%, transparent 100%)',
+                    padding: '20px', boxSizing: 'border-box'
                 }}>
                   <motion.h3 className="card-title" style={{ marginTop: 0 }}>
                     {item.title}

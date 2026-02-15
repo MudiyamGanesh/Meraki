@@ -10,7 +10,8 @@ import {
 import { useWishlist } from '../Context/WishlistContext';
 import { useToast } from '../context/ToastContext'; 
 import { useCart } from '../context/CartContext'; 
-import { sampleProducts } from '../data/products'; 
+import { doc, getDoc, collection, getDocs, query, limit } from 'firebase/firestore'; 
+import { db } from '../firebase'; 
 import '../css/ProductPage.css';
 
 // --- INTERNAL COMPONENT: Recommendation Card ---
@@ -18,6 +19,9 @@ const ProductCard = ({ data }) => {
   const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
   const { addToCart } = useCart(); 
   const isLiked = isInWishlist(data.id);
+
+  const mainImg = data.images?.[0] || "https://via.placeholder.com/300";
+  const hoverImg = data.images?.[1];
 
   const handleWishlistClick = (e) => {
     e.preventDefault();
@@ -34,21 +38,15 @@ const ProductCard = ({ data }) => {
     >
       <div className="recommendation-card">
         <div className="rec-image-wrapper">
-          <img src={data.image} alt={data.name} className="rec-img-main" />
-          {data.hoverImage && (
-            <img src={data.hoverImage} alt={data.name} className="rec-img-hover" />
-          )}
+          <img src={mainImg} alt={data.name} className="rec-img-main" />
+          {hoverImg && <img src={hoverImg} alt={data.name} className="rec-img-hover" />}
           <button className="rec-wishlist-btn" onClick={handleWishlistClick}>
-            <Heart 
-              size={16}
-              fill={isLiked ? "#dc2626" : "transparent"} 
-              color={isLiked ? "#dc2626" : "#4A5568"} 
-            />
+            <Heart size={16} fill={isLiked ? "#dc2626" : "transparent"} color={isLiked ? "#dc2626" : "#4A5568"} />
           </button>
         </div>
         <div className="rec-details">
           <h3 className="rec-title">{data.name}</h3>
-          <p className="rec-subtitle">{data.category}</p>
+          <p className="rec-subtitle">{data.subCategory || data.gender}</p>
           <span className="rec-price">₹{data.price}</span>
         </div>
       </div>
@@ -60,16 +58,15 @@ const ProductPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   
-  // Hooks
   const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
   const { addToCart } = useCart(); 
   
-  // Safe Toast handling
   const toastContext = useToast ? useToast() : null;
   const showToast = toastContext ? toastContext.showToast : (msg) => {};
 
   // --- STATE ---
   const [product, setProduct] = useState(null);
+  const [recommendations, setRecommendations] = useState([]); 
   const [selectedSize, setSelectedSize] = useState('');
   const [quantity, setQuantity] = useState(1);
   const [cleanView, setCleanView] = useState(false); 
@@ -82,8 +79,6 @@ const ProductPage = () => {
   const touchStartX = useRef(null);
   const touchStartY = useRef(null);
   const desktopOthersScrollRef = useRef(null);
-  
-  // 1. NEW REF FOR MOBILE CONTAINER
   const mobileContainerRef = useRef(null);
 
   // --- EFFECT: Handle Window Resize ---
@@ -93,47 +88,68 @@ const ProductPage = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // --- EFFECT: Load Data & SCROLL FIX ---
+  // --- EFFECT: Load Data from Firebase ---
   useEffect(() => {
-    // 2. SCROLL TO TOP LOGIC
-    
-    // For Desktop (Window scroll)
-    window.scrollTo(0, 0); 
-    
-    // For Mobile (Container scroll)
-    if (mobileContainerRef.current) {
-        mobileContainerRef.current.scrollTop = 0;
-    }
+    const fetchProductDetails = async () => {
+      try {
+        const docRef = doc(db, "products", id);
+        const docSnap = await getDoc(docRef);
 
-    setCurrentImgIndex(0);
-    setQuantity(1);
-    setSelectedSize(''); 
-    setShowScrollIndicator(true);
+        if (docSnap.exists()) {
+          setProduct({ id: docSnap.id, ...docSnap.data() });
+        } else {
+          setProduct(null);
+        }
 
-    const foundProduct = sampleProducts.find(p => p.id === parseInt(id));
-    if (foundProduct) {
-      setProduct(foundProduct);
-    }
+        const q = query(collection(db, "products"), limit(10));
+        const querySnapshot = await getDocs(q);
+        
+        let recs = [];
+        querySnapshot.forEach((docItem) => {
+          if (docItem.id !== id) {
+            recs.push({ id: docItem.id, ...docItem.data() });
+          }
+        });
+        
+        const shuffled = recs.sort(() => 0.5 - Math.random());
+        setRecommendations(shuffled.slice(0, 8));
+
+      } catch (error) {
+        console.error("Error fetching from Firebase:", error);
+      }
+    };
+
+    fetchProductDetails();
   }, [id]); 
 
-  // --- MEMO: Gallery & Recommendations ---
+  // --- EFFECT: Scroll Fix ---
+  useEffect(() => {
+    if (product) {
+      window.scrollTo(0, 0); 
+      if (mobileContainerRef.current) {
+          mobileContainerRef.current.scrollTop = 0;
+      }
+      setCurrentImgIndex(0);
+      setQuantity(1);
+      setSelectedSize(''); 
+      setShowScrollIndicator(true);
+    }
+  }, [id, product]);
+
+  // --- MEMO: Gallery Logic ---
   const galleryImages = useMemo(() => {
     if (!product) return [];
-    const images = [product.image, product.image2, product.image3, product.image4, product.image5].filter(img => img && img.length > 0);
-    return images.length > 0 ? images : ["https://dummyimage.com/600x800/e0e0e0/000000&text=No+Image"];
+    if (product.images && product.images.length > 0) {
+        return product.images;
+    }
+    return ["https://dummyimage.com/600x800/e0e0e0/000000&text=No+Image"];
   }, [product]);
 
-  const recommendations = useMemo(() => {
-    if (!product) return [];
-    const otherProducts = sampleProducts.filter(p => p.id !== product.id);
-    const shuffled = [...otherProducts].sort(() => 0.5 - Math.random());
-    return shuffled.slice(0, 8); 
-  }, [product]);
-
+  // --- LOADING GUARD (Restored your original one) ---
   if (!product) return <div className="loading-screen">Loading Product #{id}...</div>;
 
   const isLiked = isInWishlist(product.id);
-  const sizes = ['S', 'M', 'L', 'XL', 'XXL'];
+  const sizes = product.sizes || ['S', 'M', 'L', 'XL', 'XXL'];
 
   // --- HANDLERS ---
   const handleWishlist = (e) => {
@@ -149,11 +165,8 @@ const ProductPage = () => {
       return;
     }
     addToCart(product, selectedSize, quantity);
-    if(showToast) {
-        showToast(`Added ${product.name} to bag`);
-    } else {
-        alert("Added to bag!");
-    }
+    if(showToast) showToast(`Added ${product.name} to bag`);
+    else alert("Added to bag!");
   };
 
   const handleBuyNow = (e) => {
@@ -173,14 +186,10 @@ const ProductPage = () => {
 
   const handleScroll = (e) => {
     const scrollTop = e.target.scrollTop;
-    if (scrollTop > 50) {
-      setShowScrollIndicator(false);
-    } else {
-      setShowScrollIndicator(true);
-    }
+    if (scrollTop > 50) setShowScrollIndicator(false);
+    else setShowScrollIndicator(true);
   };
 
-  // --- GALLERY NAVIGATION ---
   const nextImage = (e) => {
     if(e) e.stopPropagation();
     if (galleryImages.length > 0) setCurrentImgIndex((prev) => (prev === galleryImages.length - 1 ? 0 : prev + 1));
@@ -226,7 +235,6 @@ const ProductPage = () => {
     }
   };
 
-  // --- SIZE GUIDE MODAL ---
   const SizeGuideModal = () => (
     <div className="size-guide-overlay" onClick={() => setShowSizeGuide(false)}>
       <div className="size-guide-content" onClick={(e) => e.stopPropagation()}>
@@ -253,9 +261,7 @@ const ProductPage = () => {
     </div>
   );
 
-  // --- RENDER MOBILE ---
   const renderMobile = () => (
-    // 3. ATTACH THE REF TO THE CONTAINER
     <div className="mobile-product-container" ref={mobileContainerRef} onScroll={handleScroll}>
       <div className="mobile-hero-wrapper" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
         <div className="mobile-bg-image">
@@ -302,7 +308,7 @@ const ProductPage = () => {
           <div className="mobile-hero-content">
             <div className="mobile-hero-text">
               <h1>{product.name}</h1>
-              <p>{product.category} Collection</p>
+              <p>{product.subCategory || product.category} Collection</p>
             </div>
             <div className={`scroll-indicator ${showScrollIndicator ? 'visible' : 'hidden'}`}>
               <span className="scroll-text">Scroll for details</span>
@@ -325,13 +331,16 @@ const ProductPage = () => {
            </div>
            <p className="tax-note">inclusive of all taxes</p>
         </div>
-        <p className="main-desc">{product.description || "Premium streetwear crafted for comfort and style."}</p>
+        
+        <p className="main-desc">{product.description || `Premium ${product.fit || 'regular'} fit ${product.articleType || 'streetwear'} crafted from ${product.fabric || 'high-quality fabric'}.`}</p>
+        
         <ul className="feature-list mobile-feature-list">
-          <li>• 100% Premium Cotton</li>
-          <li>• 240 GSM Heavyweight Fabric</li>
-          <li>• Puff Print / Screen Print Design</li>
-          <li>• Unisex Oversized Fit</li>
+          <li>• {product.fabric || "100% Premium Cotton"}</li>
+          <li>• {product.fit || "Relaxed Fit"}</li>
+          <li>• {product.theme ? `${product.theme} Edition` : "Premium Finish"}</li>
+          <li>• Unisex Design</li>
         </ul>
+
         <div className="selector-block mobile-selector">
             <div className="label-row">
               <span>SELECT SIZE</span>
@@ -373,10 +382,9 @@ const ProductPage = () => {
     </div>
   );
 
-  // --- RENDER DESKTOP ---
   const renderDesktop = () => (
     <div className="desktop-product-container">
-      <div className="desktop-breadcrumb">Home / {product.category} / {product.name}</div>
+      <div className="desktop-breadcrumb">Home / {product.gender} / {product.subCategory || "Collection"} / {product.name}</div>
       <div className="desktop-grid">
         <div className="desktop-gallery">
           <div className="main-image-frame">
@@ -404,12 +412,12 @@ const ProductPage = () => {
             <p className="tax-note">inclusive of all taxes</p>
           </div>
           <div className="desktop-description">
-            <p>{product.description || "Premium heavyweight cotton tee designed for the modern fit."}</p>
+            <p className="main-desc">{product.description || `Premium ${product.fit || 'regular'} fit ${product.articleType || 'streetwear'} crafted from ${product.fabric || 'high-quality fabric'}.`}</p>
             <ul className="feature-list">
-              <li>• 100% Premium Cotton</li>
-              <li>• 240 GSM Heavyweight Fabric</li>
-              <li>• Puff Print / Screen Print Design</li>
-              <li>• Unisex Oversized Fit</li>
+              <li>• {product.fabric || "100% Premium Cotton"}</li>
+              <li>• {product.fit || "Relaxed Fit"}</li>
+              <li>• {product.theme ? `${product.theme} Edition` : "Premium Finish"}</li>
+              <li>• Unisex Design</li>
             </ul>
           </div>
           <div className="selector-block">

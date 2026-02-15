@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { 
   Menu, Search, ShoppingCart, Heart, User, X, ChevronRight, 
-  Sun, Moon, Lock, LogOut, UserPlus, LogIn, Settings, 
+  Sun, Moon, Lock, LogOut, LogIn, Settings, 
   Bell, Globe, Mic 
 } from 'lucide-react'; 
 import { Link, useNavigate, useLocation } from 'react-router-dom'; 
@@ -16,13 +16,10 @@ const Navbar = () => {
   const [showMobileSearch, setShowMobileSearch] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [showSettingsModal, setShowSettingsModal] = useState(false); 
-  
   const [isScrolled, setIsScrolled] = useState(false);
 
   // --- SEARCH & VOICE STATES ---
   const [searchQuery, setSearchQuery] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
-  const [isSearching, setIsSearching] = useState(false);
   const [isListening, setIsListening] = useState(false);
 
   // Hooks & Context
@@ -36,20 +33,9 @@ const Navbar = () => {
   const mobileSearchInputRef = useRef(null);
 
   const isActive = (path) => {
-    // exact match for home
     if (path === '/') return location.pathname === '/';
-    // startsWith allows "/men/details" to keep "/men" active
     return location.pathname.startsWith(path);
   };
-
-  // Mock Search Data
-  const sampleProducts = [
-    { id: 1, name: "Oversized Graphic Tee", category: "Men" },
-    { id: 2, name: "Classic White Sneakers", category: "Sneakers" },
-    { id: 3, name: "Premium Denim Jacket", category: "Women" },
-    { id: 4, name: "High-top Streetwear", category: "Sneakers" },
-    { id: 5, name: "Riti Signature Hoodie", category: "Unisex" },
-  ];
 
   // --- THEME MANAGEMENT ---
   useEffect(() => {
@@ -62,44 +48,20 @@ const Navbar = () => {
   // --- SMART SCROLL LOGIC ---
   useEffect(() => {
     const handleScroll = () => {
-      // Just check if the user has scrolled more than 20px to trigger the background change
       setIsScrolled(window.scrollY > 50);
     };
-    
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // --- DEBOUNCED SEARCH LOGIC ---
-  useEffect(() => {
-    if (!searchQuery || searchQuery.trim().length === 0) {
-      setSearchResults([]);
-      setIsSearching(false);
-      return;
-    }
-    setIsSearching(true);
-    const delayDebounceFn = setTimeout(() => {
-      const filtered = sampleProducts.filter(product =>
-        product.name.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-      setSearchResults(filtered);
-      setIsSearching(false);
-    }, 500);
-    return () => clearTimeout(delayDebounceFn);
-  }, [searchQuery]);
-
   useEffect(() => {
     if (showMobileSearch && mobileSearchInputRef.current) {
-      // We use a tiny timeout to ensure the element is 
-      // fully rendered and visible before focusing
       const timer = setTimeout(() => {
         mobileSearchInputRef.current.focus();
       }, 100); 
       return () => clearTimeout(timer);
     }
   }, [showMobileSearch]);
-
-
 
   // --- VOICE SEARCH ---
   const handleVoiceSearch = () => {
@@ -113,8 +75,11 @@ const Navbar = () => {
       recognition.lang = 'en-US';
       recognition.onstart = () => setIsListening(true);
       recognition.onresult = (event) => {
-        setSearchQuery(event.results[0][0].transcript);
+        const transcript = event.results[0][0].transcript;
+        setSearchQuery(transcript);
         setIsListening(false);
+        // Automatically execute search after voice input
+        executeSearch(transcript);
       };
       recognition.onerror = () => setIsListening(false);
       recognition.onend = () => setIsListening(false);
@@ -124,23 +89,28 @@ const Navbar = () => {
     }
   };
 
-  // --- UTILITIES ---
-  const clearSearch = () => {
-    setSearchQuery("");
-    setSearchResults([]);
+  // --- EXECUTE SEARCH (THE REDIRECT) ---
+  const executeSearch = (queryToSearch = searchQuery) => {
+    if (queryToSearch.trim()) {
+      // Send them to the search page with the query in the URL
+      navigate(`/search?q=${encodeURIComponent(queryToSearch.trim())}`);
+      setShowMobileSearch(false);
+      setSearchQuery(""); // Optional: clear the navbar bar after they leave
+    }
   };
 
   const handleSearchSubmit = (e) => {
     if (e.key === 'Enter') {
-      alert(`Searching for: ${searchQuery}`);
-      clearSearch();
-      setShowMobileSearch(false);
+      executeSearch();
     }
+  };
+
+  const clearSearch = () => {
+    setSearchQuery("");
   };
 
   const handleMobileSearchClose = () => {
     setSearchQuery("");
-    setSearchResults([]); 
     setShowMobileSearch(false);
   };
 
@@ -196,23 +166,13 @@ const Navbar = () => {
                   <div className="search-actions">
                     <button className={`mic-btn ${isListening ? 'listening' : ''}`} onClick={handleVoiceSearch}><Mic size={18} /></button>
                     {searchQuery.length > 0 && <button className="clear-btn" onClick={clearSearch}><X size={16} /></button>}
-                    <button className="search-btn">{isSearching ? <div className="spinner-small"></div> : <Search size={18}/>}</button>
+                    {/* Hooked up the click event here too */}
+                    <button className="search-btn" onClick={() => executeSearch()}><Search size={18}/></button>
                   </div>
                </div>
-               {searchQuery.length >= 2 && (
-                 <div className="search-results-dropdown">
-                   {searchResults.length > 0 ? searchResults.map(result => (
-                     <Link key={result.id} to={`/product/${result.id}`} className="result-item" onClick={clearSearch}>
-                       <div className="result-info"><span className="result-name">{result.name}</span><span className="result-category">{result.category}</span></div>
-                       <ChevronRight size={14} />
-                     </Link>
-                   )) : <div className="no-results"><p>No results for "<strong>{searchQuery}</strong>"</p></div>}
-                 </div>
-               )}
+               {/* Dropped the results map entirely! */}
              </div>
              
-             
-
              <div className="nav-icons">
                <div className="user-dropdown-container" onMouseEnter={() => setUserMenuOpen(true)} onMouseLeave={() => setUserMenuOpen(false)}>
                  <button className={`icon-btn desktop-only ${userMenuOpen ? 'active' : ''}`}><User size={26} fill={user ? "currentColor" : "none"} /></button>
@@ -252,7 +212,6 @@ const Navbar = () => {
               ref={mobileSearchInputRef}
               type="search" 
               placeholder="Search products..." 
-              autoFocus={showMobileSearch} 
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               onKeyDown={handleSearchSubmit} 
@@ -268,12 +227,12 @@ const Navbar = () => {
               
               <div className="search-divider"></div>
 
-              {/* This is your custom button that we will style and use for closing/clearing */}
               <button className="mobile-search-close" onClick={handleMobileSearchClose}>
                 <X size={22} />
               </button>
             </div>
           </div>
+          {/* Dropped the mobile results map entirely too! */}
         </div>
       </nav>
 

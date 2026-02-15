@@ -4,8 +4,6 @@ import { WishlistProvider } from './Context/WishlistContext';
 import { AuthProvider } from './Context/AuthContext';
 import { CartProvider } from './context/CartContext';
 import { ToastProvider } from './context/ToastContext.jsx';
-// Data
-import { sampleProducts } from './data/products';
 // Components
 import SneakerDrop from './components/SneakerDrop';
 import Navbar from './components/Navbar';
@@ -22,6 +20,9 @@ import LoginPage from './pages/LoginPage.jsx';
 import CartPage from './pages/CartPage.jsx';
 import AccountPage from './pages/AccountPage.jsx';
 import ProductPage from './pages/ProductPage.jsx';
+import SearchPage from './pages/SearchPage.jsx';
+
+// --- SCROLL TO TOP ON ROUTE CHANGE ---
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -131,6 +132,7 @@ function App() {
                   <Route path="/design" element={<DesignStudio />} />
                   <Route path="/product/:id" element={<ProductPage />} />
                   <Route path="/cart" element={<CartPage />} />
+                  <Route path="/search" element={<SearchPage />} />
                 </Routes>
                 
                 <ConditionalFooter />

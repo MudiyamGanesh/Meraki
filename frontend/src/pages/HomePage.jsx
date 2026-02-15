@@ -1,34 +1,51 @@
-import React, { useMemo } from 'react';
-import HeroCarousel from '../components/HeroCarousel'; // Import the carousel
+import React, { useState, useEffect, useMemo } from 'react';
+import HeroCarousel from '../components/HeroCarousel'; 
 import ProductSection from '../components/ProductSection';
-import { sampleProducts } from '../data/products.js'; 
+import { collection, getDocs } from 'firebase/firestore'; 
+import { db } from '../firebase'; 
 
 const HomePage = ({ activeTab }) => {
-  
-  // 1. Filter Stranger Things Logic
-  // We check if the product has the theme "Stranger Things" AND matches the activeTab (Men/Women)
+  const [allProducts, setAllProducts] = useState([]);
+  const [isFetching, setIsFetching] = useState(true); // <--- The silent guard
+
+  useEffect(() => {
+    const fetchAllProducts = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, "products"));
+        const productsData = querySnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+        setAllProducts(productsData);
+      } catch (error) {
+        console.error("Error fetching home page products:", error);
+      } finally {
+        setIsFetching(false); // <--- Tells React the data is finally here
+      }
+    };
+
+    fetchAllProducts();
+  }, []); 
+
   const filteredStrangerThings = useMemo(() => {
-    return sampleProducts.filter(item => 
+    return allProducts.filter(item => 
       item.theme === "Stranger Things" && 
       item.gender === activeTab
     );
-  }, [activeTab]);
+  }, [allProducts, activeTab]);
 
-  // 2. Filter New Arrivals Logic
-  // We check if the collection is "New Arrivals" AND matches the activeTab
   const filteredNewArrivals = useMemo(() => {
-    return sampleProducts.filter(item => 
+    return allProducts.filter(item => 
       item.collection === "New Arrivals" && 
       item.gender === activeTab
     );
-  }, [activeTab]);
+  }, [allProducts, activeTab]);
 
   return (
     <div className="HomePage">
       
       {/* SECTION 1: Hero Carousel */}
-      {/* We pass the full data set; the carousel handles its own filtering/slicing */}
-      <HeroCarousel activeTab={activeTab} products={sampleProducts} />
+      <HeroCarousel activeTab={activeTab} products={allProducts} />
 
       {/* SECTION 2: Stranger Things */}
       {filteredStrangerThings.length > 0 && (
@@ -48,8 +65,9 @@ const HomePage = ({ activeTab }) => {
         />
       )}
 
-      {/* Fallback Message (Only shows if BOTH sections are empty) */}
-      {filteredStrangerThings.length === 0 && filteredNewArrivals.length === 0 && (
+      {/* Fallback Message */}
+      {/* We added !isFetching so it quietly waits before showing this! */}
+      {!isFetching && filteredStrangerThings.length === 0 && filteredNewArrivals.length === 0 && (
          <div style={{ textAlign: 'center', padding: '60px', color: '#888' }}>
             <h3>Nothing here yet!</h3>
             <p>More {activeTab}'s collections are dropping next week.</p>
