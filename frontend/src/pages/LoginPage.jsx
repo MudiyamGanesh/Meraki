@@ -6,13 +6,24 @@ import { Mail, Lock, User, ArrowRight, Eye, EyeOff, Loader2, AlertCircle } from 
 import { useToast } from '../context/ToastContext';
 import '../css/LoginPage.css';
 
+// Custom SVG for the authentic Google logo
+const GoogleIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="20px" height="20px" style={{ display: 'block' }}>
+    <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/>
+    <path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"/>
+    <path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"/>
+    <path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"/>
+  </svg>
+);
+
 const LoginPage = () => {
   const { showToast } = useToast();
-  const { login, register } = useAuth();
+  const { login, register, loginWithGoogle } = useAuth();
   const navigate = useNavigate();
   
   const [isFlipped, setIsFlipped] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
   const [formData, setFormData] = useState({
@@ -25,7 +36,6 @@ const LoginPage = () => {
   const [errors, setErrors] = useState({});
   const containerRef = useRef(null);
   
-  // Spotlight effect logic (Kept it, it looks premium)
   const handleMouseMove = (e) => {
     if (!containerRef.current) return;
     const { left, top } = containerRef.current.getBoundingClientRect();
@@ -59,38 +69,70 @@ const LoginPage = () => {
     return Object.keys(newErrors).length === 0;
   };
 
+  const handleAuthError = (errorMessage) => {
+    const msg = errorMessage || "Authentication failed.";
+    if (msg.includes("email-already-in-use")) {
+      setErrors({ email: "Email already registered." });
+    } else if (msg.includes("wrong-password") || msg.includes("user-not-found") || msg.includes("invalid-credential")) {
+      setErrors({ form: "Invalid credentials." });
+    } else if (msg.includes("popup-closed-by-user")) {
+      // Do nothing, the user just closed the Google window
+    } else {
+      showToast(msg, "error");
+    }
+  };
+
+  // --- GOOGLE LOGIN HANDLER ---
+  const handleGoogleAuth = async () => {
+    setIsGoogleLoading(true);
+    setErrors({});
+    
+    const result = await loginWithGoogle();
+    
+    if (result.success) {
+      showToast("Style loaded.", "success");
+      navigate('/');
+    } else {
+      handleAuthError(result.error);
+    }
+    setIsGoogleLoading(false);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
     setErrors({});
 
-    try {
-      if (isFlipped) { 
-        // REGISTER
-        if (!validateForm('register')) { setIsLoading(false); return; }
-        await register(formData.name, formData.email, formData.password);
+    if (isFlipped) { 
+      if (!validateForm('register')) { 
+        setIsLoading(false); 
+        return; 
+      }
+      const result = await register(formData.name, formData.email, formData.password);
+      if (result.success) {
         showToast('Welcome to the inner circle.', 'success');
         navigate('/');
-      } else { 
-        // LOGIN
-        if (!validateForm('login')) { setIsLoading(false); return; }
-        await login(formData.email, formData.password);
+      } else {
+        handleAuthError(result.error);
+      }
+    } else { 
+      if (!validateForm('login')) { 
+        setIsLoading(false); 
+        return; 
+      }
+      const result = await login(formData.email, formData.password);
+      if (result.success) {
         showToast("Style loaded.");
         navigate('/');
+      } else {
+        handleAuthError(result.error);
       }
-    } catch (error) {
-      const msg = error.message || "Authentication failed.";
-      if (msg.includes("email-already-in-use")) setErrors({ email: "Email already registered." });
-      else if (msg.includes("wrong-password") || msg.includes("user-not-found")) setErrors({ form: "Invalid credentials." });
-      else showToast(msg, "error");
-    } finally {
-      setIsLoading(false);
     }
+    setIsLoading(false);
   };
 
   return (
     <div className="aurora-container">
-      {/* Background Blobs - Subtle Atmosphere */}
       <div className="aurora-blob blob-1"></div>
       <div className="aurora-blob blob-2"></div>
 
@@ -102,8 +144,7 @@ const LoginPage = () => {
           ============================== */}
           <div className="flip-card-front spotlight-card" ref={containerRef} onMouseMove={handleMouseMove}>
             <div className="brand-logo">
-                {/* Replaced Icon with Hindi Text to match Header */}
-                <h1>PARADOX</h1>
+                <h1>रीति</h1>
             </div>
             
             <h2>Member Login</h2>
@@ -133,12 +174,34 @@ const LoginPage = () => {
                 {errors.password && <span className="error-text">{errors.password}</span>}
               </div>
 
-              <button className="brand-btn" disabled={isLoading}>
+              <button className="brand-btn" disabled={isLoading || isGoogleLoading}>
                 {isLoading ? <Loader2 className="spinner" /> : <>SIGN IN <ArrowRight size={18}/></>}
               </button>
             </form>
 
-            <div className="switch-text">
+            {/* --- GOOGLE BUTTON (LOGIN) --- */}
+            <div style={{ display: 'flex', alignItems: 'center', margin: '20px 0', gap: '15px' }}>
+              <div style={{ flex: 1, height: '1px', backgroundColor: 'rgba(255,255,255,0.1)' }}></div>
+              <span style={{ fontSize: '12px', color: '#888', fontWeight: 'bold' }}>OR</span>
+              <div style={{ flex: 1, height: '1px', backgroundColor: 'rgba(255,255,255,0.1)' }}></div>
+            </div>
+            
+            <button 
+              type="button" 
+              onClick={handleGoogleAuth} 
+              disabled={isLoading || isGoogleLoading}
+              style={{ 
+                width: '100%', padding: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px',
+                backgroundColor: 'rgba(255,255,255,0.05)', color: '#fff', border: '1px solid rgba(255,255,255,0.1)', 
+                borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold', transition: 'all 0.2s ease', outline: 'none'
+              }}
+              onMouseOver={(e) => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.1)'}
+              onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.05)'}
+            >
+              {isGoogleLoading ? <Loader2 className="spinner" size={20} /> : <><GoogleIcon /> Continue with Google</>}
+            </button>
+
+            <div className="switch-text" style={{ marginTop: '25px' }}>
               <span>Not a member?</span>
               <button type="button" className="text-btn" onClick={() => { setIsFlipped(true); setErrors({}); }}>
                 Create Account
@@ -151,7 +214,7 @@ const LoginPage = () => {
           ============================== */}
           <div className="flip-card-back spotlight-card">
             <div className="brand-logo">
-                <h1>PARADOX</h1>
+                <h1>रीति</h1>
             </div>
             
             <h2>Join the Club</h2>
@@ -197,12 +260,34 @@ const LoginPage = () => {
                 {errors.confirmPassword && <span className="error-text">{errors.confirmPassword}</span>}
               </div>
 
-              <button className="brand-btn" disabled={isLoading}>
+              <button className="brand-btn" disabled={isLoading || isGoogleLoading}>
                 {isLoading ? <Loader2 className="spinner" /> : <>REGISTER <ArrowRight size={18}/></>}
               </button>
             </form>
 
-            <div className="switch-text">
+            {/* --- GOOGLE BUTTON (REGISTER) --- */}
+            <div style={{ display: 'flex', alignItems: 'center', margin: '20px 0', gap: '15px' }}>
+              <div style={{ flex: 1, height: '1px', backgroundColor: 'rgba(255,255,255,0.1)' }}></div>
+              <span style={{ fontSize: '12px', color: '#888', fontWeight: 'bold' }}>OR</span>
+              <div style={{ flex: 1, height: '1px', backgroundColor: 'rgba(255,255,255,0.1)' }}></div>
+            </div>
+            
+            <button 
+              type="button" 
+              onClick={handleGoogleAuth} 
+              disabled={isLoading || isGoogleLoading}
+              style={{ 
+                width: '100%', padding: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px',
+                backgroundColor: 'rgba(255,255,255,0.05)', color: '#fff', border: '1px solid rgba(255,255,255,0.1)', 
+                borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold', transition: 'all 0.2s ease', outline: 'none'
+              }}
+              onMouseOver={(e) => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.1)'}
+              onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.05)'}
+            >
+              {isGoogleLoading ? <Loader2 className="spinner" size={20} /> : <><GoogleIcon /> Continue with Google</>}
+            </button>
+
+            <div className="switch-text" style={{ marginTop: '25px' }}>
               <span>Already a member?</span>
               <button type="button" className="text-btn" onClick={() => { setIsFlipped(false); setErrors({}); }}>
                 Sign In

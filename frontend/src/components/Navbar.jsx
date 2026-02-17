@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { 
   Menu, Search, ShoppingCart, Heart, User, X, ChevronRight, 
   Sun, Moon, Lock, LogOut, LogIn, Settings, 
-  Bell, Globe, Mic 
+  Bell, Globe, Mic, ShieldCheck // <-- ADDED ShieldCheck ICON
 } from 'lucide-react'; 
 import { Link, useNavigate, useLocation } from 'react-router-dom'; 
 import { useWishlist } from '../Context/WishlistContext';
@@ -78,7 +78,6 @@ const Navbar = () => {
         const transcript = event.results[0][0].transcript;
         setSearchQuery(transcript);
         setIsListening(false);
-        // Automatically execute search after voice input
         executeSearch(transcript);
       };
       recognition.onerror = () => setIsListening(false);
@@ -92,10 +91,9 @@ const Navbar = () => {
   // --- EXECUTE SEARCH (THE REDIRECT) ---
   const executeSearch = (queryToSearch = searchQuery) => {
     if (queryToSearch.trim()) {
-      // Send them to the search page with the query in the URL
       navigate(`/search?q=${encodeURIComponent(queryToSearch.trim())}`);
       setShowMobileSearch(false);
-      setSearchQuery(""); // Optional: clear the navbar bar after they leave
+      setSearchQuery(""); 
     }
   };
 
@@ -166,11 +164,9 @@ const Navbar = () => {
                   <div className="search-actions">
                     <button className={`mic-btn ${isListening ? 'listening' : ''}`} onClick={handleVoiceSearch}><Mic size={18} /></button>
                     {searchQuery.length > 0 && <button className="clear-btn" onClick={clearSearch}><X size={16} /></button>}
-                    {/* Hooked up the click event here too */}
                     <button className="search-btn" onClick={() => executeSearch()}><Search size={18}/></button>
                   </div>
                </div>
-               {/* Dropped the results map entirely! */}
              </div>
              
              <div className="nav-icons">
@@ -182,6 +178,14 @@ const Navbar = () => {
                        <>
                          <div className="dropdown-header">Hello, {user.name}</div>
                          <Link to="/account" className="dropdown-item" onClick={() => setUserMenuOpen(false)}><User size={16} /> My Account</Link>
+                         
+                         {/* --- NEW: DESKTOP ADMIN LINK --- */}
+                         {user.role === 'admin' && (
+                           <Link to="/admin" className="dropdown-item" onClick={() => setUserMenuOpen(false)} style={{ color: '#bb86fc', fontWeight: 'bold' }}>
+                             <ShieldCheck size={16} /> Admin Dashboard
+                           </Link>
+                         )}
+
                          <button className="dropdown-item" onClick={openSettings}><Settings size={16} /> Settings</button>
                          <button className="dropdown-item logout" onClick={() => { logout(); setUserMenuOpen(false); }}><LogOut size={16} /> Sign Out</button>
                        </>
@@ -232,7 +236,6 @@ const Navbar = () => {
               </button>
             </div>
           </div>
-          {/* Dropped the mobile results map entirely too! */}
         </div>
       </nav>
 
@@ -255,6 +258,19 @@ const Navbar = () => {
                 <Link to="/account" className="mobile-auth-btn account-btn" onClick={() => setMobileMenuOpen(false)}><User size={16} /> Account</Link>
                 <button onClick={handleMobileLogout} className="mobile-auth-btn logout-btn"><LogOut size={16} /> Sign Out</button>
               </div>
+
+              {/* --- NEW: MOBILE ADMIN LINK --- */}
+              {user.role === 'admin' && (
+                <Link 
+                  to="/admin" 
+                  className="mobile-auth-btn admin-btn" 
+                  onClick={() => setMobileMenuOpen(false)}
+                  style={{ display: 'flex', justifyContent: 'center', marginTop: '10px', backgroundColor: 'rgba(187, 134, 252, 0.1)', color: '#bb86fc', border: '1px solid rgba(187, 134, 252, 0.3)' }}
+                >
+                  <ShieldCheck size={16} /> Admin Dashboard
+                </Link>
+              )}
+
             </div>
           ) : (
             <div className="mobile-auth-grid">

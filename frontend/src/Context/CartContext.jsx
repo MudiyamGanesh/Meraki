@@ -1,76 +1,113 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { db } from '../firebase';
+import { useAuth } from './AuthContext'; // Adjust path if your AuthContext is somewhere else
 
 const CartContext = createContext();
 
 export const useCart = () => useContext(CartContext);
 
 export const CartProvider = ({ children }) => {
-  // Load initial state from local storage
-  const [cartItems, setCartItems] = useState(() => {
-    try {
-      const localData = localStorage.getItem('riti_cart');
-      return localData ? JSON.parse(localData) : [];
-    } catch (e) {
-      return [];
-    }
-  });
+  const [cartItems, setCartItems] = useState([]);
+  const [isInitialized, setIsInitialized] = useState(false);
+  const { user } = useAuth(); // We need to know who is logged in!
 
-  // Update local storage whenever cart changes
+  // --- 1. FETCH CART ON LOAD OR LOGIN ---
   useEffect(() => {
-    localStorage.setItem('riti_cart', JSON.stringify(cartItems));
-  }, [cartItems]);
-
-  // Add Item Logic (Handles same item with different sizes)
-  const addToCart = (product, size, quantity) => {
-    setCartItems((prevItems) => {
-      // Create a unique ID based on product ID AND size
-      const existingItemIndex = prevItems.findIndex(
-        (item) => item.id === product.id && item.selectedSize === size
-      );
-
-      if (existingItemIndex > -1) {
-        // Item exists with same size? Update quantity
-        const newItems = [...prevItems];
-        newItems[existingItemIndex].quantity += quantity;
-        return newItems;
+    const fetchCart = async () => {
+      if (user) {
+        // Fetch from Firebase for logged-in users
+        try {
+          // Assuming Firebase Auth uses 'uid'. If your custom auth uses 'id', change this!
+          const cartRef = doc(db, 'carts', user.uid); 
+          const cartSnap = await getDoc(cartRef);
+          
+          if (cartSnap.exists()) {
+            setCartItems(cartSnap.data().items || []);
+          } else {
+            setCartItems([]);
+          }
+        } catch (error) {
+          console.error("Error fetching cart from Firebase:", error);
+        }
       } else {
-        // New item or new size
-        return [...prevItems, { ...product, selectedSize: size, quantity }];
+        // Fetch from LocalStorage for guest users
+        const localCart = localStorage.getItem('riti_guest_cart');
+        if (localCart) {
+          setCartItems(JSON.parse(localCart));
+        } else {
+          setCartItems([]);
+        }
       }
+      setIsInitialized(true);
+    };
+
+    fetchCart();
+  }, [user]);
+
+  // --- 2. SAVE CART WHENEVER IT CHANGES ---
+  useEffect(() => {
+    if (!isInitialized) return; // Don't accidentally overwrite the DB before we've loaded it!
+
+    const saveCart = async () => {
+      if (user) {
+        // Save to Firebase
+        try {
+          const cartRef = doc(db, 'carts', user.uid);
+          await setDoc(cartRef, { items: cartItems }, { merge: true });
+        } catch (error) {
+          console.error("Error saving cart to Firebase:", error);
+        }
+      } else {
+        // Save to LocalStorage
+        localStorage.setItem('riti_guest_cart', JSON.stringify(cartItems));
+      }
+    };
+
+    saveCart();
+  }, [cartItems, user, isInitialized]);
+
+  // --- ACTIONS ---
+  const addToCart = (product, selectedSize, quantity = 1) => {
+    setCartItems(prev => {
+      const existingItem = prev.find(item => item.id === product.id && item.selectedSize === selectedSize);
+      if (existingItem) {
+        return prev.map(item => 
+          item.id === product.id && item.selectedSize === selectedSize
+            ? { ...item, quantity: item.quantity + quantity }
+            : item
+        );
+      }
+      return [...prev, { ...product, selectedSize, quantity }];
     });
   };
 
-  const removeFromCart = (id, size) => {
-    setCartItems((prev) => prev.filter(item => !(item.id === id && item.selectedSize === size)));
+  const removeFromCart = (productId, selectedSize) => {
+    setCartItems(prev => prev.filter(item => !(item.id === productId && item.selectedSize === selectedSize)));
   };
 
-  const updateQuantity = (id, size, delta) => {
-    setCartItems((prev) => 
-      prev.map(item => {
-        if (item.id === id && item.selectedSize === size) {
-          const newQty = Math.max(1, item.quantity + delta);
-          return { ...item, quantity: newQty };
-        }
-        return item;
-      })
-    );
+  const updateQuantity = (productId, selectedSize, change) => {
+    setCartItems(prev => prev.map(item => {
+      if (item.id === productId && item.selectedSize === selectedSize) {
+        const newQuantity = Math.max(1, item.quantity + change);
+        return { ...item, quantity: newQuantity };
+      }
+      return item;
+    }));
   };
 
-  const clearCart = () => setCartItems([]);
+  // NEW: We need this to wipe the cart clean after a successful checkout!
+  const clearCart = () => {
+    setCartItems([]);
+  };
 
-  // Derived State (Totals)
-  const cartCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
-  const cartTotal = cartItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+  // --- DERIVED STATE ---
+  const cartCount = cartItems.reduce((total, item) => total + item.quantity, 0);
+  const cartTotal = cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
 
   return (
     <CartContext.Provider value={{ 
-      cartItems, 
-      addToCart, 
-      removeFromCart, 
-      updateQuantity, 
-      clearCart,
-      cartCount,
-      cartTotal 
+      cartItems, addToCart, removeFromCart, updateQuantity, clearCart, cartCount, cartTotal 
     }}>
       {children}
     </CartContext.Provider>

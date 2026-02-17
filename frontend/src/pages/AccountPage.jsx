@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useAuth } from '../Context/AuthContext';
+import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { User, Package, MapPin, LogOut, Settings, CreditCard, ChevronRight } from 'lucide-react';
 import '../css/AccountPage.css';
