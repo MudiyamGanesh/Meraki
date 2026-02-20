@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { HashRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { WishlistProvider } from './Context/WishlistContext';
-import { AuthProvider } from './context/AuthContext';
+import { AuthProvider } from './Context/AuthContext';
 import { CartProvider } from './context/CartContext';
 import { ToastProvider } from './context/ToastContext.jsx';
 
@@ -32,6 +32,11 @@ import OrderSuccess from './pages/OrderSuccess.jsx';
 import AdminOrders from './pages/AdminOrders';
 import AdminUsers from './pages/AdminUsers';
 import AdminDashboard from './pages/AdminDashboard';
+import AdminBulkUpload from './pages/AdminBulkUpload.jsx';
+import AdminMarketing from './pages/AdminMarketing.jsx';
+import AdminLogistics from './pages/AdminLogistics.jsx';
+import AdminReports from './pages/AdminReports.jsx';
+import AdminSettings from './pages/AdminSettings.jsx';
 
 // --- SCROLL TO TOP ON ROUTE CHANGE ---
 const ScrollToTop = () => {
@@ -152,7 +157,12 @@ function App() {
                     <Route path="products/edit/:id" element={<AdminProductForm />} />
                     <Route path="orders" element={<AdminOrders />} />
                     <Route path="users" element={<AdminUsers />} />
-                  </Route> {/* <--- CRITICAL FIX: The missing closing tag! */}
+                    <Route path="products/bulk-upload" element={<AdminBulkUpload />} />
+                    <Route path="marketing" element={<AdminMarketing />} />
+                    <Route path="logistics" element={<AdminLogistics />} />
+                    <Route path="reports" element={<AdminReports />} />
+                    <Route path="settings" element={<AdminSettings />} />
+                  </Route>
                   
                 </Routes>
                 

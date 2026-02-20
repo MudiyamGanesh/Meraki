@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, Outlet, useNavigate, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Package, ShoppingBag, Users, LogOut, Menu, X } from 'lucide-react';
+import { LayoutDashboard, Package, ShoppingBag, Users, LogOut, Menu, X, Megaphone, Truck, FileSpreadsheet, Settings } from 'lucide-react';
 
 const AdminLayout = () => {
   const navigate = useNavigate();
@@ -25,6 +25,10 @@ const AdminLayout = () => {
     { name: 'Products', path: '/admin/products', icon: <Package size={20} /> },
     { name: 'Orders', path: '/admin/orders', icon: <ShoppingBag size={20} /> },
     { name: 'Users', path: '/admin/users', icon: <Users size={20} /> },
+    { name: 'Marketing', path: '/admin/marketing', icon: <Megaphone size={20} /> },
+    { name: 'Logistics', path: '/admin/logistics', icon: <Truck size={20} /> },
+    { name: 'Reports', path: '/admin/reports', icon: <FileSpreadsheet size={20} /> },
+    { name: 'Settings', path: '/admin/settings', icon: <Settings size={20} /> }, 
   ];
 
   // Helper to close sidebar on mobile after clicking a link
@@ -113,7 +117,7 @@ const AdminLayout = () => {
       </aside>
 
       {/* --- MAIN CONTENT AREA --- */}
-      <main className="admin-main-content" style={{ flexGrow: 1, overflowY: 'auto', backgroundColor: '#f4f5f7' }}>
+      <main className="admin-main-content" style={{ flexGrow: 1, overflowY: 'auto', backgroundColor: '#0a0a0f' }}>
         <Outlet />
       </main>
 
