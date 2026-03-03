@@ -841,7 +841,7 @@ input[type="search"]::-webkit-search-results-decoration {
 /* User Dropdown (Hover Logic) */
 .user-dropdown-container { position: relative; height: 100%; display: flex; align-items: center; padding: 0 10px; cursor: pointer; }
 .nav-dropdown-menu {
-  position: absolute; top: 55px; right: 0; width: 220px;
+  position: absolute; top: 50px; right: 0; width: 220px;
   background-color: var(--bg-input); border: 1px solid var(--border-color);
   border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.2);
   padding: 8px; display: flex; flex-direction: column; gap: 4px; z-index: 2000;

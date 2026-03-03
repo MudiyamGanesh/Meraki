@@ -15,6 +15,7 @@ const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [showMobileSearch, setShowMobileSearch] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const [menuSticky, setMenuSticky] = useState(false);
   const [showSettingsModal, setShowSettingsModal] = useState(false); 
   const [isScrolled, setIsScrolled] = useState(false);
 
@@ -127,14 +128,15 @@ const Navbar = () => {
   };
 
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (navRef.current && !navRef.current.contains(event.target)) {
-        setUserMenuOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+  const handleClickOutside = (event) => {
+    if (navRef.current && !navRef.current.contains(event.target)) {
+      setUserMenuOpen(false);
+      setMenuSticky(false); // <-- ADD THIS to reset stickiness when clicking outside
+    }
+  };
+  document.addEventListener("mousedown", handleClickOutside);
+  return () => document.removeEventListener("mousedown", handleClickOutside);
+}, []);
 
   return (
     <>
@@ -170,25 +172,36 @@ const Navbar = () => {
              </div>
              
              <div className="nav-icons">
-               <div className="user-dropdown-container" onMouseEnter={() => setUserMenuOpen(true)} onMouseLeave={() => setUserMenuOpen(false)}>
-                 <button className={`icon-btn desktop-only ${userMenuOpen ? 'active' : ''}`}><User size={26} fill={user ? "currentColor" : "none"} /></button>
+               <div 
+                  className="user-dropdown-container" 
+                  onMouseEnter={() => !menuSticky && setUserMenuOpen(true)} 
+                  onMouseLeave={() => !menuSticky && setUserMenuOpen(false)}
+               >
+                <button 
+                  className={`icon-btn desktop-only ${userMenuOpen ? 'active' : ''}`}
+                  onClick={() => {
+                    // Toggle sticky state and menu open state
+                    setMenuSticky(!menuSticky);
+                    setUserMenuOpen(!menuSticky);
+                  }}
+                >
+                  <User size={26} fill={user ? "currentColor" : "none"} />
+                </button>
                  {userMenuOpen && (
                    <div className="nav-dropdown-menu">
                      {user ? (
                        <>
-                         <div className="dropdown-header">Hello, {user.name}</div>
-                         <Link to="/account" className="dropdown-item" onClick={() => setUserMenuOpen(false)}><User size={16} /> My Account</Link>
-                         
-                         {/* --- NEW: DESKTOP ADMIN LINK --- */}
-                         {user.role === 'admin' && (
-                           <Link to="/admin" className="dropdown-item" onClick={() => setUserMenuOpen(false)} style={{ color: '#bb86fc', fontWeight: 'bold' }}>
-                             <ShieldCheck size={16} /> Admin Dashboard
-                           </Link>
-                         )}
+                          <div className="dropdown-header">Hello, {user.name}</div>
+                          <Link to="/account" className="dropdown-item" onClick={() => setUserMenuOpen(false)}><User size={16} /> My Account</Link>                         
+                          <Link to="/admin" className="dropdown-item" onClick={() => { setUserMenuOpen(false); setMenuSticky(false); }} style={{ color: '#bb86fc', fontWeight: 'bold' }}>
+                            <ShieldCheck size={16} /> Admin Dashboard
+                          </Link>
+                          <button className="dropdown-item" onClick={openSettings}><Settings size={16} /> Settings</button>
 
-                         <button className="dropdown-item" onClick={openSettings}><Settings size={16} /> Settings</button>
-                         <button className="dropdown-item logout" onClick={() => { logout(); setUserMenuOpen(false); }}><LogOut size={16} /> Sign Out</button>
-                       </>
+                          <button className="dropdown-item logout" onClick={() => { logout(); setUserMenuOpen(false); setMenuSticky(false); }}>
+                            <LogOut size={16} /> Sign Out
+                          </button>
+                        </>
                      ) : (
                        <><Link to="/login" className="dropdown-item" onClick={() => setUserMenuOpen(false)}><LogIn size={16} /> Sign In</Link><button className="dropdown-item" onClick={openSettings}><Settings size={16} /> Settings</button></>
                      )}
